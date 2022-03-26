@@ -1,0 +1,39 @@
+{
+    "name": "fashi",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "start": "nodemon --inspect backend/index.js",
+        "watch": "node-sass --watch resources/scss/ --output public/css/",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "minh van",
+    "license": "ISC",
+    "dependencies": {
+        "bcryptjs": "^2.4.3",
+        "cors": "^2.8.5",
+        "create-react-app": "^4.0.3",
+        "dotenv": "^10.0.0",
+        "exceljs": "^4.3.0",
+        "express": "^4.17.1",
+        "express-handlebars": "^5.3.3",
+        "jsonwebtoken": "^8.5.1",
+        "method-override": "^3.0.0",
+        "moment": "^2.29.1",
+        "mongoose": "^6.0.7",
+        "mongoose-delete": "^0.5.4",
+        "mongoose-slug-generator": "^1.0.4",
+        "multer": "^1.4.3",
+        "nodemailer": "^6.7.2",
+        "react-js-pagination": "^3.0.3"
+    },
+    "devDependencies": {
+        "husky": "^7.0.2",
+        "lint-staged": "^11.1.2",
+        "morgan": "^1.10.0",
+        "node-sass": "^7.0.1",
+        "nodemon": "^2.0.12",
+        "prettier": "^2.4.1"
+    }
+}

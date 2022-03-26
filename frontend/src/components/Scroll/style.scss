@@ -1,0 +1,20 @@
+.scroll_top {
+  position: fixed;
+  right: 20px;
+  width: 40px;
+  background: rgba(252, 248, 241, 0.8);
+  border-radius: 25px;
+  box-shadow: 2px 2px 5px yellow;
+  bottom: 100px;
+  height: 40px;
+  font-size: 40px;
+  border-radius: 100px;
+  border: none;
+  cursor: pointer;
+  color: rgb(92, 84, 84);
+  line-height: 30px;
+  text-align: center;
+  &:hover {
+    transform: scale(1.1);
+  }
+}
