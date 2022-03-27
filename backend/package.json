@@ -4,7 +4,8 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "start": "nodemon --inspect backend/index.js",
+        "start": "node --inspect index.js",
+        "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix frontend && run build --prefix frontend",
         "watch": "node-sass --watch resources/scss/ --output public/css/",
         "test": "echo \"Error: no test specified\" && exit 1"
     },

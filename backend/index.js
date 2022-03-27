@@ -1,7 +1,7 @@
 const path = require('path');
 const express = require('express');
-const morgan = require('morgan')
-const cors = require('cors')
+const morgan = require('morgan');
+const cors = require('cors');
 const methodOverride = require('method-override');
 const port = 5000;
 const app = express();
@@ -17,7 +17,7 @@ app.use(cors());
 app.use(
     express.urlencoded({
         extended: true,
-    }),
+    })
 );
 app.use(express.json());
 
@@ -31,6 +31,12 @@ app.use(morgan('combined'));
 // Route
 router(app);
 
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static('frontend/build'));
+    // app.get('*', (req, res) => {
+    //     res.sendFile(path.join(__dirname, 'frontend/build'));
+    // });
+}
 
 app.listen(port, () => {
     console.log(`App listening at http://localhost:${port}`);
