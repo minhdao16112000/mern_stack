@@ -3,9 +3,12 @@
     "version": "1.0.0",
     "description": "",
     "main": "index.js",
+    "engines": {
+        "node": "16.14.0",
+        "npm": "8.3.1"
+    },
     "scripts": {
-        "start": "node --inspect index.js",
-        "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix frontend && run build --prefix frontend",
+        "start": "node index.js",
         "watch": "node-sass --watch resources/scss/ --output public/css/",
         "test": "echo \"Error: no test specified\" && exit 1"
     },

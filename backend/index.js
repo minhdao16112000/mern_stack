@@ -26,7 +26,6 @@ app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'uploads')));
 
 // HTTP logger
-app.use(morgan('combined'));
 
 // Route
 router(app);
