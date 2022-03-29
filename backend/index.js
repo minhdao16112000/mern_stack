@@ -1,9 +1,9 @@
 const path = require('path');
 const express = require('express');
-const morgan = require('morgan');
+// const morgan = require('morgan');
 const cors = require('cors');
 const methodOverride = require('method-override');
-const port = 5000;
+const port = process.env.PORT || 5000;
 const app = express();
 require('dotenv').config();
 
