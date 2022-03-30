@@ -9,7 +9,7 @@
     },
     "scripts": {
         "start": "node /app/index.js",
-        "heroku-postbuild":"cd frontend && npm install && npm run build",
+        "heroku-postbuild": "cd frontend && npm install && npm run build",
         "watch": "node-sass --watch resources/scss/ --output public/css/",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
