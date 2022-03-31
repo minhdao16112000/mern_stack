@@ -96,7 +96,7 @@ const BlogDetailScreen = (props) => {
                                             }}
                                         ></p>
                                         {/* <div className="blog-large-pic" >
-                                        <img src={`http://localhost:5000/posts/${post.image}`} alt="" />
+                                        <img src={`https://shopfashi.herokuapp.com/posts/${post.image}`} alt="" />
                                     </div> */}
                                         <div
                                             className="blog-detail-desc"
@@ -194,7 +194,7 @@ const BlogDetailScreen = (props) => {
                                                                 >
                                                                     <div className="nb-pic">
                                                                         <img
-                                                                            src={`http://localhost:5000/posts/${
+                                                                            src={`https://shopfashi.herokuapp.com/posts/${
                                                                                 listPostByTopic[
                                                                                     i +
                                                                                         1
@@ -241,7 +241,7 @@ const BlogDetailScreen = (props) => {
                                                                     <div className="pb-pic">
                                                                         <i className="ti-arrow-left"></i>
                                                                         <img
-                                                                            src={`http://localhost:5000/posts/${
+                                                                            src={`https://shopfashi.herokuapp.com/posts/${
                                                                                 listPostByTopic[
                                                                                     i -
                                                                                         1
@@ -285,7 +285,7 @@ const BlogDetailScreen = (props) => {
                                                                     <div className="pb-pic">
                                                                         <i className="ti-arrow-left"></i>
                                                                         <img
-                                                                            src={`http://localhost:5000/posts/${
+                                                                            src={`https://shopfashi.herokuapp.com/posts/${
                                                                                 listPostByTopic[
                                                                                     i -
                                                                                         1
@@ -324,7 +324,7 @@ const BlogDetailScreen = (props) => {
                                                                 >
                                                                     <div className="nb-pic">
                                                                         <img
-                                                                            src={`http://localhost:5000/posts/${
+                                                                            src={`https://shopfashi.herokuapp.com/posts/${
                                                                                 listPostByTopic[
                                                                                     i +
                                                                                         1

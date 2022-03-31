@@ -139,7 +139,7 @@ const ProductRight = (props) => {
                                         <Link to={`/product/${value.slug}`}>
                                             <div className="pi-pic">
                                                 <img
-                                                    src={`http://localhost:5000/products/${checkImage(
+                                                    src={`https://shopfashi.herokuapp.com/products/${checkImage(
                                                         key
                                                     )}`}
                                                     alt=""
@@ -207,7 +207,7 @@ const ProductRight = (props) => {
                             <div
                                 className="product-large set-bg m-large"
                                 style={{
-                                    backgroundImage: `url(http://localhost:5000/images/${img[0].image})`,
+                                    backgroundImage: `url(https://shopfashi.herokuapp.com/images/${img[0].image})`,
                                 }}
                             >
                                 <h2>{img[0].title}</h2>

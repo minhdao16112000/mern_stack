@@ -1,10 +1,10 @@
-import Axios from "axios";
+import Axios from 'axios';
 
 const api = Axios.create({
-    baseURL: 'http://localhost:5000',
+    baseURL: 'https://shopfashi.herokuapp.com',
     headers: {
-        'content-type': 'application/json'
-    }
+        'content-type': 'application/json',
+    },
 });
 
 export default api;

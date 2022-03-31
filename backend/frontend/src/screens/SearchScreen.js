@@ -100,7 +100,7 @@ const SearchScreen = () => {
                                                         <div className="product-item">
                                                             <div className="pi-pic">
                                                                 <img
-                                                                    src={`http://localhost:5000/products/${checkImage(
+                                                                    src={`https://shopfashi.herokuapp.com/products/${checkImage(
                                                                         key
                                                                     )}`}
                                                                     alt=""

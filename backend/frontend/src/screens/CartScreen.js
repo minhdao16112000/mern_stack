@@ -1,14 +1,14 @@
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Link, useRouteMatch } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useRouteMatch } from 'react-router-dom';
 import {
     decreaseQuantity,
     deleteAllCart,
     deleteCart,
     increaseQuantity,
-} from "../redux/actions/cartActions";
-import { getColors, getSizes } from "../redux/actions/productActions";
+} from '../redux/actions/cartActions';
+import { getColors, getSizes } from '../redux/actions/productActions';
 
 const CartScreen = () => {
     const dispatch = useDispatch();
@@ -22,7 +22,7 @@ const CartScreen = () => {
 
     const checkSlug = (id) => {
         var catArr = [];
-        var catslug = "";
+        var catslug = '';
         if (lstCate.Categories) {
             lstCate.Categories.forEach((value) => {
                 if (id.includes(value._id)) {
@@ -30,7 +30,7 @@ const CartScreen = () => {
                 }
             });
             catArr.forEach((value) => {
-                catslug += value + "/";
+                catslug += value + '/';
             });
         }
         return catslug.slice(0, -1);
@@ -87,16 +87,16 @@ const CartScreen = () => {
     const checkImage = (key) => {
         let Arr = [];
         proCart.forEach((value) => {
-            const imageArr = value.image.split(",");
+            const imageArr = value.image.split(',');
             Arr.push(imageArr[0]);
         });
         return Arr[key];
     };
 
     const formatVND = (value) => {
-        return new Intl.NumberFormat("vi-VN", {
-            style: "currency",
-            currency: "VND",
+        return new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND',
         }).format(value);
     };
 
@@ -168,7 +168,7 @@ const CartScreen = () => {
                                                     <tr key={key}>
                                                         <td className="cart-pic first-row">
                                                             <img
-                                                                src={`http://localhost:5000/products/${checkImage(
+                                                                src={`https://shopfashi.herokuapp.com/products/${checkImage(
                                                                     key
                                                                 )}`}
                                                                 alt=""
@@ -191,13 +191,13 @@ const CartScreen = () => {
                                                                 className="cart-size first-row"
                                                                 style={{
                                                                     paddingLeft:
-                                                                        "20px",
+                                                                        '20px',
                                                                     paddingRight:
-                                                                        "15px",
+                                                                        '15px',
                                                                     fontStyle:
-                                                                        "italic",
+                                                                        'italic',
                                                                     opacity:
-                                                                        "50%",
+                                                                        '50%',
                                                                 }}
                                                             >
                                                                 <h5>
@@ -219,21 +219,21 @@ const CartScreen = () => {
                                                                             ),
                                                                     }}
                                                                 >
-                                                                    {" "}
+                                                                    {' '}
                                                                 </div>
                                                             ) : (
                                                                 <div
                                                                     style={{
                                                                         paddingLeft:
-                                                                            "15px",
+                                                                            '15px',
                                                                         paddingRight:
-                                                                            "15px",
+                                                                            '15px',
                                                                         fontStyle:
-                                                                            "italic",
+                                                                            'italic',
                                                                         opacity:
-                                                                            "50%",
+                                                                            '50%',
                                                                         fontSize:
-                                                                            "18px",
+                                                                            '18px',
                                                                     }}
                                                                 >
                                                                     <h5>
@@ -308,7 +308,7 @@ const CartScreen = () => {
                                                 <td colSpan="5">
                                                     <h2
                                                         style={{
-                                                            textAlign: "center",
+                                                            textAlign: 'center',
                                                         }}
                                                     >
                                                         Không có sản phẩm nào
@@ -361,18 +361,18 @@ const CartScreen = () => {
                                     <div className="proceed-checkout">
                                         <ul>
                                             <li className="subtotal">
-                                                Tạm tính({" "}
+                                                Tạm tính({' '}
                                                 {proCart.reduce(
                                                     (a, c) => a + c.quantity,
                                                     0
-                                                )}{" "}
-                                                Sản Phẩm ){" "}
+                                                )}{' '}
+                                                Sản Phẩm ){' '}
                                                 <span>
                                                     {formatVND(totalCart)}
                                                 </span>
                                             </li>
                                             <li className="cart-total">
-                                                Tổng tiền{" "}
+                                                Tổng tiền{' '}
                                                 <span>
                                                     {formatVND(totalCart)}
                                                 </span>

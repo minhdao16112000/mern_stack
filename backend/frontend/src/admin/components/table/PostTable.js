@@ -1,10 +1,10 @@
-import moment from "moment";
-import React, { useEffect, useState } from "react";
-import Pagination from "react-js-pagination";
-import { useDispatch, useSelector } from "react-redux";
-import { Link, useRouteMatch } from "react-router-dom";
-import { activePosts } from "../../../redux/actions/postActions";
-import "./style.scss";
+import moment from 'moment';
+import React, { useEffect, useState } from 'react';
+import Pagination from 'react-js-pagination';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useRouteMatch } from 'react-router-dom';
+import { activePosts } from '../../../redux/actions/postActions';
+import './style.scss';
 
 const PostTable = (props) => {
     const list = props.list;
@@ -89,7 +89,7 @@ const PostTable = (props) => {
                                         <th>
                                             <h6>Người Cập Nhật</h6>
                                         </th>
-                                        {url === "/admin/posts/trash" ? (
+                                        {url === '/admin/posts/trash' ? (
                                             <th>
                                                 <h6>Thời Điểm Tạo</h6>
                                             </th>
@@ -141,7 +141,7 @@ const PostTable = (props) => {
                                                     </td>
                                                     <td className="min-width th-admin">
                                                         <img
-                                                            src={`http://localhost:5000/posts/${value.image}`}
+                                                            src={`https://shopfashi.herokuapp.com/posts/${value.image}`}
                                                             alt=""
                                                         />
                                                     </td>
@@ -155,7 +155,7 @@ const PostTable = (props) => {
                                                             {value.summary.substring(
                                                                 0,
                                                                 50
-                                                            ) + "..."}
+                                                            ) + '...'}
                                                         </p>
                                                     </td>
                                                     <td className="min-width">
@@ -163,7 +163,7 @@ const PostTable = (props) => {
                                                             {value.content.substring(
                                                                 0,
                                                                 100
-                                                            ) + "..."}
+                                                            ) + '...'}
                                                         </p>
                                                     </td>
                                                     <td className="min-width">
@@ -177,7 +177,7 @@ const PostTable = (props) => {
                                                             <td>
                                                                 <div className="action">
                                                                     {value.status ===
-                                                                    "1" ? (
+                                                                    '1' ? (
                                                                         <button
                                                                             className="text-success"
                                                                             onClick={() =>
@@ -225,7 +225,7 @@ const PostTable = (props) => {
                                                                     )
                                                                         .utc()
                                                                         .format(
-                                                                            "DD-MM-YYYY HH:ss"
+                                                                            'DD-MM-YYYY HH:ss'
                                                                         )}
                                                                 </p>
                                                             </td>

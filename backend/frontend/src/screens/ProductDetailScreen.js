@@ -228,7 +228,7 @@ const ProductDetailScreen = () => {
                                             {product.image ? (
                                                 <img
                                                     className="product-big-img"
-                                                    src={`http://localhost:5000/products/${
+                                                    src={`https://shopfashi.herokuapp.com/products/${
                                                         product.image.split(
                                                             ','
                                                         )[count]
@@ -287,7 +287,7 @@ const ProductDetailScreen = () => {
                                                                 }
                                                             >
                                                                 <img
-                                                                    src={`http://localhost:5000/products/${value}`}
+                                                                    src={`https://shopfashi.herokuapp.com/products/${value}`}
                                                                     alt=""
                                                                 />
                                                             </div>

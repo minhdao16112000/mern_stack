@@ -126,7 +126,7 @@ const BlogsScreen = () => {
                                                     >
                                                         <div className="rb-pic">
                                                             <img
-                                                                src={`http://localhost:5000/posts/${value.image}`}
+                                                                src={`https://shopfashi.herokuapp.com/posts/${value.image}`}
                                                                 alt=""
                                                             />
                                                         </div>
@@ -187,7 +187,7 @@ const BlogsScreen = () => {
                                                     <div className="blog-item">
                                                         <div className="bi-pic">
                                                             <img
-                                                                src={`http://localhost:5000/posts/${value.image}`}
+                                                                src={`https://shopfashi.herokuapp.com/posts/${value.image}`}
                                                                 alt=""
                                                             />
                                                         </div>

@@ -211,7 +211,7 @@ const Header = () => {
                                                                     >
                                                                         <td className="si-pic">
                                                                             <img
-                                                                                src={`http://localhost:5000/products/${checkImage(
+                                                                                src={`https://shopfashi.herokuapp.com/products/${checkImage(
                                                                                     key
                                                                                 )}`}
                                                                                 alt=""

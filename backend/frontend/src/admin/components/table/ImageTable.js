@@ -1,10 +1,10 @@
-import moment from "moment";
-import React, { useEffect, useState } from "react";
-import Pagination from "react-js-pagination";
-import { useDispatch, useSelector } from "react-redux";
-import { Link, useRouteMatch } from "react-router-dom";
-import { activeImages } from "../../../redux/actions/imageActions";
-import "./style.scss";
+import moment from 'moment';
+import React, { useEffect, useState } from 'react';
+import Pagination from 'react-js-pagination';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useRouteMatch } from 'react-router-dom';
+import { activeImages } from '../../../redux/actions/imageActions';
+import './style.scss';
 
 const ImageTable = (props) => {
     const list = props.list;
@@ -85,7 +85,7 @@ const ImageTable = (props) => {
                                         <th>
                                             <h6>Vị Trí Hiển Thị</h6>
                                         </th>
-                                        {url === "/admin/images/trash" ? (
+                                        {url === '/admin/images/trash' ? (
                                             <th>
                                                 <h6>Thời Điểm Xóa</h6>
                                             </th>
@@ -137,7 +137,7 @@ const ImageTable = (props) => {
                                                     </td>
                                                     <td className="min-width th-admin">
                                                         <img
-                                                            src={`http://localhost:5000/images/${value.image}`}
+                                                            src={`https://shopfashi.herokuapp.com/images/${value.image}`}
                                                             alt=""
                                                         />
                                                     </td>
@@ -151,7 +151,7 @@ const ImageTable = (props) => {
                                                             {value.content.substring(
                                                                 0,
                                                                 50
-                                                            ) + "..."}
+                                                            ) + '...'}
                                                         </p>
                                                     </td>
                                                     <td className="min-width">
@@ -165,7 +165,7 @@ const ImageTable = (props) => {
                                                             <td>
                                                                 <div className="action">
                                                                     {value.status ===
-                                                                    "1" ? (
+                                                                    '1' ? (
                                                                         <button
                                                                             className="text-success"
                                                                             onClick={() =>
@@ -213,7 +213,7 @@ const ImageTable = (props) => {
                                                                     )
                                                                         .utc()
                                                                         .format(
-                                                                            "DD-MM-YYYY HH:ss"
+                                                                            'DD-MM-YYYY HH:ss'
                                                                         )}
                                                                 </p>
                                                             </td>

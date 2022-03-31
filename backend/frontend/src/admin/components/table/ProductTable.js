@@ -1,10 +1,10 @@
-import moment from "moment";
-import React, { useEffect, useState } from "react";
-import Pagination from "react-js-pagination";
-import { useDispatch, useSelector } from "react-redux";
-import { Link, useRouteMatch } from "react-router-dom";
-import { activeProducts } from "../../../redux/actions/productActions";
-import "./style.scss";
+import moment from 'moment';
+import React, { useEffect, useState } from 'react';
+import Pagination from 'react-js-pagination';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useRouteMatch } from 'react-router-dom';
+import { activeProducts } from '../../../redux/actions/productActions';
+import './style.scss';
 
 const ProductTable = (props) => {
     const list = props.list;
@@ -30,9 +30,9 @@ const ProductTable = (props) => {
     };
 
     const formatVND = (value) => {
-        return new Intl.NumberFormat("vi-VN", {
-            style: "currency",
-            currency: "VND",
+        return new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND',
         }).format(value);
     };
 
@@ -76,7 +76,7 @@ const ProductTable = (props) => {
     const checkImage = (key) => {
         let Arr = [];
         currentTodos.forEach((value) => {
-            const imageArr = value.image.split(",");
+            const imageArr = value.image.split(',');
             Arr.push(imageArr[0]);
             // for(let i = 0; i< imageArr.length; i++){
             //     console.log(imageArr[i])
@@ -135,7 +135,7 @@ const ProductTable = (props) => {
                                         <th>
                                             <h6>Giá Khuyến Mãi</h6>
                                         </th>
-                                        {url === "/admin/products/trash" ? (
+                                        {url === '/admin/products/trash' ? (
                                             <th>
                                                 <h6>Thời Điểm Xóa</h6>
                                             </th>
@@ -181,7 +181,7 @@ const ProductTable = (props) => {
                                                     </td>
                                                     <td className="min-width th-admin">
                                                         <img
-                                                            src={`http://localhost:5000/products/${checkImage(
+                                                            src={`https://shopfashi.herokuapp.com/products/${checkImage(
                                                                 key
                                                             )}`}
                                                             alt=""
@@ -219,7 +219,7 @@ const ProductTable = (props) => {
                                                             <td>
                                                                 <div className="action">
                                                                     {value.status ===
-                                                                    "1" ? (
+                                                                    '1' ? (
                                                                         <button
                                                                             className="text-success"
                                                                             onClick={() =>
@@ -267,7 +267,7 @@ const ProductTable = (props) => {
                                                                     )
                                                                         .utc()
                                                                         .format(
-                                                                            "DD-MM-YYYY HH:ss"
+                                                                            'DD-MM-YYYY HH:ss'
                                                                         )}
                                                                 </p>
                                                             </td>
