@@ -61,7 +61,7 @@ class UserController {
                         address: newUser.address,
                     },
                     message: {
-                        message: 'Đổi mật khẩu thành công !',
+                        message: 'Đăng ký thành công !',
                     },
                 })
             )
