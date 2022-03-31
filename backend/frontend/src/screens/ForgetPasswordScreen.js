@@ -1,22 +1,23 @@
-import { FastField, Form, Formik } from "formik";
-import React, { useState } from "react";
-import * as Yup from "yup";
-import { useDispatch } from "react-redux";
-import InputField from "../components/InputField/InputField";
-import { forget } from "../redux/actions/userActions";
-import MessageBox from "../components/Box/MessageBox";
+import { FastField, Form, Formik } from 'formik';
+import React, { useState } from 'react';
+import * as Yup from 'yup';
+import { useDispatch } from 'react-redux';
+import InputField from '../components/InputField/InputField';
+import { forget } from '../redux/actions/userActions';
+import MessageBox from '../components/Box/MessageBox';
+import { Link } from 'react-router-dom';
 
 const ForgetPasswordScreen = () => {
     const dispatch = useDispatch();
     const [confirm, setConfirm] = useState(false);
     const initialValues = {
-        email: "",
+        email: '',
     };
 
     const validationSchema = Yup.object().shape({
         email: Yup.string()
-            .email("Email không hợp lệ")
-            .required("Bạn phải nhập email"),
+            .email('Email không hợp lệ')
+            .required('Bạn phải nhập email'),
     });
 
     // useEffect(() => {
@@ -56,12 +57,12 @@ const ForgetPasswordScreen = () => {
                                                 />
                                                 <div className="group-input gi-check">
                                                     <div className="gi-more">
-                                                        <a
-                                                            href="/dang-nhap"
+                                                        <Link
+                                                            to="/dang-nhap"
                                                             className="forget-pass"
                                                         >
                                                             Đăng Nhập
-                                                        </a>
+                                                        </Link>
                                                     </div>
                                                 </div>
                                                 <button

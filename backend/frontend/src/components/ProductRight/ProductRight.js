@@ -211,7 +211,7 @@ const ProductRight = (props) => {
                                 }}
                             >
                                 <h2>{img[0].title}</h2>
-                                <a href="/category/nam">Xem thêm</a>
+                                <Link to="/category/nam">Xem thêm</Link>
                             </div>
                         ) : (
                             <></>

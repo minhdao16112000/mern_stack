@@ -1,13 +1,14 @@
-import { FastField, Form, Formik } from "formik";
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import * as Yup from "yup";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import InputField from "../components/InputField/InputField";
-import TextareaField from "../components/InputField/TextareaField";
-import { createContact } from "../redux/actions/contactAction";
-import MessageBox from "../components/Box/MessageBox";
+import { FastField, Form, Formik } from 'formik';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import * as Yup from 'yup';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import InputField from '../components/InputField/InputField';
+import TextareaField from '../components/InputField/TextareaField';
+import { createContact } from '../redux/actions/contactAction';
+import MessageBox from '../components/Box/MessageBox';
+import { Link } from 'react-router-dom';
 
 const ContactScreen = () => {
     const dispatch = useDispatch();
@@ -22,8 +23,8 @@ const ContactScreen = () => {
     };
 
     const notify = () => {
-        toast.error("Vui lòng nhập nội dung cần gửi ", {
-            position: "top-right",
+        toast.error('Vui lòng nhập nội dung cần gửi ', {
+            position: 'top-right',
             autoClose: 5000,
             hideProgressBar: false,
             closeOnClick: true,
@@ -33,26 +34,26 @@ const ContactScreen = () => {
         });
     };
 
-    const initialValues = localStorage.getItem("userInfo")
+    const initialValues = localStorage.getItem('userInfo')
         ? {
               name:
-                  JSON.parse(localStorage.getItem("userInfo")).firstName +
-                  " " +
-                  JSON.parse(localStorage.getItem("userInfo")).lastName,
-              email: JSON.parse(localStorage.getItem("userInfo")).email,
-              message: "",
+                  JSON.parse(localStorage.getItem('userInfo')).firstName +
+                  ' ' +
+                  JSON.parse(localStorage.getItem('userInfo')).lastName,
+              email: JSON.parse(localStorage.getItem('userInfo')).email,
+              message: '',
           }
         : {
-              name: "",
-              email: "",
-              message: "",
+              name: '',
+              email: '',
+              message: '',
           };
 
     const validationSchema = Yup.object().shape({
-        name: Yup.string().required("Bạn phải nhập tên"),
+        name: Yup.string().required('Bạn phải nhập tên'),
         email: Yup.string()
-            .email("Email không hợp lệ")
-            .required("Bạn phải nhập Email"),
+            .email('Email không hợp lệ')
+            .required('Bạn phải nhập Email'),
     });
 
     return (
@@ -83,10 +84,10 @@ const ContactScreen = () => {
                                 <div className="row">
                                     <div className="col-lg-12">
                                         <div className="breadcrumb-text">
-                                            <a href="/">
-                                                <i className="fa fa-home"></i>{" "}
+                                            <Link to="/">
+                                                <i className="fa fa-home"></i>{' '}
                                                 Trang Chủ
-                                            </a>
+                                            </Link>
                                             <span>Liên Hệ</span>
                                         </div>
                                     </div>

@@ -59,10 +59,10 @@ const BlogDetailScreen = (props) => {
                         <div className="row">
                             <div className="col-lg-12">
                                 <div className="breadcrumb-text product-more">
-                                    <a href="/">
+                                    <Link to="/">
                                         <i className="fa fa-home"></i> Trang Chủ
-                                    </a>
-                                    <a href="/tin-tuc">Tin Tức</a>
+                                    </Link>
+                                    <Link to="/tin-tuc">Tin Tức</Link>
                                     <span>Bài Viết</span>
                                 </div>
                             </div>

@@ -90,6 +90,11 @@ const Routers = () => {
                     path="/change-password/:id"
                     component={ChangePasswordScreen}
                 />
+                <GuardedRoute
+                    path="/change-password"
+                    component={ChangePasswordScreen}
+                    meta={{ auth: 'no-admin' }}
+                />
                 <GuardedRoute path="/lien-he" component={ContactScreen} />
                 <GuardedRoute path="/tim-kiem" component={SearchScreen} />
                 <GuardedRoute path="/page/:slug" component={PagesScreen} />
@@ -107,11 +112,6 @@ const Routers = () => {
                 <GuardedRoute
                     path="/thong-tin-tai-khoan"
                     component={InfoUserScreen}
-                    meta={{ auth: 'no-admin' }}
-                />
-                <GuardedRoute
-                    path="/change-password"
-                    component={ChangePasswordScreen}
                     meta={{ auth: 'no-admin' }}
                 />
                 <GuardedRoute

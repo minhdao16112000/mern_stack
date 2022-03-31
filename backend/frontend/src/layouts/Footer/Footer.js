@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { getPages } from "../../redux/actions/pageActions";
+import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { getPages } from '../../redux/actions/pageActions';
 
 const Footer = () => {
     const dispatch = useDispatch();
@@ -18,17 +18,17 @@ const Footer = () => {
                     <div className="col-lg-3">
                         <div className="footer-left">
                             <div className="footer-logo">
-                                <a href="/">
+                                <Link to="/">
                                     <img
                                         src="assets/img/footer-logo.png"
                                         alt=""
                                     />
-                                </a>
+                                </Link>
                             </div>
                             <ul>
                                 <li>
                                     Địa chỉ: Tầng 16, Landmark 81, TP.HCM, Việt
-                                    Nam{" "}
+                                    Nam{' '}
                                 </li>
                                 <li>SĐT: +84 386256124</li>
                                 <li>Email: bluroller161@gmail.com</li>
@@ -121,11 +121,11 @@ const Footer = () => {
                                 <script>
                                     document.write(new Date().getFullYear());
                                 </script>
-                                All rights reserved | This template is made with{" "}
+                                All rights reserved | This template is made with{' '}
                                 <i
                                     className="fa fa-heart-o"
                                     aria-hidden="true"
-                                ></i>{" "}
+                                ></i>{' '}
                                 by
                                 <a href="https://therichpost.com"> MinhVan</a>
                             </div>

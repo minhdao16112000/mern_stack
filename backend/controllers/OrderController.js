@@ -78,7 +78,7 @@ class OrderController {
         content += `
             <div>
                 <p>Chào ${req.body.order.shippingAddress.lastName}</p>
-                <p>Bạn đã đặt một đơn hàng mới từ cửa hàng <a href="http://localhost:3000/">Fashi</a> của chúng tôi !</p>
+                <p>Bạn đã đặt một đơn hàng mới từ cửa hàng <a href="https://shopfashi.herokuapp.com/">Fashi</a> của chúng tôi !</p>
                 <h3 style="text-align: center; font-weight: 700; font-size: 20px">Thông tin đơn hàng</h3>
                 <div style="text-align: center;">
                     <table style="border: 1px solid black;">
@@ -119,7 +119,7 @@ class OrderController {
                 </div>
                 <p style="font-size: 17px; margin-top: 20px;">Để biết thêm thông tin chi tiết và theo dõi trạng thái đơn hàng,
                     vui lòng nhấn vào
-                    <a href="http://localhost:3000/order/${
+                    <a href="https://shopfashi.herokuapp.com/order/${
                         req.body.order._id
                     }"><b>đây</b></a></p>
             </div>

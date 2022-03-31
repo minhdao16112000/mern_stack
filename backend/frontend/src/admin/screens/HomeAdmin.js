@@ -1,28 +1,28 @@
-import moment from "moment";
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import moment from 'moment';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
     Link,
     Route,
     Switch,
     useHistory,
     useRouteMatch,
-} from "react-router-dom";
-import { ScrollToTop } from "../../components/Scroll/ScrollToTop";
-import { activeContacts, listContact } from "../../redux/actions/contactAction";
-import Content from "../layouts/Content/Content";
-import Footer from "../layouts/Footer/Footer";
-import Category from "./CategoriesScreen";
-import Color from "./ColorsScreen";
-import Contact from "./ContactsScreen";
-import Image from "./ImagesScreen";
-import Order from "./OrdersScreen";
-import Page from "./PagesScreen";
-import Post from "./PostsScreen";
-import Product from "./ProductsScreen";
-import Size from "./SizesScreen";
-import Topic from "./TopicsScreen";
-import User from "./UsersScreen";
+} from 'react-router-dom';
+import { ScrollToTop } from '../../components/Scroll/ScrollToTop';
+import { activeContacts, listContact } from '../../redux/actions/contactAction';
+import Content from '../layouts/Content/Content';
+import Footer from '../layouts/Footer/Footer';
+import Category from './CategoriesScreen';
+import Color from './ColorsScreen';
+import Contact from './ContactsScreen';
+import Image from './ImagesScreen';
+import Order from './OrdersScreen';
+import Page from './PagesScreen';
+import Post from './PostsScreen';
+import Product from './ProductsScreen';
+import Size from './SizesScreen';
+import Topic from './TopicsScreen';
+import User from './UsersScreen';
 
 const HomeAdmin = () => {
     const dispatch = useDispatch();
@@ -35,45 +35,45 @@ const HomeAdmin = () => {
     let history = useHistory();
     const animateSidabar = () => {
         const sidebarNavWrapper = document.querySelector(
-            ".sidebar-nav-wrapper"
+            '.sidebar-nav-wrapper'
         );
-        const mainWrapper = document.querySelector(".main-wrapper");
-        const menuToggleButton = document.querySelector("#menu-toggle");
-        const menuToggleButtonIcon = document.querySelector("#menu-toggle i");
+        const mainWrapper = document.querySelector('.main-wrapper');
+        const menuToggleButton = document.querySelector('#menu-toggle');
+        const menuToggleButtonIcon = document.querySelector('#menu-toggle i');
 
-        menuToggleButton.addEventListener("click", () => {
-            sidebarNavWrapper.classList.toggle("active");
-            mainWrapper.classList.toggle("active");
+        menuToggleButton.addEventListener('click', () => {
+            sidebarNavWrapper.classList.toggle('active');
+            mainWrapper.classList.toggle('active');
 
             if (document.body.clientWidth > 1200) {
                 if (
-                    menuToggleButtonIcon.classList.contains("lni-chevron-left")
+                    menuToggleButtonIcon.classList.contains('lni-chevron-left')
                 ) {
-                    menuToggleButtonIcon.classList.remove("lni-chevron-left");
-                    menuToggleButtonIcon.classList.add("lni-menu");
+                    menuToggleButtonIcon.classList.remove('lni-chevron-left');
+                    menuToggleButtonIcon.classList.add('lni-menu');
                 } else {
-                    menuToggleButtonIcon.classList.remove("lni-menu");
-                    menuToggleButtonIcon.classList.add("lni-chevron-left");
+                    menuToggleButtonIcon.classList.remove('lni-menu');
+                    menuToggleButtonIcon.classList.add('lni-chevron-left');
                 }
             } else {
                 if (
-                    menuToggleButtonIcon.classList.contains("lni-chevron-left")
+                    menuToggleButtonIcon.classList.contains('lni-chevron-left')
                 ) {
-                    menuToggleButtonIcon.classList.remove("lni-chevron-left");
-                    menuToggleButtonIcon.classList.add("lni-menu");
+                    menuToggleButtonIcon.classList.remove('lni-chevron-left');
+                    menuToggleButtonIcon.classList.add('lni-menu');
                 }
             }
         });
     };
 
     function handleClick() {
-        history.push("/");
+        history.push('/');
     }
 
     useEffect(() => {
         dispatch(listContact());
         if (!window.location.hash) {
-            window.location = window.location + "#admin";
+            window.location = window.location + '#admin';
         }
         animateSidabar();
     }, [dispatch]);
@@ -83,24 +83,27 @@ const HomeAdmin = () => {
                 {/* -- ======== sidebar-nav start =========== -- */}
                 <aside className="sidebar-nav-wrapper">
                     <div className="navbar-logo">
-                        <a href="/admin" onClick={() => history.push("/admin")}>
+                        <Link
+                            to="/admin"
+                            onClick={() => history.push('/admin')}
+                        >
                             <img
                                 src="admin/assets/images/logo/logo.svg"
                                 alt="logo"
                             />
-                        </a>
+                        </Link>
                     </div>
                     <nav className="sidebar-nav">
                         <ul>
                             <li className="nav-item__admin">
-                                <a href="/" onClick={handleClick}>
+                                <Link to="/" onClick={handleClick}>
                                     <span className="icon">
                                         <i className="lni lni-home"></i>
                                     </span>
                                     <span className="text">
                                         Trang chủ Fashi
                                     </span>
-                                </a>
+                                </Link>
                             </li>
                             <li className="nav-item__admin nav-item-has-children">
                                 <a
@@ -123,21 +126,21 @@ const HomeAdmin = () => {
                                 >
                                     <li>
                                         <Link to="/admin/products">
-                                            <i className="lni lni-arrow-right"></i>{" "}
+                                            <i className="lni lni-arrow-right"></i>{' '}
                                             Quản Lý Sản Phẩm
                                         </Link>
                                     </li>
 
                                     <li>
                                         <Link to="/admin/colors">
-                                            <i className="lni lni-arrow-right"></i>{" "}
+                                            <i className="lni lni-arrow-right"></i>{' '}
                                             Quản Lý Màu
                                         </Link>
                                     </li>
 
                                     <li>
                                         <Link to="/admin/sizes">
-                                            <i className="lni lni-arrow-right"></i>{" "}
+                                            <i className="lni lni-arrow-right"></i>{' '}
                                             Quản Lý Sizes
                                         </Link>
                                     </li>
@@ -165,7 +168,7 @@ const HomeAdmin = () => {
                                 >
                                     <li>
                                         <Link to="/admin/categories">
-                                            <i className="lni lni-arrow-right"></i>{" "}
+                                            <i className="lni lni-arrow-right"></i>{' '}
                                             Quản Lý Danh Mục
                                         </Link>
                                     </li>
@@ -193,13 +196,13 @@ const HomeAdmin = () => {
                                 >
                                     <li>
                                         <Link to="/admin/topics">
-                                            <i className="lni lni-arrow-right"></i>{" "}
+                                            <i className="lni lni-arrow-right"></i>{' '}
                                             Quản Lý Chủ Đề
                                         </Link>
                                     </li>
                                     <li>
                                         <Link to="/admin/posts">
-                                            <i className="lni lni-arrow-right"></i>{" "}
+                                            <i className="lni lni-arrow-right"></i>{' '}
                                             Quản Lý Tin Tức
                                         </Link>
                                     </li>
@@ -227,7 +230,7 @@ const HomeAdmin = () => {
                                 >
                                     <li>
                                         <Link to="/admin/images">
-                                            <i className="lni lni-arrow-right"></i>{" "}
+                                            <i className="lni lni-arrow-right"></i>{' '}
                                             Quản Lý Hình Ảnh
                                         </Link>
                                     </li>
@@ -255,7 +258,7 @@ const HomeAdmin = () => {
                                 >
                                     <li>
                                         <Link to="/admin/users">
-                                            <i className="lni lni-arrow-right"></i>{" "}
+                                            <i className="lni lni-arrow-right"></i>{' '}
                                             Quản Lý Tài Khoản
                                         </Link>
                                     </li>
@@ -282,7 +285,7 @@ const HomeAdmin = () => {
                                 >
                                     <li>
                                         <Link to="/admin/orders">
-                                            <i className="lni lni-arrow-right"></i>{" "}
+                                            <i className="lni lni-arrow-right"></i>{' '}
                                             Quản Lý Đơn Hàng
                                         </Link>
                                     </li>
@@ -309,7 +312,7 @@ const HomeAdmin = () => {
                                 >
                                     <li>
                                         <Link to="/admin/contacts">
-                                            <i className="lni lni-arrow-right"></i>{" "}
+                                            <i className="lni lni-arrow-right"></i>{' '}
                                             Quản Lý Liên Hệ
                                         </Link>
                                     </li>
@@ -336,7 +339,7 @@ const HomeAdmin = () => {
                                 >
                                     <li>
                                         <Link to="/admin/pages">
-                                            <i className="lni lni-arrow-right"></i>{" "}
+                                            <i className="lni lni-arrow-right"></i>{' '}
                                             Quản Lý Trang
                                         </Link>
                                     </li>
@@ -361,7 +364,7 @@ const HomeAdmin = () => {
                                                 id="menu-toggle"
                                                 className="main-btn primary-btn__admin btn-hover"
                                             >
-                                                <i className="lni lni-chevron-left me-2"></i>{" "}
+                                                <i className="lni lni-chevron-left me-2"></i>{' '}
                                                 Menu
                                             </button>
                                         </div>
@@ -483,7 +486,7 @@ const HomeAdmin = () => {
                                                                             )
                                                                                 .utc()
                                                                                 .format(
-                                                                                    "MMM DD, YYYY hh:ss"
+                                                                                    'MMM DD, YYYY hh:ss'
                                                                                 )}
                                                                         </span>
                                                                     </div>
@@ -496,7 +499,7 @@ const HomeAdmin = () => {
                                                         <div className="content">
                                                             <p>
                                                                 Thùng Thư Rỗng
-                                                            </p>{" "}
+                                                            </p>{' '}
                                                         </div>
                                                     </li>
                                                 )}
@@ -523,14 +526,14 @@ const HomeAdmin = () => {
                                                     <div className="info">
                                                         <h6>
                                                             {localStorage.getItem(
-                                                                "userInfo"
+                                                                'userInfo'
                                                             )
                                                                 ? JSON.parse(
                                                                       localStorage.getItem(
-                                                                          "userInfo"
+                                                                          'userInfo'
                                                                       )
                                                                   ).lastName
-                                                                : "Admin"}
+                                                                : 'Admin'}
                                                         </h6>
                                                         <div className="image">
                                                             <img

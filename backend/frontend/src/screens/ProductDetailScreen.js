@@ -195,9 +195,9 @@ const ProductDetailScreen = () => {
                     <div className="row">
                         <div className="col-lg-12">
                             <div className="breadcrumb-text product-more">
-                                <a href="./home.html">
+                                <Link to="/">
                                     <i className="fa fa-home" /> Trang Chủ
-                                </a>
+                                </Link>
                                 <Link to={url.split('/product')[0]}>
                                     Cửa Hàng
                                 </Link>

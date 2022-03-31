@@ -1,10 +1,11 @@
-import React from "react";
-import { useHistory } from "react-router-dom";
-import "./styles/infoUser.scss";
+import React from 'react';
+import { useDispatch } from 'react-redux';
+import { forget } from '../redux/actions/userActions';
+import './styles/infoUser.scss';
 
 const InfoUserScreen = () => {
-    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-    const history = useHistory();
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+    const dispatch = useDispatch();
     return (
         <section className="tab-components info-list">
             <div className="container-fluid">
@@ -15,10 +16,10 @@ const InfoUserScreen = () => {
                             <div>
                                 <h4
                                     style={{
-                                        fontSize: "25px",
-                                        fontWeight: "700",
-                                        color: "#595959",
-                                        marginBottom: "5px",
+                                        fontSize: '25px',
+                                        fontWeight: '700',
+                                        color: '#595959',
+                                        marginBottom: '5px',
                                     }}
                                 >
                                     <i className="fas fa-info"></i> Thông Tin
@@ -42,7 +43,7 @@ const InfoUserScreen = () => {
                                                                 <strong>
                                                                     {
                                                                         userInfo.firstName
-                                                                    }{" "}
+                                                                    }{' '}
                                                                     {
                                                                         userInfo.lastName
                                                                     }
@@ -119,8 +120,10 @@ const InfoUserScreen = () => {
                                                             <button
                                                                 className="main-btn rounded-full btn-hover change_password"
                                                                 onClick={() =>
-                                                                    history.push(
-                                                                        "/change-password"
+                                                                    dispatch(
+                                                                        forget(
+                                                                            userInfo.email
+                                                                        )
                                                                     )
                                                                 }
                                                             >

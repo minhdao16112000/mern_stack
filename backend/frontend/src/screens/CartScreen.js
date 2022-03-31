@@ -124,9 +124,9 @@ const CartScreen = () => {
                     <div className="row">
                         <div className="col-lg-12">
                             <div className="breadcrumb-text product-more">
-                                <a href="/">
+                                <Link to="/">
                                     <i className="fa fa-home"></i> Trang Chủ
-                                </a>
+                                </Link>
                                 <span>Giỏ Hàng</span>
                             </div>
                         </div>
@@ -323,12 +323,12 @@ const CartScreen = () => {
                             <div className="row">
                                 <div className="col-lg-4">
                                     <div className="cart-buttons">
-                                        <a
-                                            href="/#"
+                                        <Link
+                                            to="/"
                                             className="primary-btn continue-shop"
                                         >
                                             Tiếp Tục Mua Sắm
-                                        </a>
+                                        </Link>
                                         <span
                                             className="primary-btn up-cart"
                                             onClick={() =>

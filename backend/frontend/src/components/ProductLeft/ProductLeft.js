@@ -119,7 +119,7 @@ const ProductLeft = (props) => {
                                 }}
                             >
                                 <h2>{img[0].title}</h2>
-                                <a href="/category/nu">Xem thêm</a>
+                                <Link to="/category/nu">Xem thêm</Link>
                             </div>
                         </div>
                     ) : (
