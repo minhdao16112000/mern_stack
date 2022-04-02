@@ -1,14 +1,15 @@
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Link, useRouteMatch } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useRouteMatch } from 'react-router-dom';
 import {
     decreaseQuantity,
     deleteAllCart,
     deleteCart,
     increaseQuantity,
-} from "../redux/actions/cartActions";
-import { getColors, getSizes } from "../redux/actions/productActions";
+} from '../redux/actions/cartActions';
+import { getColors, getSizes } from '../redux/actions/productActions';
+import './styles/shoppingCart.scss';
 
 const CartScreen = () => {
     const dispatch = useDispatch();
@@ -22,7 +23,7 @@ const CartScreen = () => {
 
     const checkSlug = (id) => {
         var catArr = [];
-        var catslug = "";
+        var catslug = '';
         if (lstCate.Categories) {
             lstCate.Categories.forEach((value) => {
                 if (id.includes(value._id)) {
@@ -30,7 +31,7 @@ const CartScreen = () => {
                 }
             });
             catArr.forEach((value) => {
-                catslug += value + "/";
+                catslug += value + '/';
             });
         }
         return catslug.slice(0, -1);
@@ -87,16 +88,16 @@ const CartScreen = () => {
     const checkImage = (key) => {
         let Arr = [];
         proCart.forEach((value) => {
-            const imageArr = value.image.split(",");
+            const imageArr = value.image.split(',');
             Arr.push(imageArr[0]);
         });
         return Arr[key];
     };
 
     const formatVND = (value) => {
-        return new Intl.NumberFormat("vi-VN", {
-            style: "currency",
-            currency: "VND",
+        return new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND',
         }).format(value);
     };
 
@@ -191,13 +192,13 @@ const CartScreen = () => {
                                                                 className="cart-size first-row"
                                                                 style={{
                                                                     paddingLeft:
-                                                                        "20px",
+                                                                        '20px',
                                                                     paddingRight:
-                                                                        "15px",
+                                                                        '15px',
                                                                     fontStyle:
-                                                                        "italic",
+                                                                        'italic',
                                                                     opacity:
-                                                                        "50%",
+                                                                        '50%',
                                                                 }}
                                                             >
                                                                 <h5>
@@ -219,21 +220,21 @@ const CartScreen = () => {
                                                                             ),
                                                                     }}
                                                                 >
-                                                                    {" "}
+                                                                    {' '}
                                                                 </div>
                                                             ) : (
                                                                 <div
                                                                     style={{
                                                                         paddingLeft:
-                                                                            "15px",
+                                                                            '15px',
                                                                         paddingRight:
-                                                                            "15px",
+                                                                            '15px',
                                                                         fontStyle:
-                                                                            "italic",
+                                                                            'italic',
                                                                         opacity:
-                                                                            "50%",
+                                                                            '50%',
                                                                         fontSize:
-                                                                            "18px",
+                                                                            '18px',
                                                                     }}
                                                                 >
                                                                     <h5>
@@ -257,7 +258,7 @@ const CartScreen = () => {
                                                                                 item.quantity
                                                                             )
                                                                         }
-                                                                        className="dec qtybtn"
+                                                                        className="dec qtybutton"
                                                                     >
                                                                         -
                                                                     </span>
@@ -277,7 +278,7 @@ const CartScreen = () => {
                                                                                 item.quantity
                                                                             )
                                                                         }
-                                                                        className="inc qtybtn"
+                                                                        className="inc qtybutton"
                                                                     >
                                                                         +
                                                                     </span>
@@ -292,11 +293,11 @@ const CartScreen = () => {
                                                         </td>
                                                         <td className="close-td first-row">
                                                             <i
-                                                                onClick={() =>
-                                                                    handleDelate(
-                                                                        key
-                                                                    )
-                                                                }
+                                                                // onClick={() =>
+                                                                //     handleDelate(
+                                                                //         key
+                                                                //     )
+                                                                // }
                                                                 className="ti-close"
                                                             ></i>
                                                         </td>
@@ -308,7 +309,7 @@ const CartScreen = () => {
                                                 <td colSpan="5">
                                                     <h2
                                                         style={{
-                                                            textAlign: "center",
+                                                            textAlign: 'center',
                                                         }}
                                                     >
                                                         Không có sản phẩm nào
@@ -329,14 +330,14 @@ const CartScreen = () => {
                                         >
                                             Tiếp Tục Mua Sắm
                                         </a>
-                                        <span
+                                        <div
                                             className="primary-btn up-cart"
                                             onClick={() =>
                                                 window.location.reload()
                                             }
                                         >
                                             Cập Nhật Giỏ Hàng
-                                        </span>
+                                        </div>
                                     </div>
                                     <div className="discount-coupon">
                                         <h6>Mã Giảm Giá</h6>
@@ -361,18 +362,18 @@ const CartScreen = () => {
                                     <div className="proceed-checkout">
                                         <ul>
                                             <li className="subtotal">
-                                                Tạm tính({" "}
+                                                Tạm tính({' '}
                                                 {proCart.reduce(
                                                     (a, c) => a + c.quantity,
                                                     0
-                                                )}{" "}
-                                                Sản Phẩm ){" "}
+                                                )}{' '}
+                                                Sản Phẩm ){' '}
                                                 <span>
                                                     {formatVND(totalCart)}
                                                 </span>
                                             </li>
                                             <li className="cart-total">
-                                                Tổng tiền{" "}
+                                                Tổng tiền{' '}
                                                 <span>
                                                     {formatVND(totalCart)}
                                                 </span>
