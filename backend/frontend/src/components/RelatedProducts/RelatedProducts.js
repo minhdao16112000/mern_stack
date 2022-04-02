@@ -38,19 +38,19 @@ const RelatedProducts = (props) => {
         return catArr.toString();
     };
 
-    const checkSlug = (id) => {
-        var catArr = [];
-        var catSlug = '';
-        listCate.forEach((value) => {
-            if (id.includes(value._id)) {
-                catArr.push(value.slug);
-            }
-        });
-        catArr.forEach((value) => {
-            catSlug += value + '/';
-        });
-        return catSlug.slice(0, -1);
-    };
+    // const checkSlug = (id) => {
+    //     var catArr = [];
+    //     var catSlug = '';
+    //     listCate.forEach((value) => {
+    //         if (id.includes(value._id)) {
+    //             catArr.push(value.slug);
+    //         }
+    //     });
+    //     catArr.forEach((value) => {
+    //         catSlug += value + '/';
+    //     });
+    //     return catSlug.slice(0, -1);
+    // };
 
     const checkImage = (key) => {
         let Arr = [];
@@ -83,11 +83,7 @@ const RelatedProducts = (props) => {
                         relatedPro.map((value, key) => {
                             return (
                                 <div key={key} className="col-lg-3 col-sm-6">
-                                    <Link
-                                        to={`/category/${checkSlug(
-                                            value.categoryId
-                                        )}/product/${value._id}`}
-                                    >
+                                    <Link to={`/product/${value.slug}`}>
                                         <div className="product-item">
                                             <div className="pi-pic">
                                                 <img

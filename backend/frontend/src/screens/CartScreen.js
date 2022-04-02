@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useRouteMatch } from 'react-router-dom';
+import { Link, useHistory, useRouteMatch } from 'react-router-dom';
 import {
     decreaseQuantity,
     deleteAllCart,
@@ -20,44 +20,56 @@ const CartScreen = () => {
     const [qtyPro, setQtyPro] = useState();
     let { url } = useRouteMatch();
 
-    const checkSlug = (id) => {
-        var catArr = [];
-        var catslug = '';
-        if (lstCate.Categories) {
-            lstCate.Categories.forEach((value) => {
-                if (id.includes(value._id)) {
-                    catArr.push(value.slug);
-                }
-            });
-            catArr.forEach((value) => {
-                catslug += value + '/';
-            });
+    // const checkSlug = (id) => {
+    //     var catArr = [];
+    //     var catslug = '';
+    //     if (lstCate.Categories) {
+    //         lstCate.Categories.forEach((value) => {
+    //             if (id.includes(value._id)) {
+    //                 catArr.push(value.slug);
+    //             }
+    //         });
+    //         catArr.forEach((value) => {
+    //             catslug += value + '/';
+    //         });
+    //     }
+    //     return catslug.slice(0, -1);
+    // };
+
+    const handleChangeQty = () => {
+        if (proCart.length !== 0) {
+            const total = proCart.reduce((prev, item) => {
+                return prev + item.price * item.quantity;
+            }, 0);
+            setTotalCart(total);
         }
-        return catslug.slice(0, -1);
     };
 
     const QtyUpdateIncr = (key, quantity) => {
         dispatch(increaseQuantity(key));
         setQtyPro(quantity);
+        handleChangeQty();
     };
 
-    const QtyUpdatedecr = (key, quantity) => {
+    const QtyUpdateDecr = (key, quantity) => {
         dispatch(decreaseQuantity(key));
         setQtyPro(quantity);
+        handleChangeQty();
     };
 
-    const handleDelate = (key) => {
+    const handleDelete = (key) => {
         dispatch(deleteCart(key));
-        window.location.reload();
-    };
-
-    const handleDetail = (key) => {
-        dispatch(deleteCart(key));
+        if (proCart.length !== 0) {
+            const total = proCart.reduce((prev, item) => {
+                return prev + item.price * item.quantity;
+            }, 0);
+            setTotalCart(total);
+        }
     };
 
     const deleteAll = () => {
         dispatch(deleteAllCart());
-        window.location.reload();
+        setTotalCart(0);
     };
 
     const checkColor = (id) => {
@@ -252,7 +264,7 @@ const CartScreen = () => {
                                                                 <div className="pro-qty">
                                                                     <span
                                                                         onClick={() =>
-                                                                            QtyUpdatedecr(
+                                                                            QtyUpdateDecr(
                                                                                 key,
                                                                                 item.quantity
                                                                             )
@@ -293,7 +305,7 @@ const CartScreen = () => {
                                                         <td className="close-td first-row">
                                                             <i
                                                                 onClick={() =>
-                                                                    handleDelate(
+                                                                    handleDelete(
                                                                         key
                                                                     )
                                                                 }
@@ -329,14 +341,6 @@ const CartScreen = () => {
                                         >
                                             Tiếp Tục Mua Sắm
                                         </Link>
-                                        <span
-                                            className="primary-btn up-cart"
-                                            onClick={() =>
-                                                window.location.reload()
-                                            }
-                                        >
-                                            Cập Nhật Giỏ Hàng
-                                        </span>
                                     </div>
                                     <div className="discount-coupon">
                                         <h6>Mã Giảm Giá</h6>

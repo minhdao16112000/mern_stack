@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 const Blogs = () => {
     const post = useSelector((state) => state.post.posts_list);
-    const listTopic = useSelector((state) => state.topic.topics);
+    // const listTopic = useSelector((state) => state.topic.topics);
     var listPost = [];
     if (post.Posts) {
         const lstPost = post.Posts.filter((value) => value.status === '1');
@@ -17,17 +17,17 @@ const Blogs = () => {
             currency: 'VND',
         }).format(value);
     };
-    const checkSlug = (id) => {
-        var topicSlug = '';
-        if (listTopic.Topics) {
-            listTopic.Topics.forEach((value) => {
-                if (id.includes(value._id)) {
-                    topicSlug += value.slug + '/';
-                }
-            });
-        }
-        return topicSlug.slice(0, -1);
-    };
+    // const checkSlug = (id) => {
+    //     var topicSlug = '';
+    //     if (listTopic.Topics) {
+    //         listTopic.Topics.forEach((value) => {
+    //             if (id.includes(value._id)) {
+    //                 topicSlug += value.slug + '/';
+    //             }
+    //         });
+    //     }
+    //     return topicSlug.slice(0, -1);
+    // };
 
     return (
         <section className="latest-blog spad">
@@ -43,11 +43,7 @@ const Blogs = () => {
                     {listPost.slice(0, 3).map((value, key) => {
                         return (
                             <div key={key} className="col-lg-4 col-md-6">
-                                <Link
-                                    to={`/tin-tuc/${checkSlug(
-                                        value.topicId
-                                    )}/post/${value.slug}`}
-                                >
+                                <Link to={`/tin-tuc/${value.slug}`}>
                                     <div className="single-latest-blog">
                                         <img
                                             src={`https://shopfashi.herokuapp.com/posts/${value.image}`}
