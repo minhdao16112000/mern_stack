@@ -20,12 +20,9 @@ const BlogDetailScreen = (props) => {
     }
     var i = 0;
 
-    console.log(listPostByTopic.length);
-
     listPostByTopic.forEach((value, key) => {
         if (value._id === post._id) {
             i = key;
-            console.log(key);
         }
     });
 

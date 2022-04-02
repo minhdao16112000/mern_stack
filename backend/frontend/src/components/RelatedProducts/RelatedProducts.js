@@ -10,6 +10,7 @@ const RelatedProducts = (props) => {
     const listCate = props.listCate;
     const dispatch = useDispatch();
     const lstPro = useSelector((state) => state.product.products_list);
+    const user = useSelector((state) => state.user.user);
 
     var relatedPro = [];
     if (lstPro.Products) {
@@ -20,6 +21,30 @@ const RelatedProducts = (props) => {
                 value.status === '1'
         );
     }
+
+    const handleCheckFavorite = (id) => {
+        var check = false;
+        if (user && user.favorites) {
+            user.favorites.forEach((values) => {
+                if (values._id === id) {
+                    return (check = true);
+                }
+            });
+        }
+        if (check === false) {
+            return (
+                <div className="icon">
+                    <i className="icon_heart_alt"></i>
+                </div>
+            );
+        } else {
+            return (
+                <div className="icon">
+                    <i className="icon_heart"></i>
+                </div>
+            );
+        }
+    };
 
     const formatVND = (value) => {
         return new Intl.NumberFormat('vi-VN', {
@@ -100,9 +125,7 @@ const RelatedProducts = (props) => {
                                                     <div></div>
                                                 )}
 
-                                                <div className="icon">
-                                                    <i className="icon_heart_alt"></i>
-                                                </div>
+                                                {handleCheckFavorite(value._id)}
                                             </div>
                                             <div className="pi-text">
                                                 <div className="catagory-name">

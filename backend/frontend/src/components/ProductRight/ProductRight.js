@@ -8,6 +8,7 @@ import './style.scss';
 
 const ProductRight = (props) => {
     const listImg = useSelector((state) => state.image.images);
+    const user = useSelector((state) => state.user.user);
     var img = [];
     if (listImg.Images) {
         img = listImg.Images.filter(
@@ -19,6 +20,30 @@ const ProductRight = (props) => {
     var [count, setCount] = useState(0);
 
     var id = childCateMale[count];
+
+    const handleCheckFavorite = (id) => {
+        var check = false;
+        if (user && user.favorites) {
+            user.favorites.forEach((values) => {
+                if (values._id === id) {
+                    return (check = true);
+                }
+            });
+        }
+        if (check === false) {
+            return (
+                <div className="icon">
+                    <i className="icon_heart_alt"></i>
+                </div>
+            );
+        } else {
+            return (
+                <div className="icon">
+                    <i className="icon_heart"></i>
+                </div>
+            );
+        }
+    };
 
     const formatVND = (value) => {
         return new Intl.NumberFormat('vi-VN', {
@@ -152,9 +177,7 @@ const ProductRight = (props) => {
                                                     <div></div>
                                                 )}
 
-                                                <div className="icon">
-                                                    <i className="icon_heart_alt"></i>
-                                                </div>
+                                                {handleCheckFavorite(value._id)}
                                                 {/* <ul>
                                                 <li className="w-icon active">
                                                     <a href="/#">
