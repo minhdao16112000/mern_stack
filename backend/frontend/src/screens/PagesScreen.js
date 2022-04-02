@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import { getPageSlug } from "../redux/actions/pageActions";
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { getPageSlug } from '../redux/actions/pageActions';
 
 const PagesScreen = (props) => {
     const dispatch = useDispatch();

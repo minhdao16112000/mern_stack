@@ -13,7 +13,6 @@ import { getColors, getSizes } from '../redux/actions/productActions';
 const CartScreen = () => {
     const dispatch = useDispatch();
     const proCart = useSelector((state) => state.cart.carts);
-    const lstCate = useSelector((state) => state.category.categories);
     const lstColors = useSelector((state) => state.product.colors_list);
     const lstSizes = useSelector((state) => state.product.sizes_list);
     const [totalCart, setTotalCart] = useState(0);

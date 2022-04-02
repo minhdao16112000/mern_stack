@@ -10,8 +10,8 @@ const BlogDetailScreen = (props) => {
     const dispatch = useDispatch();
     const slug = props.match.params.slug;
     const listTopic = useSelector((state) => state.topic.topics);
-    const post = useSelector((state) => state.post.post);
     const listPost = useSelector((state) => state.post.posts_list);
+    const post = useSelector((state) => state.post.post);
     var listPostByTopic = [];
     if (listPost.Posts) {
         listPostByTopic = listPost.Posts.filter(
