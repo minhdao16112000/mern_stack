@@ -10,6 +10,7 @@ router.post('/userRole', userController.getRole);
 router.put('/changePassword', userController.changePassword);
 router.put('/:id', userController.update);
 router.patch('/restore', userController.restore);
+router.patch('/:id/favorites', userController.addFavorites);
 router.delete('/force', userController.forceDestroy);
 router.delete('/', userController.destroy);
 router.get('/trash', userController.trash);
