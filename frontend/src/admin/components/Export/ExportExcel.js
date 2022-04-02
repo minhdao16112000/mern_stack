@@ -1,6 +1,6 @@
 import saveAs from 'file-saver';
 import React from 'react';
-const ExcelJS = require('exceljs');
+import ExcelJS from 'exceljs';
 
 const ExportExcel = (props) => {
     const exportData = () => {

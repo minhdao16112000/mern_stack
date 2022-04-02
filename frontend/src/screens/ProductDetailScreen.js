@@ -14,6 +14,7 @@ import {
     getProductBySlug,
     getSizes,
 } from '../redux/actions/productActions';
+import { favoritesAdd, getUser } from '../redux/actions/userActions';
 
 const ProductDetailScreen = () => {
     const dispatch = useDispatch();
@@ -32,8 +33,19 @@ const ProductDetailScreen = () => {
     const [colors, setColors] = useState('');
     const [quantityPro, setQuantityPro] = useState(1);
     var cate = product.categoryId;
-
-    // const image = product.image.split(',');
+    const userId = localStorage.getItem('userInfo')
+        ? JSON.parse(localStorage.getItem('userInfo'))._id
+        : '';
+    const user = useSelector((state) => state.user.user);
+    var check = false;
+    if (user && product) {
+        user.favorites.forEach((values) => {
+            if (values._id === product._id) {
+                return (check = true);
+            }
+        });
+    }
+    const [checkAdd, setCheckAdd] = useState(check);
 
     const responsive = {
         desktop: {
@@ -87,6 +99,33 @@ const ProductDetailScreen = () => {
             draggable: true,
             progress: undefined,
         });
+    };
+
+    const handleAddFavorite = (id) => {
+        dispatch(favoritesAdd(id));
+        if (checkAdd === false) {
+            setCheckAdd(true);
+            toast.success('Đã thêm sản phẩm vào mục ưa thích.', {
+                position: 'top-center',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+        } else {
+            setCheckAdd(false);
+            toast.warn('Đã xóa sản phẩm khỏi mục ưa thích.', {
+                position: 'top-center',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+        }
     };
 
     const handleClickSize = (key, value) => {
@@ -186,7 +225,10 @@ const ProductDetailScreen = () => {
         dispatch(getCategories());
         dispatch(getColors());
         dispatch(getSizes());
-    }, [dispatch, slug]);
+        if (userId !== '') {
+            dispatch(getUser(userId));
+        }
+    }, [dispatch, slug, userId]);
     return (
         <div>
             {/* Breadcrumb Section Begin */}
@@ -313,9 +355,33 @@ const ProductDetailScreen = () => {
                                                 )}
                                             </span>
                                             <h3>{product.name}</h3>
-                                            <a href="/#" className="heart-icon">
-                                                <i className="icon_heart_alt" />
-                                            </a>
+                                            {localStorage.getItem(
+                                                'userInfo'
+                                            ) ? (
+                                                checkAdd === true ? (
+                                                    <div
+                                                        onClick={() =>
+                                                            handleAddFavorite(
+                                                                product._id
+                                                            )
+                                                        }
+                                                        className="heart-icon"
+                                                    >
+                                                        <i className="icon_heart" />
+                                                    </div>
+                                                ) : (
+                                                    <div
+                                                        onClick={() =>
+                                                            handleAddFavorite(
+                                                                product._id
+                                                            )
+                                                        }
+                                                        className="heart-icon"
+                                                    >
+                                                        <i className="icon_heart_alt" />
+                                                    </div>
+                                                )
+                                            ) : null}
                                         </div>
                                         <div className="pd-rating">
                                             <i className="fa fa-star" />
