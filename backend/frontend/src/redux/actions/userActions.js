@@ -90,7 +90,17 @@ export const login = (data) => async (dispatch) => {
             password: data.password,
         });
         if (res.data.info) {
-            localStorage.setItem('userInfo', JSON.stringify(res.data.info));
+            const user = {
+                _id: res.data.info._id,
+                firstName: res.data.info.firstName,
+                lastName: res.data.info.lastName,
+                phone: res.data.info.phone,
+                email: res.data.info.email,
+                address: res.data.info.address,
+                role: res.data.info.role,
+                sex: res.data.info.sex,
+            };
+            localStorage.setItem('userInfo', JSON.stringify(user));
             localStorage.setItem(
                 'message-user',
                 JSON.stringify(res.data.message)
@@ -174,6 +184,21 @@ export const restoreUsers = (data) => async (dispatch) => {
         });
         if (isRestore) {
             document.location.href = '/admin/users/trash';
+        }
+    } catch (e) {
+        console.log(e);
+    }
+};
+
+//ADD FAVORITE ACTION
+export const favoritesAdd = (data) => async (dispatch) => {
+    try {
+        const id = JSON.parse(localStorage.getItem('userInfo'))._id;
+        const res = await api.patch('api/user/' + id + '/favorites', {
+            idPro: data,
+        });
+        if (res.data) {
+            console.log(res.data);
         }
     } catch (e) {
         console.log(e);

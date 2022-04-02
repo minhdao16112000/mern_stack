@@ -1,12 +1,8 @@
 const userModel = require('../models/UserModel');
-// const { mongooseToObject } = require('../util/mongoose');
-// const uploadFile = require('../util/multer');
 const bcryptjs = require('bcryptjs');
 const nodemailer = require('nodemailer');
 
 class UserController {
-    // uploadImg = uploadFile.single('image');
-
     // [POST] /login
     login = async (req, res, next) => {
         try {
@@ -23,6 +19,7 @@ class UserController {
                             sex: user.sex,
                             role: user.role,
                             address: user.address,
+                            favorites: user.favorites,
                         },
                         message: {
                             message: 'Đăng nhập thành công !',
@@ -210,6 +207,33 @@ class UserController {
             res.json({ error: err });
         }
     }
+
+    // [PATCH] /:id/favorites
+    addFavorites = async (req, res, next) => {
+        try {
+            const user = await userModel.findOne({ _id: req.params.id });
+            var check = false;
+            if (user) {
+                user.favorites.forEach((item, index) => {
+                    if (item._id.toString() === req.body.idPro) {
+                        user.favorites.splice(index, 1);
+                        return (check = true);
+                    }
+                });
+                if (check === false) {
+                    user.favorites.push(req.body.idPro);
+                }
+            }
+            userModel
+                .findOneAndUpdate({ _id: user.id }, user, {
+                    returnOriginal: false,
+                })
+                .then(() => res.send('Action Successfully !!!'))
+                .catch(next);
+        } catch (error) {
+            res.send({ error: error });
+        }
+    };
 
     // [POST] /handle-form-actions
     // handleFormAction(req, res, next) {

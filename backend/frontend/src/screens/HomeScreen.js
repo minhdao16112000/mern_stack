@@ -1,20 +1,17 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-// import Hero from '../layouts/Hero/Hero';
 import Banner from '../layouts/Banner/Banner';
 import ProductLeft from '../components/ProductLeft/ProductLeft';
 import DealWeek from '../components/DealWeek/DealWeek';
 import ProductRight from '../components/ProductRight/ProductRight';
 import Insta from '../layouts/Insta/Insta';
 import Blogs from '../layouts/Blogs/Blogs';
-// import Partners from "../layouts/Partners/Partners"
 import { getRole } from '../redux/actions/userActions';
 import { getCategories } from '../redux/actions/categoryActions';
 import { getProducts } from '../redux/actions/productActions';
 import { getPosts } from '../redux/actions/postActions';
 import { getTopics } from '../redux/actions/topicActions';
 import { getImages } from '../redux/actions/imageActions';
-// import Products from "../components/Products/Products";
 
 const HomeScreen = () => {
     const dispatch = useDispatch();
@@ -38,9 +35,7 @@ const HomeScreen = () => {
     }, [id, dispatch]);
     return (
         <div>
-            {/* <Hero /> */}
             <Banner listCate={lstCate.Categories} />
-            {/* <Products list={lstCate} listPro={lstPro}/> */}
             <ProductLeft
                 listFeMale={lstCate.Categories}
                 listProFeMale={lstPro.Products}

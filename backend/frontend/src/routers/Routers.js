@@ -22,6 +22,7 @@ import SearchScreen from '../screens/SearchScreen';
 import PagesScreen from '../screens/PagesScreen';
 import ChangePasswordScreen from '../screens/ChangePasswordScreen';
 import InfoUserScreen from '../screens/InfoUserScreen';
+import FavoritesScreen from '../screens/FavoritesScreen';
 
 // import { Protected } from '../components/Protected/Protected'
 
@@ -121,6 +122,11 @@ const Routers = () => {
                 <GuardedRoute
                     path={['/tin-tuc', '/chu-de/:slug']}
                     component={BlogsScreen}
+                />
+                <GuardedRoute
+                    path="/danh-muc-ua-thich"
+                    component={FavoritesScreen}
+                    meta={{ auth: 'no-admin' }}
                 />
                 <GuardedRoute
                     path={['/product/:slug']}

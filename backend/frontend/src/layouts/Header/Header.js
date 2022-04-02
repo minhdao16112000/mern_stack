@@ -5,6 +5,7 @@ import Nav from '../../components/Nav';
 import { getCategories } from '../../redux/actions/categoryActions';
 import { deleteCart } from '../../redux/actions/cartActions';
 import { getProducts, getSearch } from '../../redux/actions/productActions';
+import { getUser } from '../../redux/actions/userActions';
 import './header.scss';
 
 const Header = () => {
@@ -16,6 +17,10 @@ const Header = () => {
     const proCart = useSelector((state) => state.cart.carts);
     const [search, setSearch] = useState('');
     const [suggestions, setSuggestions] = useState([]);
+    const userId = localStorage.getItem('userInfo')
+        ? JSON.parse(localStorage.getItem('userInfo'))._id
+        : '';
+    const user = useSelector((state) => state.user.user);
 
     const onChangeHandler = (text) => {
         let matches = [];
@@ -78,7 +83,10 @@ const Header = () => {
     useEffect(() => {
         dispatch(getCategories());
         dispatch(getProducts());
-    }, [dispatch]);
+        if (userId !== '') {
+            dispatch(getUser(userId));
+        }
+    }, [dispatch, userId]);
 
     return (
         <header className="header-section">
@@ -181,12 +189,20 @@ const Header = () => {
                         </div>
                         <div className="col-lg-3 text-right col-md-3">
                             <ul className="nav-right">
-                                <li className="heart-icon">
-                                    <a href="/#">
-                                        <i className="icon_heart_alt"></i>
-                                        <span>0</span>
-                                    </a>
-                                </li>
+                                {localStorage.getItem('userInfo') ? (
+                                    <li className="heart-icon">
+                                        <Link to="/danh-muc-ua-thich">
+                                            <i className="icon_heart_alt"></i>
+                                            {user && user.favorites ? (
+                                                <span>
+                                                    {user.favorites.length}
+                                                </span>
+                                            ) : (
+                                                <span>0</span>
+                                            )}
+                                        </Link>
+                                    </li>
+                                ) : null}
                                 <li className="cart-icon">
                                     <Link to="/xem-gio-hang">
                                         <i className="icon_bag_alt"></i>

@@ -47,6 +47,7 @@ function App() {
                         '/tim-kiem',
                         '/page/:slug',
                         '/thong-tin-tai-khoan',
+                        '/danh-muc-ua-thich',
                     ]}
                     exact
                     component={Header}
@@ -75,6 +76,7 @@ function App() {
                         '/tim-kiem',
                         '/page/:slug',
                         '/thong-tin-tai-khoan',
+                        '/danh-muc-ua-thich',
                     ]}
                     exact
                     component={Footer}
