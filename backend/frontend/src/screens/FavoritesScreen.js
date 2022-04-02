@@ -107,7 +107,7 @@ const FavoritesScreen = () => {
                                                         <div className="product-item">
                                                             <div className="pi-pic favorite-image">
                                                                 <img
-                                                                    src={`http://localhost:5000/products/${checkImage(
+                                                                    src={`https://shopfashi.herokuapp.com/products/${checkImage(
                                                                         key
                                                                     )}`}
                                                                     alt=""
