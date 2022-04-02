@@ -22,8 +22,6 @@ const FavoritesScreen = () => {
         });
     }
 
-    console.log(showPro);
-
     const [activePage, setCurrentPage] = useState(1);
 
     const indexOfLastTodo = activePage * 6;

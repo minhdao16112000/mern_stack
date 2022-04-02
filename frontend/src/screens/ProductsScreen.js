@@ -17,11 +17,11 @@ const ProductsScreen = () => {
     const lstColor = useSelector((state) => state.product.colors_list);
     const lstSize = useSelector((state) => state.product.sizes_list);
     const lstPro = useSelector((state) => state.product.products_list);
+    const user = useSelector((state) => state.user.user);
     let match1 = useRouteMatch('/category/:slug');
     let match2 = useRouteMatch('/category/:slug/:slug');
     let match3 = useRouteMatch('/category/:slug/:slug/:slug');
     let match4 = useRouteMatch('/tim-kiem');
-
     var showPro = [];
 
     if (lstPro.Products) {
@@ -168,6 +168,30 @@ const ProductsScreen = () => {
         }
     }
 
+    const handleCheckFavorite = (id) => {
+        var check = false;
+        if (user && user.favorites) {
+            user.favorites.forEach((values) => {
+                if (values._id === id) {
+                    return (check = true);
+                }
+            });
+        }
+        if (check === false) {
+            return (
+                <div className="icon">
+                    <i className="icon_heart_alt"></i>
+                </div>
+            );
+        } else {
+            return (
+                <div className="icon">
+                    <i className="icon_heart"></i>
+                </div>
+            );
+        }
+    };
+
     const [activePage, setCurrentPage] = useState(1);
 
     const indexOfLastTodo = activePage * 12;
@@ -275,9 +299,9 @@ const ProductsScreen = () => {
                                                                 ) : (
                                                                     <div></div>
                                                                 )}
-                                                                <div className="icon">
-                                                                    <i className="icon_heart_alt"></i>
-                                                                </div>
+                                                                {handleCheckFavorite(
+                                                                    value._id
+                                                                )}
                                                                 {/* <ul>
                                                                 <li className="w-icon active">
                                                                     <Link to={location.pathname}>

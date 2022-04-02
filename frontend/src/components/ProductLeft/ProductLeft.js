@@ -10,6 +10,7 @@ import './style.scss';
 
 const ProductLeft = (props) => {
     const listImg = useSelector((state) => state.image.images);
+    const user = useSelector((state) => state.user.user);
     var img = [];
     if (listImg.Images) {
         img = listImg.Images.filter(
@@ -21,6 +22,30 @@ const ProductLeft = (props) => {
     var [count, setCount] = useState(1);
 
     const id = childCateFeMale[count];
+
+    const handleCheckFavorite = (id) => {
+        var check = false;
+        if (user && user.favorites) {
+            user.favorites.forEach((values) => {
+                if (values._id === id) {
+                    return (check = true);
+                }
+            });
+        }
+        if (check === false) {
+            return (
+                <div className="icon">
+                    <i className="icon_heart_alt"></i>
+                </div>
+            );
+        } else {
+            return (
+                <div className="icon">
+                    <i className="icon_heart"></i>
+                </div>
+            );
+        }
+    };
 
     const formatVND = (value) => {
         return new Intl.NumberFormat('vi-VN', {
@@ -54,7 +79,7 @@ const ProductLeft = (props) => {
     const settings = {
         dots: true,
         infinite: true,
-        speed: 2000,
+        speed: 1000,
         slidesToShow: 3,
         slidesToScroll: 1,
         autoplay: true,
@@ -173,9 +198,7 @@ const ProductLeft = (props) => {
                                                     <div></div>
                                                 )}
 
-                                                <div className="icon">
-                                                    <i className="icon_heart_alt"></i>
-                                                </div>
+                                                {handleCheckFavorite(value._id)}
                                                 {/* <ul>
                                                 <li className="w-icon active">
                                                     <a href="/#">
