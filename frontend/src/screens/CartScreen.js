@@ -14,51 +14,47 @@ import './styles/shoppingCart.scss';
 const CartScreen = () => {
     const dispatch = useDispatch();
     const proCart = useSelector((state) => state.cart.carts);
-    const lstCate = useSelector((state) => state.category.categories);
     const lstColors = useSelector((state) => state.product.colors_list);
     const lstSizes = useSelector((state) => state.product.sizes_list);
     const [totalCart, setTotalCart] = useState(0);
     const [qtyPro, setQtyPro] = useState();
     let { url } = useRouteMatch();
 
-    const checkSlug = (id) => {
-        var catArr = [];
-        var catslug = '';
-        if (lstCate.Categories) {
-            lstCate.Categories.forEach((value) => {
-                if (id.includes(value._id)) {
-                    catArr.push(value.slug);
-                }
-            });
-            catArr.forEach((value) => {
-                catslug += value + '/';
-            });
-        }
-        return catslug.slice(0, -1);
-    };
-
     const QtyUpdateIncr = (key, quantity) => {
         dispatch(increaseQuantity(key));
         setQtyPro(quantity);
+        handleChangeQty();
     };
 
     const QtyUpdatedecr = (key, quantity) => {
         dispatch(decreaseQuantity(key));
         setQtyPro(quantity);
+        handleChangeQty();
+    };
+
+    const handleChangeQty = () => {
+        if (proCart.length !== 0) {
+            const total = proCart.reduce((prev, item) => {
+                return prev + item.price * item.quantity;
+            }, 0);
+            setTotalCart(total);
+        }
     };
 
     const handleDelate = (key) => {
         dispatch(deleteCart(key));
-        window.location.reload();
-    };
-
-    const handleDetail = (key) => {
-        dispatch(deleteCart(key));
+        if (key !== 0) {
+            handleChangeQty();
+        } else {
+            setTotalCart(0);
+        }
+        // window.location.reload();
     };
 
     const deleteAll = () => {
         dispatch(deleteAllCart());
-        window.location.reload();
+        setTotalCart(0);
+        // window.location.reload();
     };
 
     const checkColor = (id) => {
@@ -293,11 +289,11 @@ const CartScreen = () => {
                                                         </td>
                                                         <td className="close-td first-row">
                                                             <i
-                                                                // onClick={() =>
-                                                                //     handleDelate(
-                                                                //         key
-                                                                //     )
-                                                                // }
+                                                                onClick={() =>
+                                                                    handleDelate(
+                                                                        key
+                                                                    )
+                                                                }
                                                                 className="ti-close"
                                                             ></i>
                                                         </td>
@@ -330,14 +326,6 @@ const CartScreen = () => {
                                         >
                                             Tiếp Tục Mua Sắm
                                         </a>
-                                        <div
-                                            className="primary-btn up-cart"
-                                            onClick={() =>
-                                                window.location.reload()
-                                            }
-                                        >
-                                            Cập Nhật Giỏ Hàng
-                                        </div>
                                     </div>
                                     <div className="discount-coupon">
                                         <h6>Mã Giảm Giá</h6>
