@@ -1,89 +1,173 @@
-import moment from "moment";
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+/* eslint-disable react-hooks/exhaustive-deps */
+import moment from 'moment';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
     Link,
     Route,
     Switch,
     useHistory,
     useRouteMatch,
-} from "react-router-dom";
-import { ScrollToTop } from "../../components/Scroll/ScrollToTop";
-import { activeContacts, listContact } from "../../redux/actions/contactAction";
-import Content from "../layouts/Content/Content";
-import Footer from "../layouts/Footer/Footer";
-import Category from "./CategoriesScreen";
-import Color from "./ColorsScreen";
-import Contact from "./ContactsScreen";
-import Image from "./ImagesScreen";
-import Order from "./OrdersScreen";
-import Page from "./PagesScreen";
-import Post from "./PostsScreen";
-import Product from "./ProductsScreen";
-import Size from "./SizesScreen";
-import Topic from "./TopicsScreen";
-import User from "./UsersScreen";
+} from 'react-router-dom';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { ScrollToTop } from '../../components/Scroll/ScrollToTop';
+import { PRODUCT_MARK_ALL_RESET } from '../../constants/productConstant';
+import { activeContacts, listContact } from '../../redux/actions/contactAction';
+import {
+    getProducts,
+    markAllProducts,
+} from '../../redux/actions/productActions';
+import Content from '../layouts/Content/Content';
+import Footer from '../layouts/Footer/Footer';
+import Category from './CategoriesScreen';
+import Color from './ColorsScreen';
+import Contact from './ContactsScreen';
+import Image from './ImagesScreen';
+import Order from './OrdersScreen';
+import Page from './PagesScreen';
+import Post from './PostsScreen';
+import Product from './ProductsScreen';
+import Size from './SizesScreen';
+import './style/home.scss';
+import Topic from './TopicsScreen';
+import User from './UsersScreen';
 
 const HomeAdmin = () => {
     const dispatch = useDispatch();
     const contact = useSelector((state) => state.contact.contacts);
+    const products = useSelector((state) => state.product.products_list);
+    const proMarkAll = useSelector((state) => state.product);
+    const [markAll, setMarkAll] = useState(true);
+
+    var notify = 0;
+    var mess = [];
+
+    const {
+        // loading: loadingReviewCreate,
+        error: errorMarkAll,
+        success: successMarkAll,
+    } = proMarkAll;
+
+    if (products && products.Products) {
+        var messArray = [];
+        products.Products.forEach((pro) => {
+            if (pro.reviews) {
+                pro.reviews.forEach((item) => {
+                    if (item.notify === true) {
+                        var timeAgo = moment(item.createdAt).local();
+                        messArray.push({
+                            name: item.name,
+                            slug: pro.slug,
+                            message: item.comment,
+                            time: moment(timeAgo).fromNow(),
+                            sortTime: timeAgo,
+                        });
+                        notify++;
+                    }
+                });
+            }
+        });
+        mess = messArray.sort(({ time: a }, { time: b }) =>
+            a > b ? 1 : a < b ? -1 : 0
+        );
+    }
+
     var send = [];
     if (contact.Contacts) {
         send = contact.Contacts.filter((value) => value.status === false);
     }
     let { path } = useRouteMatch();
     let history = useHistory();
+
     const animateSidabar = () => {
         const sidebarNavWrapper = document.querySelector(
-            ".sidebar-nav-wrapper"
+            '.sidebar-nav-wrapper'
         );
-        const mainWrapper = document.querySelector(".main-wrapper");
-        const menuToggleButton = document.querySelector("#menu-toggle");
-        const menuToggleButtonIcon = document.querySelector("#menu-toggle i");
+        const mainWrapper = document.querySelector('.main-wrapper');
+        const menuToggleButton = document.querySelector('#menu-toggle');
+        const menuToggleButtonIcon = document.querySelector('#menu-toggle i');
 
-        menuToggleButton.addEventListener("click", () => {
-            sidebarNavWrapper.classList.toggle("active");
-            mainWrapper.classList.toggle("active");
+        menuToggleButton.addEventListener('click', () => {
+            sidebarNavWrapper.classList.toggle('active');
+            mainWrapper.classList.toggle('active');
 
             if (document.body.clientWidth > 1200) {
                 if (
-                    menuToggleButtonIcon.classList.contains("lni-chevron-left")
+                    menuToggleButtonIcon.classList.contains('lni-chevron-left')
                 ) {
-                    menuToggleButtonIcon.classList.remove("lni-chevron-left");
-                    menuToggleButtonIcon.classList.add("lni-menu");
+                    menuToggleButtonIcon.classList.remove('lni-chevron-left');
+                    menuToggleButtonIcon.classList.add('lni-menu');
                 } else {
-                    menuToggleButtonIcon.classList.remove("lni-menu");
-                    menuToggleButtonIcon.classList.add("lni-chevron-left");
+                    menuToggleButtonIcon.classList.remove('lni-menu');
+                    menuToggleButtonIcon.classList.add('lni-chevron-left');
                 }
             } else {
                 if (
-                    menuToggleButtonIcon.classList.contains("lni-chevron-left")
+                    menuToggleButtonIcon.classList.contains('lni-chevron-left')
                 ) {
-                    menuToggleButtonIcon.classList.remove("lni-chevron-left");
-                    menuToggleButtonIcon.classList.add("lni-menu");
+                    menuToggleButtonIcon.classList.remove('lni-chevron-left');
+                    menuToggleButtonIcon.classList.add('lni-menu');
                 }
             }
         });
     };
 
     function handleClick() {
-        history.push("/");
+        history.push('/');
     }
 
+    const handleMarkNotify = () => {
+        if (notify !== 0 && mess.length !== 0) {
+            dispatch(markAllProducts());
+            // notify = 0;
+            // mess = [];
+            // history.push('/admin');
+        }
+    };
+
     useEffect(() => {
+        if (successMarkAll === true) {
+            toast.success('Không còn thông báo nào cả !.', {
+                position: 'top-center',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+            setMarkAll(false);
+            dispatch({ type: PRODUCT_MARK_ALL_RESET });
+        }
+
+        if (errorMarkAll) {
+            toast.error('Có lỗi !.', {
+                position: 'top-center',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+        }
+        if (!products) {
+            dispatch(getProducts());
+        }
         dispatch(listContact());
         if (!window.location.hash) {
-            window.location = window.location + "#admin";
+            window.location = window.location + '#admin';
         }
         animateSidabar();
-    }, [dispatch]);
+    }, [dispatch, errorMarkAll, products, successMarkAll]);
     return (
         <>
             <div>
                 {/* -- ======== sidebar-nav start =========== -- */}
                 <aside className="sidebar-nav-wrapper">
                     <div className="navbar-logo">
-                        <a href="/admin" onClick={() => history.push("/admin")}>
+                        <a href="/admin" onClick={() => history.push('/admin')}>
                             <img
                                 src="admin/assets/images/logo/logo.svg"
                                 alt="logo"
@@ -123,21 +207,21 @@ const HomeAdmin = () => {
                                 >
                                     <li>
                                         <Link to="/admin/products">
-                                            <i className="lni lni-arrow-right"></i>{" "}
+                                            <i className="lni lni-arrow-right"></i>{' '}
                                             Quản Lý Sản Phẩm
                                         </Link>
                                     </li>
 
                                     <li>
                                         <Link to="/admin/colors">
-                                            <i className="lni lni-arrow-right"></i>{" "}
+                                            <i className="lni lni-arrow-right"></i>{' '}
                                             Quản Lý Màu
                                         </Link>
                                     </li>
 
                                     <li>
                                         <Link to="/admin/sizes">
-                                            <i className="lni lni-arrow-right"></i>{" "}
+                                            <i className="lni lni-arrow-right"></i>{' '}
                                             Quản Lý Sizes
                                         </Link>
                                     </li>
@@ -165,7 +249,7 @@ const HomeAdmin = () => {
                                 >
                                     <li>
                                         <Link to="/admin/categories">
-                                            <i className="lni lni-arrow-right"></i>{" "}
+                                            <i className="lni lni-arrow-right"></i>{' '}
                                             Quản Lý Danh Mục
                                         </Link>
                                     </li>
@@ -193,13 +277,13 @@ const HomeAdmin = () => {
                                 >
                                     <li>
                                         <Link to="/admin/topics">
-                                            <i className="lni lni-arrow-right"></i>{" "}
+                                            <i className="lni lni-arrow-right"></i>{' '}
                                             Quản Lý Chủ Đề
                                         </Link>
                                     </li>
                                     <li>
                                         <Link to="/admin/posts">
-                                            <i className="lni lni-arrow-right"></i>{" "}
+                                            <i className="lni lni-arrow-right"></i>{' '}
                                             Quản Lý Tin Tức
                                         </Link>
                                     </li>
@@ -227,7 +311,7 @@ const HomeAdmin = () => {
                                 >
                                     <li>
                                         <Link to="/admin/images">
-                                            <i className="lni lni-arrow-right"></i>{" "}
+                                            <i className="lni lni-arrow-right"></i>{' '}
                                             Quản Lý Hình Ảnh
                                         </Link>
                                     </li>
@@ -255,7 +339,7 @@ const HomeAdmin = () => {
                                 >
                                     <li>
                                         <Link to="/admin/users">
-                                            <i className="lni lni-arrow-right"></i>{" "}
+                                            <i className="lni lni-arrow-right"></i>{' '}
                                             Quản Lý Tài Khoản
                                         </Link>
                                     </li>
@@ -282,7 +366,7 @@ const HomeAdmin = () => {
                                 >
                                     <li>
                                         <Link to="/admin/orders">
-                                            <i className="lni lni-arrow-right"></i>{" "}
+                                            <i className="lni lni-arrow-right"></i>{' '}
                                             Quản Lý Đơn Hàng
                                         </Link>
                                     </li>
@@ -309,7 +393,7 @@ const HomeAdmin = () => {
                                 >
                                     <li>
                                         <Link to="/admin/contacts">
-                                            <i className="lni lni-arrow-right"></i>{" "}
+                                            <i className="lni lni-arrow-right"></i>{' '}
                                             Quản Lý Liên Hệ
                                         </Link>
                                     </li>
@@ -336,7 +420,7 @@ const HomeAdmin = () => {
                                 >
                                     <li>
                                         <Link to="/admin/pages">
-                                            <i className="lni lni-arrow-right"></i>{" "}
+                                            <i className="lni lni-arrow-right"></i>{' '}
                                             Quản Lý Trang
                                         </Link>
                                     </li>
@@ -361,7 +445,7 @@ const HomeAdmin = () => {
                                                 id="menu-toggle"
                                                 className="main-btn primary-btn__admin btn-hover"
                                             >
-                                                <i className="lni lni-chevron-left me-2"></i>{" "}
+                                                <i className="lni lni-chevron-left me-2"></i>{' '}
                                                 Menu
                                             </button>
                                         </div>
@@ -370,7 +454,7 @@ const HomeAdmin = () => {
                                 <div className="col-lg-7 col-md-7 col-6">
                                     <div className="header-right">
                                         {/* -- notification start -- */}
-                                        {/* <div className="notification-box ml-15 d-none d-md-flex">
+                                        <div className="notification-box ml-15 d-none d-md-flex">
                                             <button
                                                 className="dropdown-toggle"
                                                 type="button"
@@ -379,54 +463,93 @@ const HomeAdmin = () => {
                                                 aria-expanded="false"
                                             >
                                                 <i className="lni lni-alarm"></i>
-                                                <span>2</span>
+                                                <span>
+                                                    {markAll === true
+                                                        ? notify
+                                                        : 0}
+                                                </span>
                                             </button>
                                             <ul
-                                                className="dropdown-menu dropdown-menu-end"
+                                                className="dropdown-menu dropdown-menu-end notify-show"
                                                 aria-labelledby="notification"
+                                                data-popper-placement="bottom-end"
+                                                style={{
+                                                    position: 'absolute',
+                                                    inset: '0px auto auto 0px',
+                                                    margin: '0px',
+                                                    transform:
+                                                        'translate(-304px, 48px)',
+                                                }}
                                             >
-                                                <li>
-                                                    <a href="#0">
-                                                        <div className="image">
-                                                            <img src="admin/assets/images/lead/lead-6.png" alt="" />
-                                                        </div>
-                                                        <div className="content">
-                                                            <h6>
-                                                                John Doe
-                                                                <span className="text-regular">
-                                                                    comment on a product.
-                                                                </span>
-                                                            </h6>
-                                                            <p>
-                                                                Lorem ipsum dolor sit amet, consect etur adipiscing
-                                                                elit Vivamus tortor.
-                                                            </p>
-                                                            <span>10 mins ago</span>
-                                                        </div>
-                                                    </a>
+                                                <li className="mark-all-notify">
+                                                    <input
+                                                        onClick={() =>
+                                                            handleMarkNotify()
+                                                        }
+                                                        className="mark-button"
+                                                        type={'button'}
+                                                        value={
+                                                            'Đánh dấu đã đọc'
+                                                        }
+                                                    />
                                                 </li>
-                                                <li>
-                                                    <a href="#0">
-                                                        <div className="image">
-                                                            <img src="admin/assets/images/lead/lead-1.png" alt="" />
-                                                        </div>
+                                                {mess.length !== 0 &&
+                                                markAll === true ? (
+                                                    mess.map((value, key) => {
+                                                        return (
+                                                            <li key={key}>
+                                                                <Link
+                                                                    to={`/product/${value.slug}`}
+                                                                >
+                                                                    <div className="image">
+                                                                        <img
+                                                                            src="https://kiemtientuweb.com/ckfinder/userfiles/images/avatar-cute/avatar-cute-12.jpg"
+                                                                            alt=""
+                                                                        />
+                                                                    </div>
+                                                                    <div className="content">
+                                                                        <h6>
+                                                                            {
+                                                                                value.name
+                                                                            }
+                                                                            <span className="text-regular">
+                                                                                {' '}
+                                                                                đã
+                                                                                đánh
+                                                                                giá
+                                                                                sản
+                                                                                phẩm
+                                                                                của
+                                                                                bạn
+                                                                            </span>
+                                                                        </h6>
+                                                                        <p>
+                                                                            {
+                                                                                value.message
+                                                                            }
+                                                                        </p>
+                                                                        <span>
+                                                                            {
+                                                                                value.time
+                                                                            }
+                                                                        </span>
+                                                                    </div>
+                                                                </Link>
+                                                            </li>
+                                                        );
+                                                    })
+                                                ) : (
+                                                    <li>
                                                         <div className="content">
-                                                            <h6>
-                                                                Jonathon
-                                                                <span className="text-regular">
-                                                                    like on a product.
-                                                                </span>
-                                                            </h6>
                                                             <p>
-                                                                Lorem ipsum dolor sit amet, consect etur adipiscing
-                                                                elit Vivamus tortor.
+                                                                Không có thông
+                                                                báo
                                                             </p>
-                                                            <span>10 mins ago</span>
                                                         </div>
-                                                    </a>
-                                                </li>
+                                                    </li>
+                                                )}
                                             </ul>
-                                        </div> */}
+                                        </div>
                                         {/* -- notification end -- */}
                                         {/* -- message start -- */}
                                         <div className="header-message-box ml-15 d-none d-md-flex">
@@ -483,7 +606,7 @@ const HomeAdmin = () => {
                                                                             )
                                                                                 .utc()
                                                                                 .format(
-                                                                                    "MMM DD, YYYY hh:ss"
+                                                                                    'MMM DD, YYYY hh:ss'
                                                                                 )}
                                                                         </span>
                                                                     </div>
@@ -496,7 +619,7 @@ const HomeAdmin = () => {
                                                         <div className="content">
                                                             <p>
                                                                 Thùng Thư Rỗng
-                                                            </p>{" "}
+                                                            </p>{' '}
                                                         </div>
                                                     </li>
                                                 )}
@@ -523,14 +646,14 @@ const HomeAdmin = () => {
                                                     <div className="info">
                                                         <h6>
                                                             {localStorage.getItem(
-                                                                "userInfo"
+                                                                'userInfo'
                                                             )
                                                                 ? JSON.parse(
                                                                       localStorage.getItem(
-                                                                          "userInfo"
+                                                                          'userInfo'
                                                                       )
                                                                   ).lastName
-                                                                : "Admin"}
+                                                                : 'Admin'}
                                                         </h6>
                                                         <div className="image">
                                                             <img

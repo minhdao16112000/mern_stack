@@ -1,20 +1,26 @@
 import React, { useEffect, useState } from 'react';
+import moment from 'moment';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useLocation, useRouteMatch } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import MessageBox from '../components/Box/MessageBox';
 import MenuLeft from '../components/MenuLeft/MenuLeft';
+import Rate from '../components/Rate/Rate';
 import RelatedProducts from '../components/RelatedProducts/RelatedProducts';
+import { PRODUCT_REVIEW_CREATE_RESET } from '../constants/productConstant';
 import { addCart } from '../redux/actions/cartActions';
 import { getCategories } from '../redux/actions/categoryActions';
 import {
+    createReview,
     getColors,
     getProductBySlug,
     getSizes,
 } from '../redux/actions/productActions';
 import { favoritesAdd, getUser } from '../redux/actions/userActions';
+import './styles/porductDetail.scss';
 
 const ProductDetailScreen = () => {
     const dispatch = useDispatch();
@@ -26,26 +32,97 @@ const ProductDetailScreen = () => {
     const lstCate = useSelector((state) => state.category.categories);
     const lstColor = useSelector((state) => state.product.colors_list);
     const lstSize = useSelector((state) => state.product.sizes_list);
+    const proReview = useSelector((state) => state.product);
+    const user = useSelector((state) => state.user.user);
     var [count, setCount] = useState(0);
     const [sizeAct, setSizeAct] = useState('');
     const [sizes, setSizes] = useState('');
     const [colorAct, setColorAct] = useState('');
     const [colors, setColors] = useState('');
     const [quantityPro, setQuantityPro] = useState(1);
-    var cate = product.categoryId;
+    const [rating, setRating] = useState(0);
+    const [comment, setComment] = useState('');
+
+    const {
+        // loading: loadingReviewCreate,
+        error: errorReviewCreate,
+        success: successReviewCreate,
+    } = proReview;
+
+    const pro = product ? product : [];
+
+    var cate = pro.categoryId;
+
+    var userName = '';
+
     const userId = localStorage.getItem('userInfo')
         ? JSON.parse(localStorage.getItem('userInfo'))._id
         : '';
-    const user = useSelector((state) => state.user.user);
+
     var check = false;
-    if (user && product) {
+    var noComment = false;
+
+    if (user && pro) {
         user.favorites.forEach((values) => {
-            if (values._id === product._id) {
+            if (values._id === pro._id) {
                 return (check = true);
             }
         });
+        if (pro.reviews) {
+            pro.reviews.forEach((values) => {
+                if (values.idUser === user._id) {
+                    return (noComment = true);
+                }
+            });
+        }
     }
+
     const [checkAdd, setCheckAdd] = useState(check);
+
+    if (user) {
+        userName = user.firstName + ' ' + user.lastName;
+    }
+
+    const submitHandler = (e) => {
+        e.preventDefault();
+        if (rating === 0) {
+            toast.error('Bạn đừng quên đánh giá nhé !.', {
+                position: 'top-center',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+            return;
+        }
+        if (comment === '') {
+            toast.error('Opps! Bạn quên bình luận rồi.', {
+                position: 'top-center',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+            return;
+        }
+        if (rating && comment) {
+            if (pro) {
+                dispatch(
+                    createReview(pro._id, {
+                        id: user._id,
+                        sex: user.sex,
+                        rate: rating,
+                        cmt: comment,
+                        name: userName,
+                    })
+                );
+            }
+        }
+    };
 
     const responsive = {
         desktop: {
@@ -63,6 +140,61 @@ const ProductDetailScreen = () => {
             items: 1,
             slidesToSlide: 1, // optional, default to 1.
         },
+    };
+
+    const getStar = () => {
+        if (pro) {
+            return (
+                <div className="pd-rating star-pro">
+                    <i
+                        className={
+                            pro.rating >= 1
+                                ? 'fa fa-star'
+                                : pro.rating >= 0.5
+                                ? 'fa fa-star-half-o'
+                                : 'fa fa-star-o'
+                        }
+                    />
+                    <i
+                        className={
+                            pro.rating >= 2
+                                ? 'fa fa-star'
+                                : pro.rating >= 1.5
+                                ? 'fa fa-star-half-o'
+                                : 'fa fa-star-o'
+                        }
+                    />
+                    <i
+                        className={
+                            pro.rating >= 3
+                                ? 'fa fa-star'
+                                : pro.rating >= 2.5
+                                ? 'fa fa-star-half-o'
+                                : 'fa fa-star-o'
+                        }
+                    />
+                    <i
+                        className={
+                            pro.rating >= 4
+                                ? 'fa fa-star'
+                                : pro.rating >= 3.5
+                                ? 'fa fa-star-half-o'
+                                : 'fa fa-star-o'
+                        }
+                    />
+                    <i
+                        className={
+                            pro.rating >= 5
+                                ? 'fa fa-star'
+                                : pro.rating >= 4.5
+                                ? 'fa fa-star-half-o'
+                                : 'fa fa-star-o'
+                        }
+                    />
+                    <span>({pro.numReviews})</span>
+                </div>
+            );
+        }
     };
 
     const notifySuccess = () => {
@@ -198,7 +330,7 @@ const ProductDetailScreen = () => {
 
     const checkColor = (id) => {
         var colorArr = [];
-        if (id && lstColor.Colors) {
+        if (id && lstColor && lstColor.Colors) {
             lstColor.Colors.forEach((value) => {
                 if (id.includes(value._id)) {
                     colorArr.push(value.code);
@@ -210,7 +342,7 @@ const ProductDetailScreen = () => {
 
     const checkSize = (id) => {
         var sizeArr = [];
-        if (id && lstSize.Sizes) {
+        if (id && lstSize && lstSize.Sizes) {
             lstSize.Sizes.forEach((value) => {
                 if (value._id.includes(id)) {
                     sizeArr.push(value.name);
@@ -221,6 +353,20 @@ const ProductDetailScreen = () => {
     };
 
     useEffect(() => {
+        if (successReviewCreate) {
+            toast.success('Cám ơn bạn đã đánh giá !.', {
+                position: 'top-center',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+            setRating(0);
+            setComment('');
+            dispatch({ type: PRODUCT_REVIEW_CREATE_RESET });
+        }
         dispatch(getProductBySlug(slug));
         dispatch(getCategories());
         dispatch(getColors());
@@ -228,7 +374,7 @@ const ProductDetailScreen = () => {
         if (userId !== '') {
             dispatch(getUser(userId));
         }
-    }, [dispatch, slug, userId]);
+    }, [dispatch, slug, successReviewCreate, userId]);
     return (
         <div>
             {/* Breadcrumb Section Begin */}
@@ -257,9 +403,9 @@ const ProductDetailScreen = () => {
                         <div className="col-lg-3">
                             <MenuLeft
                                 listCate={lstCate.Categories}
-                                listColor={lstColor.Colors}
-                                listSize={lstSize.Sizes}
-                                slugCate={checkSlug(product.categoryId)}
+                                listColor={lstColor ? lstColor.Colors : null}
+                                listSize={lstSize ? lstSize.Sizes : null}
+                                slugCate={checkSlug(pro.categoryId)}
                             />
                         </div>
                         <div className="col-lg-9">
@@ -267,13 +413,13 @@ const ProductDetailScreen = () => {
                                 <div className="col-lg-6">
                                     <div className="product-pic-zoom">
                                         <div className="product-pic-zoom">
-                                            {product.image ? (
+                                            {pro.image ? (
                                                 <img
                                                     className="product-big-img"
                                                     src={`http://localhost:5000/products/${
-                                                        product.image.split(
-                                                            ','
-                                                        )[count]
+                                                        pro.image.split(',')[
+                                                            count
+                                                        ]
                                                     }`}
                                                     alt=""
                                                 />
@@ -314,8 +460,8 @@ const ProductDetailScreen = () => {
                                             dotListClass="custom-dot-list-style"
                                             itemClass="carousel-item-padding-40-px"
                                         >
-                                            {product.image ? (
-                                                product.image
+                                            {pro.image ? (
+                                                pro.image
                                                     .split(',')
                                                     .map((value, key) => {
                                                         return (
@@ -351,10 +497,10 @@ const ProductDetailScreen = () => {
                                         <div className="pd-title">
                                             <span>
                                                 {checkSingleCate(
-                                                    product.categoryId
+                                                    pro.categoryId
                                                 )}
                                             </span>
-                                            <h3>{product.name}</h3>
+                                            <h3>{pro.name}</h3>
                                             {localStorage.getItem(
                                                 'userInfo'
                                             ) ? (
@@ -362,7 +508,7 @@ const ProductDetailScreen = () => {
                                                     <div
                                                         onClick={() =>
                                                             handleAddFavorite(
-                                                                product._id
+                                                                pro._id
                                                             )
                                                         }
                                                         className="heart-icon"
@@ -373,7 +519,7 @@ const ProductDetailScreen = () => {
                                                     <div
                                                         onClick={() =>
                                                             handleAddFavorite(
-                                                                product._id
+                                                                pro._id
                                                             )
                                                         }
                                                         className="heart-icon"
@@ -383,30 +529,21 @@ const ProductDetailScreen = () => {
                                                 )
                                             ) : null}
                                         </div>
-                                        <div className="pd-rating">
-                                            <i className="fa fa-star" />
-                                            <i className="fa fa-star" />
-                                            <i className="fa fa-star" />
-                                            <i className="fa fa-star" />
-                                            <i className="fa fa-star-o" />
-                                            <span>(5)</span>
-                                        </div>
+                                        {getStar()}
                                         <div className="pd-desc">
-                                            {product.priceDiscount !== 0 ? (
+                                            {pro.priceDiscount !== 0 ? (
                                                 <h4 className="product-price">
                                                     {formatVND(
-                                                        product.priceDiscount
+                                                        pro.priceDiscount
                                                     )}
                                                     <span>
                                                         {' '}
-                                                        {formatVND(
-                                                            product.price
-                                                        )}
+                                                        {formatVND(pro.price)}
                                                     </span>
                                                 </h4>
                                             ) : (
                                                 <h4 className="product-price">
-                                                    {formatVND(product.price)}
+                                                    {formatVND(pro.price)}
                                                 </h4>
                                             )}
                                         </div>
@@ -414,8 +551,8 @@ const ProductDetailScreen = () => {
                                             <h6>Màu</h6>
                                             {/* <div className="circle" style={{ background: value.code }}></div> */}
                                             <div className="pd-color-choose">
-                                                {product.color ? (
-                                                    product.color
+                                                {pro.color ? (
+                                                    pro.color
                                                         .split(',')
                                                         .map((value, key) => {
                                                             return (
@@ -461,7 +598,7 @@ const ProductDetailScreen = () => {
                                                             className="circle"
                                                             style={{
                                                                 background:
-                                                                    product.color,
+                                                                    pro.color,
                                                             }}
                                                         ></div>
                                                     </div>
@@ -469,8 +606,8 @@ const ProductDetailScreen = () => {
                                             </div>
                                         </div>
                                         <div className="pd-size-choose">
-                                            {product.size ? (
-                                                product.size
+                                            {pro.size ? (
+                                                pro.size
                                                     .split(',')
                                                     .map((value, key) => {
                                                         return (
@@ -520,14 +657,14 @@ const ProductDetailScreen = () => {
                                                 </div>
                                             )}
                                         </div>
-                                        {product.quantity > 0 ? (
+                                        {pro.quantity > 0 ? (
                                             <div className="quantity">
                                                 <div className="pro-qty">
                                                     <input
                                                         type="number"
                                                         defaultValue={1}
                                                         min={1}
-                                                        max={product.quantity}
+                                                        max={pro.quantity}
                                                         onChange={(e) =>
                                                             setQuantityPro(
                                                                 e.target.value
@@ -539,7 +676,7 @@ const ProductDetailScreen = () => {
                                                     to={location.pathname}
                                                     onClick={() =>
                                                         handleAddCart({
-                                                            ...product,
+                                                            ...pro,
                                                             size: sizes,
                                                             color: colors,
                                                             getQty: Number(
@@ -562,9 +699,7 @@ const ProductDetailScreen = () => {
                                         <ul className="pd-tags">
                                             <li>
                                                 <span>DANH MỤC SẢN PHẨM</span>:{' '}
-                                                {checkMultiCate(
-                                                    product.categoryId
-                                                )}
+                                                {checkMultiCate(pro.categoryId)}
                                             </li>
                                             {/* <li>
                                                 <span>TAGS</span>: Clothing, T-shirt, Woman
@@ -617,7 +752,8 @@ const ProductDetailScreen = () => {
                                                 href="#tab-3"
                                                 role="tab"
                                             >
-                                                Đánh Giá Của Khách Hàng (02)
+                                                Đánh Giá Của Khách Hàng (
+                                                {pro.numReviews})
                                             </a>
                                         </li>
                                     </ul>
@@ -634,7 +770,7 @@ const ProductDetailScreen = () => {
                                                     <div
                                                         className="col-lg-12"
                                                         dangerouslySetInnerHTML={{
-                                                            __html: product.details,
+                                                            __html: pro.details,
                                                         }}
                                                     />
                                                     {/* <div className="col-lg-5">
@@ -655,18 +791,7 @@ const ProductDetailScreen = () => {
                                                             <td className="p-catagory">
                                                                 Xếp hạng
                                                             </td>
-                                                            <td>
-                                                                <div className="pd-rating">
-                                                                    <i className="fa fa-star" />
-                                                                    <i className="fa fa-star" />
-                                                                    <i className="fa fa-star" />
-                                                                    <i className="fa fa-star" />
-                                                                    <i className="fa fa-star-o" />
-                                                                    <span>
-                                                                        (5)
-                                                                    </span>
-                                                                </div>
-                                                            </td>
+                                                            <td>{getStar()}</td>
                                                         </tr>
                                                         <tr>
                                                             <td className="p-catagory">
@@ -675,7 +800,7 @@ const ProductDetailScreen = () => {
                                                             <td>
                                                                 <div className="p-price">
                                                                     {formatVND(
-                                                                        product.price
+                                                                        pro.price
                                                                     )}
                                                                 </div>
                                                             </td>
@@ -687,7 +812,7 @@ const ProductDetailScreen = () => {
                                                             <td>
                                                                 <div className="p-stock">
                                                                     {
-                                                                        product.quantity
+                                                                        pro.quantity
                                                                     }{' '}
                                                                     trong kho
                                                                 </div>
@@ -703,35 +828,105 @@ const ProductDetailScreen = () => {
                                             role="tabpanel"
                                         >
                                             <div className="customer-review-option">
-                                                <h4>2 Bình Luận</h4>
+                                                <h4>
+                                                    {pro.numReviews} Bình Luận
+                                                </h4>
                                                 <div className="comment-option">
-                                                    <div className="co-item">
-                                                        <div className="avatar-pic">
-                                                            <img
-                                                                src="assets/img/product-single/avatar-1.png"
-                                                                alt=""
-                                                            />
-                                                        </div>
-                                                        <div className="avatar-text">
-                                                            <div className="at-rating">
-                                                                <i className="fa fa-star" />
-                                                                <i className="fa fa-star" />
-                                                                <i className="fa fa-star" />
-                                                                <i className="fa fa-star" />
-                                                                <i className="fa fa-star-o" />
-                                                            </div>
-                                                            <h5>
-                                                                Brandon Kelley{' '}
-                                                                <span>
-                                                                    27 Aug 2019
-                                                                </span>
-                                                            </h5>
-                                                            <div className="at-reply">
-                                                                Nice !
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="co-item">
+                                                    {pro.reviews ? (
+                                                        pro.reviews.map(
+                                                            (value, key) => {
+                                                                return (
+                                                                    <div
+                                                                        key={
+                                                                            key
+                                                                        }
+                                                                        className="co-item"
+                                                                    >
+                                                                        <div className="avatar-pic">
+                                                                            {value.sex ? (
+                                                                                value.sex ===
+                                                                                1 ? (
+                                                                                    <img
+                                                                                        src="https://i.pinimg.com/originals/7c/c7/a6/7cc7a630624d20f7797cb4c8e93c09c1.png"
+                                                                                        alt=""
+                                                                                    />
+                                                                                ) : (
+                                                                                    <img
+                                                                                        src="https://images.clipartlogo.com/files/istock/previews/9730/97305655-avatar-icon-of-girl-in-a-wide-brim-felt-hat.jpg"
+                                                                                        alt=""
+                                                                                    />
+                                                                                )
+                                                                            ) : (
+                                                                                <img
+                                                                                    src="https://kiemtientuweb.com/ckfinder/userfiles/images/avatar-cute/avatar-cute-12.jpg"
+                                                                                    alt=""
+                                                                                />
+                                                                            )}
+                                                                        </div>
+                                                                        <div className="avatar-text">
+                                                                            <div className="at-rating show-rating">
+                                                                                {Array(
+                                                                                    5
+                                                                                )
+                                                                                    .fill(
+                                                                                        0
+                                                                                    )
+                                                                                    .map(
+                                                                                        (
+                                                                                            _,
+                                                                                            i
+                                                                                        ) =>
+                                                                                            i +
+                                                                                            1
+                                                                                    )
+                                                                                    .map(
+                                                                                        (
+                                                                                            idx
+                                                                                        ) => (
+                                                                                            <i
+                                                                                                key={
+                                                                                                    idx
+                                                                                                }
+                                                                                                className={
+                                                                                                    idx <=
+                                                                                                    value.rating
+                                                                                                        ? 'fa fa-star'
+                                                                                                        : 'fa fa-star-o'
+                                                                                                }
+                                                                                            />
+                                                                                        )
+                                                                                    )}
+                                                                            </div>
+                                                                            <h5>
+                                                                                {
+                                                                                    value.name
+                                                                                }{' '}
+                                                                                <span>
+                                                                                    {moment(
+                                                                                        value.createdAt.substring(
+                                                                                            0,
+                                                                                            10
+                                                                                        )
+                                                                                    ).format(
+                                                                                        'DD MMM  YYYY'
+                                                                                    )}
+                                                                                </span>
+                                                                            </h5>
+                                                                            <div className="at-reply">
+                                                                                {
+                                                                                    value.comment
+                                                                                }
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                );
+                                                            }
+                                                        )
+                                                    ) : (
+                                                        <div className="co-item"></div>
+                                                    )}
+
+                                                    {/* <div className="co-item">
                                                         <div className="avatar-pic">
                                                             <img
                                                                 src="assets/img/product-single/avatar-2.png"
@@ -756,54 +951,82 @@ const ProductDetailScreen = () => {
                                                                 Nice !
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div> */}
                                                 </div>
-                                                <div className="personal-rating">
-                                                    <h6>Your Ratind</h6>
-                                                    <div className="rating">
-                                                        <i className="fa fa-star" />
-                                                        <i className="fa fa-star" />
-                                                        <i className="fa fa-star" />
-                                                        <i className="fa fa-star" />
-                                                        <i className="fa fa-star-o" />
+                                                {localStorage.getItem(
+                                                    'userInfo'
+                                                ) && noComment === false ? (
+                                                    <div className="personal-rating">
+                                                        <h6>Your Rating</h6>
+                                                        <Rate
+                                                            rating={rating}
+                                                            onRating={(rate) =>
+                                                                setRating(rate)
+                                                            }
+                                                        />
                                                     </div>
-                                                </div>
-                                                <div className="leave-comment">
-                                                    <h4>Leave A Comment</h4>
-                                                    <form
-                                                        action="#"
-                                                        className="comment-form"
-                                                    >
-                                                        <div className="row">
-                                                            <div className="col-lg-6">
-                                                                <input
-                                                                    type="text"
-                                                                    placeholder="Name"
-                                                                />
-                                                            </div>
-                                                            <div className="col-lg-6">
-                                                                <input
-                                                                    type="text"
-                                                                    placeholder="Email"
-                                                                />
-                                                            </div>
-                                                            <div className="col-lg-12">
-                                                                <textarea
-                                                                    placeholder="Messages"
-                                                                    defaultValue={
-                                                                        ''
-                                                                    }
-                                                                />
-                                                                <button
-                                                                    type="submit"
-                                                                    className="site-btn"
-                                                                >
-                                                                    Send message
-                                                                </button>
-                                                            </div>
+                                                ) : null}
+                                                {localStorage.getItem(
+                                                    'userInfo'
+                                                ) ? (
+                                                    noComment === false ? (
+                                                        <div className="leave-comment">
+                                                            <h4>
+                                                                Leave A Comment
+                                                            </h4>
+                                                            <form
+                                                                className="comment-form"
+                                                                onSubmit={
+                                                                    submitHandler
+                                                                }
+                                                            >
+                                                                <div className="row">
+                                                                    <div className="col-lg-12">
+                                                                        <textarea
+                                                                            placeholder="Messages"
+                                                                            value={
+                                                                                comment
+                                                                            }
+                                                                            onChange={(
+                                                                                e
+                                                                            ) =>
+                                                                                setComment(
+                                                                                    e
+                                                                                        .target
+                                                                                        .value
+                                                                                )
+                                                                            }
+                                                                        />
+                                                                        <button
+                                                                            type="submit"
+                                                                            className="site-btn"
+                                                                        >
+                                                                            Send
+                                                                            message
+                                                                        </button>
+                                                                        <div>
+                                                                            {errorReviewCreate && (
+                                                                                <MessageBox variant="danger">
+                                                                                    {
+                                                                                        errorReviewCreate
+                                                                                    }
+                                                                                </MessageBox>
+                                                                            )}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </form>
                                                         </div>
-                                                    </form>
-                                                </div>
+                                                    ) : null
+                                                ) : (
+                                                    <MessageBox>
+                                                        Hãy{' '}
+                                                        <Link to="/dang-nhap">
+                                                            Đăng nhập
+                                                        </Link>{' '}
+                                                        để đánh giá sản phẩm !
+                                                    </MessageBox>
+                                                )}
                                             </div>
                                         </div>
                                     </div>

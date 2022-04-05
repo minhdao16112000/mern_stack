@@ -12,7 +12,7 @@ const RelatedProducts = (props) => {
     const lstPro = useSelector((state) => state.product.products_list);
 
     var relatedPro = [];
-    if (lstPro.Products) {
+    if (lstPro && lstPro.Products) {
         relatedPro = lstPro.Products.filter(
             (value) =>
                 value.categoryId === cate &&

@@ -1,50 +1,6 @@
 const { JsonWebTokenError } = require('jsonwebtoken');
 const productModel = require('../models/ProductModel');
 const uploadFile = require('../util/multerProduct');
-var fs = require('fs');
-
-// class APIfeatures {
-//     constructor(query, queryString){
-//         this.query = query;
-//         this.queryString = queryString;
-//     }
-//     filtering(){
-//        const queryObj = {...this.queryString} //queryString = req.query
-
-//        const excludedFields = ['page', 'sort', 'limit']
-//        excludedFields.forEach(el => delete(queryObj[el]))
-
-//        let queryStr = JSON.stringify(queryObj)
-//        queryStr = queryStr.replace(/\b(gte|gt|lt|lte|regex)\b/g, match => '$' + match)
-
-//     //    gte = greater than or equal
-//     //    lte = lesser than or equal
-//     //    lt = lesser than
-//     //    gt = greater than
-//        this.query.find(JSON.parse(queryStr))
-
-//        return this;
-//     }
-
-//     sorting(){
-//         if(this.queryString.sort){
-//             const sortBy = this.queryString.sort.split(',').join(' ')
-//             this.query = this.query.sort(sortBy)
-//         }else{
-//             this.query = this.query.sort('-createdAt')
-//         }
-
-//         return this;
-//     }
-
-//     paginating(){
-//         const page = this.queryString.page * 1 || 1
-//         const limit = this.queryString.limit * 1 || 9
-//         const skip = (page - 1) * limit;
-//         this.query = this.query.skip(skip).limit(limit)
-//         return this;
-//     }
-// }
 
 class ProductController {
     uploadImg = uploadFile.array('image');
@@ -95,6 +51,41 @@ class ProductController {
                 res.json({ error: err });
             });
     }
+
+    createReviews = async (req, res, next) => {
+        const productId = req.params.id;
+        const product = await productModel.findById(productId);
+        if (product) {
+            if (
+                product.reviews.find((x) => x.idUser.toString() === req.body.id)
+            ) {
+                return res
+                    .status(400)
+                    .send({ message: 'Bạn đã đánh giá sản phẩm này rồi.' });
+            }
+            const review = {
+                idUser: req.body.id,
+                sex: Number(req.body.sex),
+                name: req.body.name,
+                rating: Number(req.body.rate),
+                comment: req.body.cmt,
+            };
+            product.reviews.push(review);
+            product.numReviews = product.reviews.length;
+            product.rating =
+                product.reviews.reduce((a, c) => c.rating + a, 0) /
+                product.reviews.length;
+            const updatedProduct = await product.save();
+            res.status(201).send({
+                message: 'Đã đánh giá!',
+                review: updatedProduct.reviews[
+                    updatedProduct.reviews.length - 1
+                ],
+            });
+        } else {
+            res.status(404).send({ message: 'Không tìm thấy sản phẩm' });
+        }
+    };
 
     /* ----End Actions Add product ---- */
 
@@ -225,7 +216,6 @@ class ProductController {
         try {
             req.body.orderItems.forEach((value) => {
                 var pro = productModel.findOne({ _id: value.id });
-                console.log(pro);
                 var decrQty = { quantity: value.inStock - value.quantity };
                 productModel
                     .findOneAndUpdate({ _id: value.id }, decrQty, {
@@ -238,6 +228,24 @@ class ProductController {
             res.json({ error: err });
         }
     }
+
+    // [PATCH] /mark-all
+    markAll = async (req, res, next) => {
+        try {
+            productModel
+                .updateMany(
+                    {},
+                    { $set: { 'reviews.$[elem].notify': false } },
+                    {
+                        arrayFilters: [{ 'elem.notify': { $gte: true } }],
+                    }
+                )
+                .then(() => res.send('Mark Successfully !!!'))
+                .catch(next);
+        } catch (error) {
+            res.send({ mess: 'error' });
+        }
+    };
     /* ----End Actions Update product ---- */
 
     /* ----Begin Actions Delete product ---- */

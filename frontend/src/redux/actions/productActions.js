@@ -7,6 +7,12 @@ import {
     SET_COLOR,
     SET_SIZE,
     PRODUCTS_SEARCH,
+    PRODUCT_REVIEW_CREATE_REQUEST,
+    PRODUCT_REVIEW_CREATE_SUCCESS,
+    PRODUCT_REVIEW_CREATE_FAIL,
+    PRODUCT_MARK_ALL_REQUEST,
+    PRODUCT_MARK_ALL_SUCCESS,
+    PRODUCT_MARK_ALL_FAIL,
 } from '../../constants/productConstant';
 
 //GET ACTIONS BEGIN
@@ -193,6 +199,26 @@ export const postImgProduct = (data) => async (dispatch) => {
         console.log(e);
     }
 };
+
+export const createReview = (productId, review) => async (dispatch) => {
+    dispatch({ type: PRODUCT_REVIEW_CREATE_REQUEST });
+    try {
+        const { data } = await api.post(
+            `/api/product/${productId}/reviews`,
+            review
+        );
+        dispatch({
+            type: PRODUCT_REVIEW_CREATE_SUCCESS,
+            payload: data.review,
+        });
+    } catch (error) {
+        const message =
+            error.response && error.response.data.message
+                ? error.response.data.message
+                : error.message;
+        dispatch({ type: PRODUCT_REVIEW_CREATE_FAIL, payload: message });
+    }
+};
 //POST ACTIONS END
 
 //DELETE ACTION BEGIN
@@ -323,6 +349,23 @@ export const activeProducts = (data) => async (dispatch) => {
         }
     } catch (e) {
         console.log(e);
+    }
+};
+
+export const markAllProducts = () => async (dispatch) => {
+    dispatch({ type: PRODUCT_MARK_ALL_REQUEST });
+    try {
+        const data = await api.patch('api/product/mark-all');
+        dispatch({
+            type: PRODUCT_MARK_ALL_SUCCESS,
+            payload: data.data,
+        });
+    } catch (error) {
+        const message =
+            error.response && error.response.data.message
+                ? error.response.data.message
+                : error.message;
+        dispatch({ type: PRODUCT_MARK_ALL_FAIL, payload: message });
     }
 };
 //PATCH ACTION END
