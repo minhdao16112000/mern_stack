@@ -3,9 +3,11 @@ const router = express.Router();
 const productController = require('../controllers/ProductController');
 
 router.post('/store', productController.uploadImg, productController.store);
+router.post('/:id/reviews', productController.createReviews);
 router.put('/:id', productController.uploadImg, productController.update);
 router.patch('/decrease-qty', productController.decreaseQty);
 router.patch('/restore', productController.restore);
+router.patch('/mark-all', productController.markAll);
 router.patch('/:id', productController.active);
 router.delete('/force', productController.forceDestroy);
 router.delete('/', productController.destroy);

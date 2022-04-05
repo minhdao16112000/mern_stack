@@ -13,7 +13,7 @@ const RelatedProducts = (props) => {
     const user = useSelector((state) => state.user.user);
 
     var relatedPro = [];
-    if (lstPro.Products) {
+    if (lstPro && lstPro.Products) {
         relatedPro = lstPro.Products.filter(
             (value) =>
                 value.categoryId === cate &&
