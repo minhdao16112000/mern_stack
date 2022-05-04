@@ -138,7 +138,7 @@ const ProductLeft = (props) => {
                     {img.length !== 0 ? (
                         <div className="col-lg-3">
                             <div
-                                className="product-large set-bg m-large"
+                                className="product-large set-bg m-large large-man"
                                 style={{
                                     backgroundImage: `url(http://localhost:5000/images/${img[0].image})`,
                                 }}

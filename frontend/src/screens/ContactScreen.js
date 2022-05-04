@@ -8,6 +8,7 @@ import InputField from '../components/InputField/InputField';
 import TextareaField from '../components/InputField/TextareaField';
 import { createContact } from '../redux/actions/contactAction';
 import MessageBox from '../components/Box/MessageBox';
+import './styles/contact.scss';
 
 const ContactScreen = () => {
     const dispatch = useDispatch();
@@ -96,7 +97,7 @@ const ContactScreen = () => {
                         {/*!-- Breadcrumb Section Begin --*/}
 
                         {/*!-- Map Section Begin --*/}
-                        <div className="map spad">
+                        <div className="map spad show-map">
                             <div className="container">
                                 <div className="map-inner">
                                     <div
@@ -111,7 +112,7 @@ const ContactScreen = () => {
                         {/*!-- Map Section Begin --*/}
 
                         {/*!-- Contact Section Begin --*/}
-                        <section className="contact-section spad">
+                        <section className="contact-section spad show-contact">
                             <div className="container">
                                 <div className="row">
                                     <div className="col-lg-5">

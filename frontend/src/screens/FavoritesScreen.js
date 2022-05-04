@@ -89,7 +89,7 @@ const FavoritesScreen = () => {
             </div>
             {/* -- Breadcrumb Section End -- */}
             {/* -- Product Shop Section Begin -- */}
-            <section className="product-shop spad">
+            <section className="product-shop spad show-favorites">
                 <div className="container">
                     <div className="row">
                         <div className="col-lg-12 order-1 order-lg-2">

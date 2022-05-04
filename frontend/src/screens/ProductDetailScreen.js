@@ -288,18 +288,6 @@ const ProductDetailScreen = () => {
         }).format(value);
     };
 
-    const checkSlug = (id) => {
-        var catArr = [];
-        if (id && lstCate.Categories) {
-            lstCate.Categories.forEach((value) => {
-                if (id.includes(value._id)) {
-                    catArr.push(value.slug);
-                }
-            });
-        }
-        return catArr[0];
-    };
-
     const checkMultiCate = (id) => {
         var catArr = [];
         if (id && lstCate.Categories) {
@@ -405,7 +393,6 @@ const ProductDetailScreen = () => {
                                 listCate={lstCate.Categories}
                                 listColor={lstColor ? lstColor.Colors : null}
                                 listSize={lstSize ? lstSize.Sizes : null}
-                                slugCate={checkSlug(pro.categoryId)}
                             />
                         </div>
                         <div className="col-lg-9">

@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
 import { getCategories } from '../redux/actions/categoryActions';
+import './styles/search.scss';
 
 const SearchScreen = () => {
     const dispatch = useDispatch();
@@ -108,7 +109,7 @@ const SearchScreen = () => {
             </div>
             {/* -- Breadcrumb Section End -- */}
             {/* -- Product Shop Section Begin -- */}
-            <section className="product-shop spad">
+            <section className="product-shop spad show-search">
                 <div className="container">
                     <div className="row">
                         <div className="col-lg-12 order-1 order-lg-2">

@@ -193,7 +193,7 @@ const Header = () => {
                                     <li className="heart-icon">
                                         <Link to="/danh-muc-ua-thich">
                                             <i className="icon_heart_alt"></i>
-                                            {user ? (
+                                            {user && user.favorites ? (
                                                 <span>
                                                     {user.favorites.length}
                                                 </span>

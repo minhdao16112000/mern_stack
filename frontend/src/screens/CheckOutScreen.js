@@ -1,13 +1,15 @@
-import { FastField, Form, Formik } from "formik";
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import * as Yup from "yup";
-import InputField from "../components/InputField/InputField";
-import TextareaField from "../components/InputField/TextareaField";
-import { ORDER_CREATE_RESET } from "../constants/orderConstant";
-import { createOrder } from "../redux/actions/orderActions";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { FastField, Form, Formik } from 'formik';
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import * as Yup from 'yup';
+import InputField from '../components/InputField/InputField';
+import TextareaField from '../components/InputField/TextareaField';
+import { ORDER_CREATE_RESET } from '../constants/orderConstant';
+import { createOrder } from '../redux/actions/orderActions';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import './styles/checkout.scss';
 
 const CheckOutScreen = (props) => {
     const dispatch = useDispatch();
@@ -19,31 +21,31 @@ const CheckOutScreen = (props) => {
     const [shippingFee, setShippingFee] = useState(0);
     const [checkCash, setCheckCash] = useState(true);
     const [checkPaypal, setCheckPaypal] = useState(false);
-    const [payment, setPayment] = useState("cash");
+    const [payment, setPayment] = useState('cash');
 
-    const initialValues = localStorage.getItem("userInfo")
+    const initialValues = localStorage.getItem('userInfo')
         ? {
-              id: JSON.parse(localStorage.getItem("userInfo"))._id,
-              firstName: JSON.parse(localStorage.getItem("userInfo")).firstName,
-              lastName: JSON.parse(localStorage.getItem("userInfo")).lastName,
-              address: JSON.parse(localStorage.getItem("userInfo")).address,
-              emailAddress: JSON.parse(localStorage.getItem("userInfo")).email,
-              phone: JSON.parse(localStorage.getItem("userInfo")).phone,
-              note: "",
+              id: JSON.parse(localStorage.getItem('userInfo'))._id,
+              firstName: JSON.parse(localStorage.getItem('userInfo')).firstName,
+              lastName: JSON.parse(localStorage.getItem('userInfo')).lastName,
+              address: JSON.parse(localStorage.getItem('userInfo')).address,
+              emailAddress: JSON.parse(localStorage.getItem('userInfo')).email,
+              phone: JSON.parse(localStorage.getItem('userInfo')).phone,
+              note: '',
           }
         : {
-              id: "61b6de8cb6cd4976d4f59b83",
-              firstName: "",
-              lastName: "",
-              address: "",
-              emailAddress: "",
-              phone: "",
-              note: "",
+              id: '61b6de8cb6cd4976d4f59b83',
+              firstName: '',
+              lastName: '',
+              address: '',
+              emailAddress: '',
+              phone: '',
+              note: '',
           };
 
     const notifySize = (data, qty) => {
-        toast.error("Vui lòng chọn size cho " + qty + " sản phẩm, là " + data, {
-            position: "top-right",
+        toast.error('Vui lòng chọn size cho ' + qty + ' sản phẩm, là ' + data, {
+            position: 'top-right',
             autoClose: 5000,
             hideProgressBar: false,
             closeOnClick: true,
@@ -54,8 +56,8 @@ const CheckOutScreen = (props) => {
     };
 
     const notifyColor = (data, qty) => {
-        toast.error("Vui lòng chọn màu cho " + qty + " sản phẩm, là " + data, {
-            position: "top-right",
+        toast.error('Vui lòng chọn màu cho ' + qty + ' sản phẩm, là ' + data, {
+            position: 'top-right',
             autoClose: 5000,
             hideProgressBar: false,
             closeOnClick: true,
@@ -66,34 +68,34 @@ const CheckOutScreen = (props) => {
     };
 
     const validationSchema = Yup.object().shape({
-        firstName: Yup.string().required("Bạn phải nhập họ"),
-        lastName: Yup.string().required("Bạn phải nhập Tên"),
-        address: Yup.string().required("Bạn phải nhập địa chỉ"),
+        firstName: Yup.string().required('Bạn phải nhập họ'),
+        lastName: Yup.string().required('Bạn phải nhập Tên'),
+        address: Yup.string().required('Bạn phải nhập địa chỉ'),
         phone: Yup.string()
-            .min(10, "Số điện thoại không hợp lệ")
-            .max(11, "Số điện thoại không hợp lệ")
-            .required("Bạn phải nhập Số ĐT"),
+            .min(10, 'Số điện thoại không hợp lệ')
+            .max(11, 'Số điện thoại không hợp lệ')
+            .required('Bạn phải nhập Số ĐT'),
         emailAddress: Yup.string()
-            .email("Email không hợp lệ")
-            .required("Bạn phải nhập Email"),
+            .email('Email không hợp lệ')
+            .required('Bạn phải nhập Email'),
     });
 
     const checkedPayment = (id) => {
-        if (id === "pc-paypal") {
+        if (id === 'pc-paypal') {
             setCheckPaypal(true);
             setCheckCash(false);
-            setPayment("Paypal");
+            setPayment('Paypal');
         } else {
             setCheckPaypal(false);
             setCheckCash(true);
-            setPayment("Tiền Mặt");
+            setPayment('Tiền Mặt');
         }
     };
 
     const formatVND = (value) => {
-        return new Intl.NumberFormat("vi-VN", {
-            style: "currency",
-            currency: "VND",
+        return new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND',
         }).format(value);
     };
 
@@ -120,22 +122,21 @@ const CheckOutScreen = (props) => {
             initialValues={initialValues}
             validationSchema={validationSchema}
             onSubmit={(value) => {
-                var sizes = proCart.filter((value) => value.size === "");
-                var colors = proCart.filter((value) => value.color === "");
+                var sizes = proCart.filter((value) => value.size === '');
+                var colors = proCart.filter((value) => value.color === '');
                 if (sizes.length !== 0) {
-                    var temp1 = "";
+                    var temp1 = '';
                     sizes.forEach((element) => {
-                        temp1 += element.name + " và ";
+                        temp1 += element.name + ' và ';
                     });
                     notifySize(temp1.slice(0, -4), sizes.length);
                 } else if (colors.length !== 0) {
-                    var temp2 = "";
+                    var temp2 = '';
                     colors.forEach((element) => {
-                        temp2 += element.name + " và ";
+                        temp2 += element.name + ' và ';
                     });
                     notifyColor(temp2.slice(0, -4), colors.length);
                 } else {
-                    console.log(true);
                     dispatch(
                         createOrder({
                             orderItems: proCart,
@@ -166,7 +167,7 @@ const CheckOutScreen = (props) => {
                                     <div className="col-lg-12">
                                         <div className="breadcrumb-text product-more">
                                             <a href="/">
-                                                <i className="fa fa-home"></i>{" "}
+                                                <i className="fa fa-home"></i>{' '}
                                                 Trang Chủ
                                             </a>
                                             <a href="/xem-gio-hang">Giỏ Hàng</a>
@@ -179,14 +180,28 @@ const CheckOutScreen = (props) => {
                         {/* !-- Breadcrumb Section End -- */}
 
                         {/* !-- Checkout Section End -- */}
-                        <section className="checkout-section spad">
+                        <section className="checkout-section spad show-checkout">
                             <div className="container">
                                 <Form className="checkout-form">
                                     <div className="row">
                                         <div className="col-lg-6">
-                                            <div className="checkout-content">
+                                            {localStorage.getItem(
+                                                'userInfo'
+                                            ) ? (
+                                                <div></div>
+                                            ) : (
+                                                <div className="checkout-content">
+                                                    <Link
+                                                        to="/dang-nhap"
+                                                        className="content-btn"
+                                                    >
+                                                        Click Here To Login
+                                                    </Link>
+                                                </div>
+                                            )}
+                                            {/* <div className="checkout-content">
                                                 {localStorage.getItem(
-                                                    "userInfo"
+                                                    'userInfo'
                                                 ) ? (
                                                     <div></div>
                                                 ) : (
@@ -197,7 +212,7 @@ const CheckOutScreen = (props) => {
                                                         Click Here To Login
                                                     </a>
                                                 )}
-                                            </div>
+                                            </div> */}
                                             <h4>Chi Tiết Đơn Hàng</h4>
                                             <div className="row">
                                                 <FastField
@@ -268,18 +283,12 @@ const CheckOutScreen = (props) => {
                                             </div>
                                         </div>
                                         <div className="col-lg-6">
-                                            <div className="checkout-content">
-                                                <input
-                                                    type="text"
-                                                    placeholder="Enter Your Coupon Code"
-                                                />
-                                            </div>
                                             <div className="place-order">
                                                 <h4>Đơn Hàng Của Bạn</h4>
                                                 <div className="order-total">
                                                     <ul className="order-table">
                                                         <li>
-                                                            Sản Phẩm{" "}
+                                                            Sản Phẩm{' '}
                                                             <span>Tổng</span>
                                                         </li>
                                                         {proCart.length !==
@@ -295,8 +304,8 @@ const CheckOutScreen = (props) => {
                                                                         >
                                                                             {
                                                                                 item.name
-                                                                            }{" "}
-                                                                            x{" "}
+                                                                            }{' '}
+                                                                            x{' '}
                                                                             {
                                                                                 item.quantity
                                                                             }
@@ -313,7 +322,7 @@ const CheckOutScreen = (props) => {
                                                         ) : (
                                                             <li className="fw-normal">
                                                                 Không Có Sản
-                                                                Phẩm{" "}
+                                                                Phẩm{' '}
                                                                 <span>
                                                                     {formatVND(
                                                                         0
@@ -322,13 +331,13 @@ const CheckOutScreen = (props) => {
                                                             </li>
                                                         )}
                                                         <li className="fw-normal">
-                                                            Tạm Tính({" "}
+                                                            Tạm Tính({' '}
                                                             {proCart.reduce(
                                                                 (a, c) =>
                                                                     a +
                                                                     c.quantity,
                                                                 0
-                                                            )}{" "}
+                                                            )}{' '}
                                                             Sản phẩm )
                                                             <span>
                                                                 {formatVND(
@@ -345,7 +354,7 @@ const CheckOutScreen = (props) => {
                                                             </span>
                                                         </li>
                                                         <li className="total-price">
-                                                            Tổng tiền{" "}
+                                                            Tổng tiền{' '}
                                                             <span>
                                                                 {formatVND(
                                                                     totalCart

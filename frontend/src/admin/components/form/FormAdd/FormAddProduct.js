@@ -1,21 +1,21 @@
-import { FastField, Field, Form, Formik } from "formik";
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import * as Yup from "yup";
-import { getCategories } from "../../../../redux/actions/categoryActions";
+import { FastField, Field, Form, Formik } from 'formik';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import * as Yup from 'yup';
+import { getCategories } from '../../../../redux/actions/categoryActions';
 import {
     getColors,
     getSizes,
     storeProduct,
     storeProductAndContinue,
-} from "../../../../redux/actions/productActions";
-import AddField from "../../add/AddField";
-import CKEditorField from "../../add/CKEditorField";
-import ImageField from "../../add/ImageField";
-import MultiSelectField from "../../add/MultiSelectField";
-import SelectField from "../../add/SelectField";
-import "../style.scss";
+} from '../../../../redux/actions/productActions';
+import AddField from '../../add/AddField';
+import CKEditorField from '../../add/CKEditorField';
+import ImageField from '../../add/ImageField';
+import MultiSelectField from '../../add/MultiSelectField';
+import SelectField from '../../add/SelectField';
+import '../style.scss';
 
 const FromAddProduct = () => {
     const dispatch = useDispatch();
@@ -24,75 +24,80 @@ const FromAddProduct = () => {
     const [colors, setColors] = useState([]);
     const [sizes, setSizes] = useState([]);
     const [file, setFile] = useState([]);
-    const [save, setSave] = useState("true");
-
+    const [save, setSave] = useState('true');
     const lstCate = useSelector((state) => state.category.categories);
     const lstColors = useSelector((state) => state.product.colors_list);
     const lstSizes = useSelector((state) => state.product.sizes_list);
 
     const initialValues = {
-        name: "",
-        image: "",
-        categoryId: "",
-        color: "",
-        size: "",
-        details: "",
-        type: "1",
+        name: '',
+        image: '',
+        categoryId: '',
+        color: '',
+        size: '',
+        details: '',
+        type: '1',
         price: 0,
         priceDiscount: 0,
         quantity: 0,
-        status: "1",
+        status: '1',
     };
 
     const setSelectCate = () => {
-        lstCate.Categories.forEach((value) => {
-            if (value.status === "1") {
-                let objCate = { value: value._id, label: value.name };
-                setCate((oldVal) => [...oldVal, objCate]);
-            }
-        });
+        if (lstCate && lstCate.Categories) {
+            lstCate.Categories.forEach((value) => {
+                if (value.status === '1') {
+                    let objCate = { value: value._id, label: value.name };
+                    setCate((oldVal) => [...oldVal, objCate]);
+                }
+            });
+        }
     };
 
     const setSelectColors = () => {
-        lstColors.Colors.forEach((value) => {
-            let objColors = { value: value._id, label: value.name };
-            setColors((oldVal) => [...oldVal, objColors]);
-        });
+        if (lstColors && lstColors.Colors) {
+            lstColors.Colors.forEach((value) => {
+                let objColors = { value: value._id, label: value.name };
+                setColors((oldVal) => [...oldVal, objColors]);
+            });
+        }
     };
 
     const setSelectSizes = () => {
-        lstSizes.Sizes.forEach((value) => {
-            let objSizes = { value: value._id, label: value.name };
-            setSizes((oldVal) => [...oldVal, objSizes]);
-        });
+        if (lstColors && lstColors.Colors) {
+            lstSizes.Sizes.forEach((value) => {
+                let objSizes = { value: value._id, label: value.name };
+                setSizes((oldVal) => [...oldVal, objSizes]);
+            });
+        }
     };
 
     const validationSchema = Yup.object().shape({
         name: Yup.string()
-            .min("5", "Tên sản phẩm tối thiểu 5 kí tự")
-            .max(100, "Tên sản phẩm tối đa 100 kí tự")
-            .required("Bạn phải nhập tên sản phẩm"),
-        image: Yup.string().required("Bạn phải chọn hình ảnh cho sản phẩm"),
+            .min('5', 'Tên sản phẩm tối thiểu 5 kí tự')
+            .max(100, 'Tên sản phẩm tối đa 100 kí tự')
+            .required('Bạn phải nhập tên sản phẩm'),
+        image: Yup.string().required('Bạn phải chọn hình ảnh cho sản phẩm'),
         categoryId: Yup.string().required(
-            "Bạn phải chọn danh mục cho sản phẩm"
+            'Bạn phải chọn danh mục cho sản phẩm'
         ),
-        color: Yup.string().required("Bạn phải chọn màu cho sản phẩm"),
-        size: Yup.string().required("Bạn phải chọn size cho sản phẩm"),
-        details: Yup.string().required("Bạn phải nhập mô tả cho sản phẩm"),
+        color: Yup.string().required('Bạn phải chọn màu cho sản phẩm'),
+        size: Yup.string().required('Bạn phải chọn size cho sản phẩm'),
+        details: Yup.string().required('Bạn phải nhập mô tả cho sản phẩm'),
         price: Yup.number()
-            .min(20000, "Giá sản phẩm tôi thiểu từ 20.000đ")
-            .required("Bạn phải nhập giá cho sản phẩm"),
-        priceDiscount: Yup.number().required(
-            "Bạn phải nhập giá khuyến mãi cho sản phẩm"
-        ),
-        status: Yup.string().required("Bạn phải chọn trạng thái cho sản phẩm"),
-        quantity: Yup.number().required(
-            "Bạn phải nhập số lượng sản phẩm trong kho"
-        ),
+            .min(20000, 'Giá sản phẩm tôi thiểu từ 20.000đ')
+            .required('Bạn phải nhập giá cho sản phẩm'),
+        priceDiscount: Yup.number()
+            .min(0, 'Giá khuyến mãi không hợp lệ')
+            .required('Bạn phải nhập giá khuyến mãi cho sản phẩm'),
+        status: Yup.string().required('Bạn phải chọn trạng thái cho sản phẩm'),
+        quantity: Yup.number()
+            .min(1, 'Số lượng sản phẩm tối thiểu là 1')
+            .required('Bạn phải nhập số lượng sản phẩm trong kho'),
     });
 
     useEffect(() => {
-        document.title = "Manage Products";
+        document.title = 'Manage Products';
         dispatch(getCategories());
         dispatch(getColors());
         dispatch(getSizes());
@@ -128,10 +133,10 @@ const FromAddProduct = () => {
                 };
                 const formData = new FormData();
                 for (let i = 0; i < file.length; i++) {
-                    formData.append("image", file[i]);
+                    formData.append('image', file[i]);
                 }
-                formData.append("infos", JSON.stringify(value));
-                if (save === "true") {
+                formData.append('infos', JSON.stringify(value));
+                if (save === 'true') {
                     dispatch(storeProduct(formData));
                 } else {
                     dispatch(storeProductAndContinue(formData));
@@ -169,7 +174,7 @@ const FromAddProduct = () => {
                                                         type="submit"
                                                         className="main-btn success-btn btn-hover"
                                                         onClick={() =>
-                                                            setSave("true")
+                                                            setSave('true')
                                                         }
                                                     >
                                                         <i className="fas fa-save"></i>
@@ -180,7 +185,7 @@ const FromAddProduct = () => {
                                                         type="submit"
                                                         className="main-btn info-btn btn-hover"
                                                         onClick={() =>
-                                                            setSave("false")
+                                                            setSave('false')
                                                         }
                                                     >
                                                         <i className="far fa-save"></i>
@@ -283,12 +288,12 @@ const FromAddProduct = () => {
                                                     id="status"
                                                     options={[
                                                         {
-                                                            value: "1",
-                                                            label: "Hiện",
+                                                            value: '1',
+                                                            label: 'Hiện',
                                                         },
                                                         {
-                                                            value: "0",
-                                                            label: "Ẩn",
+                                                            value: '0',
+                                                            label: 'Ẩn',
                                                         },
                                                     ]}
                                                 />

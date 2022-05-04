@@ -13,19 +13,16 @@ const BlogDetailScreen = (props) => {
     const post = useSelector((state) => state.post.post);
     const listPost = useSelector((state) => state.post.posts_list);
     var listPostByTopic = [];
-    if (listPost.Posts) {
+    if (listPost && listPost.Posts) {
         listPostByTopic = listPost.Posts.filter(
             (value) => value.topicId === post.topicId && value.status === '1'
         );
     }
     var i = 0;
 
-    console.log(listPostByTopic.length);
-
     listPostByTopic.forEach((value, key) => {
         if (value._id === post._id) {
             i = key;
-            console.log(key);
         }
     });
 
@@ -36,7 +33,7 @@ const BlogDetailScreen = (props) => {
                 topicArr.push(value.name);
             }
         });
-        return topicArr[0].toString();
+        return topicArr.toString();
     };
 
     useEffect(() => {
@@ -72,7 +69,7 @@ const BlogDetailScreen = (props) => {
                 {/* !-- Breadcrumb Section End -- */}
 
                 {post.length !== 0 ? (
-                    <section className="blog-details spad">
+                    <section className="blog-details spad show-blogDetail">
                         <div className="container">
                             <div className="row">
                                 <div className="col-lg-12">
@@ -106,23 +103,38 @@ const BlogDetailScreen = (props) => {
                                             }}
                                         ></div>
                                         {/* <div className="blog-quote">
-                                        <p>“ Technology is nothing. What's important is that you have a faith in people, that
-                                            they're basically good and smart, and if you give them tools, they'll do wonderful
-                                            things with them.” <span>- Steven Jobs</span></p>
-                                    </div> */}
+                                            <p>
+                                                “ Technology is nothing. What's
+                                                important is that you have a
+                                                faith in people, that they're
+                                                basically good and smart, and if
+                                                you give them tools, they'll do
+                                                wonderful things with them.”{' '}
+                                                <span>- Steven Jobs</span>
+                                            </p>
+                                        </div> */}
                                         {/* <div className="blog-more">
-                                        <div className="row">
-                                            <div className="col-sm-4">
-                                                <img src="assets/img/blog/blog-detail-1.jpg" alt="" />
+                                            <div className="row">
+                                                <div className="col-sm-4">
+                                                    <img
+                                                        src="assets/img/blog/blog-detail-1.jpg"
+                                                        alt=""
+                                                    />
+                                                </div>
+                                                <div className="col-sm-4">
+                                                    <img
+                                                        src="assets/img/blog/blog-detail-2.jpg"
+                                                        alt=""
+                                                    />
+                                                </div>
+                                                <div className="col-sm-4">
+                                                    <img
+                                                        src="assets/img/blog/blog-detail-3.jpg"
+                                                        alt=""
+                                                    />
+                                                </div>
                                             </div>
-                                            <div className="col-sm-4">
-                                                <img src="assets/img/blog/blog-detail-2.jpg" alt="" />
-                                            </div>
-                                            <div className="col-sm-4">
-                                                <img src="assets/img/blog/blog-detail-3.jpg" alt="" />
-                                            </div>
-                                        </div>
-                                    </div> */}
+                                        </div> */}
 
                                         <div className="tag-share">
                                             <div className="details-tag">
@@ -140,13 +152,18 @@ const BlogDetailScreen = (props) => {
                                                                 )[2]
                                                         ).map((value) => {
                                                             return (
-                                                                <li
+                                                                <Link
+                                                                    to={`/chu-de/${value.slug}`}
                                                                     key={
                                                                         value._id
                                                                     }
                                                                 >
-                                                                    {value.name}
-                                                                </li>
+                                                                    <li>
+                                                                        {
+                                                                            value.name
+                                                                        }
+                                                                    </li>
+                                                                </Link>
                                                             );
                                                         })
                                                     ) : (
@@ -154,7 +171,7 @@ const BlogDetailScreen = (props) => {
                                                     )}
                                                 </ul>
                                             </div>
-                                            <div className="blog-share">
+                                            {/* <div className="blog-share">
                                                 <span>Share:</span>
                                                 <div className="social-links">
                                                     <a href=".#">
@@ -173,7 +190,7 @@ const BlogDetailScreen = (props) => {
                                                         <i className="fa fa-youtube-play"></i>
                                                     </a>
                                                 </div>
-                                            </div>
+                                            </div> */}
                                         </div>
                                         <div className="blog-post">
                                             <div className="row">
@@ -359,59 +376,6 @@ const BlogDetailScreen = (props) => {
                                                     <></>
                                                 )}
                                             </div>
-                                        </div>
-                                        <div className="posted-by">
-                                            <div className="pb-pic">
-                                                <img
-                                                    src="assets/img/blog/post-by.png"
-                                                    alt=""
-                                                />
-                                            </div>
-                                            <div className="pb-text">
-                                                <a href=".#">
-                                                    <h5>Shane Lynch</h5>
-                                                </a>
-                                                <p>
-                                                    Aliquip ex ea commodo
-                                                    consequat. Duis aute irure
-                                                    dolor in reprehenderit in
-                                                    voluptate velit esse cillum
-                                                    bore et dolore magna aliqua.
-                                                    Ut enim ad minim veniam,
-                                                    quis nostrud amodo
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <div className="leave-comment">
-                                            <h4>Leave A Comment</h4>
-                                            <form
-                                                action="#"
-                                                className="comment-form"
-                                            >
-                                                <div className="row">
-                                                    <div className="col-lg-6">
-                                                        <input
-                                                            type="text"
-                                                            placeholder="Name"
-                                                        />
-                                                    </div>
-                                                    <div className="col-lg-6">
-                                                        <input
-                                                            type="text"
-                                                            placeholder="Email"
-                                                        />
-                                                    </div>
-                                                    <div className="col-lg-12">
-                                                        <textarea placeholder="Messages"></textarea>
-                                                        <button
-                                                            type="submit"
-                                                            className="site-btn"
-                                                        >
-                                                            Send message
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </form>
                                         </div>
                                     </div>
                                 </div>

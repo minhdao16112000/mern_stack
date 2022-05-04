@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import PropTypes from "prop-types";
-import { ErrorMessage } from "formik";
-import { useRouteMatch } from "react-router-dom";
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+import { ErrorMessage } from 'formik';
+import { useRouteMatch } from 'react-router-dom';
 
 ImageField.propTypes = {
     field: PropTypes.object.isRequired,
@@ -11,15 +11,15 @@ ImageField.propTypes = {
 };
 
 ImageField.defaultProps = {
-    data: "",
+    data: '',
 };
 
 export default function ImageField(props) {
-    let match = useRouteMatch("/admin/:slug");
+    let match = useRouteMatch('/admin/:slug');
+    const { field, form, data } = props;
     // eslint-disable-next-line no-unused-vars
     const [filename, setFilename] = useState([]);
-    const [img, setImg] = useState([]);
-    const { field, form, data } = props;
+    const [img, setImg] = useState(data);
     const { name } = field;
     const { errors, touched } = form;
     const showError = errors[name] && touched[name];
@@ -48,7 +48,6 @@ export default function ImageField(props) {
             setImg((oldVal) => [...oldVal, URL.createObjectURL(value[1])]);
         });
     };
-
     return (
         <div className="input-style-1">
             <label>Hình Ảnh</label>
@@ -64,22 +63,23 @@ export default function ImageField(props) {
                 {img.length !== 0 ? (
                     img.map((value, key) => {
                         return (
-                            <img
-                                key={key}
-                                className="product_img-add"
-                                src={value}
-                                alt="hình sản phẩm"
-                            />
+                            <div key={key}>
+                                <img
+                                    className="product_img-add"
+                                    src={value}
+                                    alt="hình sản phẩm"
+                                />
+                            </div>
                         );
                     })
-                ) : data !== "" ? (
-                    data.split(",").map((value, key) => {
+                ) : data !== '' ? (
+                    data.split(',').map((value, key) => {
                         return (
                             <img
                                 key={key}
                                 className="product_img-add"
                                 src={`http://localhost:5000/${
-                                    match.url.split("/")[2]
+                                    match.url.split('/')[2]
                                 }/${value}`}
                                 alt="hình sản phẩm nè"
                             />

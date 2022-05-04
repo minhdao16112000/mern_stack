@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
-
+const passport = require('passport');
 const userController = require('../controllers/UserController');
+require('../config/passport/passport');
 
 router.post('/login', userController.login);
 router.post('/register', userController.register);
@@ -13,6 +14,34 @@ router.patch('/restore', userController.restore);
 router.patch('/:id/favorites', userController.addFavorites);
 router.delete('/force', userController.forceDestroy);
 router.delete('/', userController.destroy);
+router.get(
+    '/login-google/callback',
+    passport.authenticate('google', {
+        failureRedirect: '/',
+    }),
+    userController.redirectToken
+);
+router.get(
+    '/login-facebook/callback',
+    passport.authenticate('facebook', {
+        failureRedirect: '/',
+    }),
+    userController.redirectToken
+);
+router.get('/login-google/success', userController.successGoogle);
+router.get('/login-facebook/success', userController.successGoogle);
+router.get(
+    '/login-google',
+    passport.authenticate('google', {
+        scope: ['profile', 'email'],
+    })
+);
+router.get(
+    '/login-facebook',
+    passport.authenticate('facebook', {
+        scope: ['email'],
+    })
+);
 router.get('/trash', userController.trash);
 router.get('/:id/edit', userController.edit);
 router.get('/', userController.show);

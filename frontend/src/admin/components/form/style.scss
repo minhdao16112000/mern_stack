@@ -6,8 +6,14 @@
 }
 .product_img-add {
     width: 100px;
+    margin: 5px;
+    position: relative;
 }
-
+.close-image-product {
+    position: absolute;
+    z-index: 1;
+    right: 0;
+}
 .group-input {
     position: relative;
     i {

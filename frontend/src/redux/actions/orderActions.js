@@ -206,7 +206,7 @@ export const restoreOrders = (data) => async (dispatch) => {
 
 export const exportOrders = () => async (dispatch) => {
     try {
-        const isRestore = await api.post('api/order/export-excel', {
+        await api.post('api/order/export-excel', {
             month: '3',
         });
     } catch (e) {

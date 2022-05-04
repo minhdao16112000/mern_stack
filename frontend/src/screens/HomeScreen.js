@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import DealWeek from '../components/DealWeek/DealWeek';
 import ProductLeft from '../components/ProductLeft/ProductLeft';
 import ProductRight from '../components/ProductRight/ProductRight';
 import Banner from '../layouts/Banner/Banner';
@@ -12,7 +11,7 @@ import { getPosts } from '../redux/actions/postActions';
 import { getProducts } from '../redux/actions/productActions';
 import { getTopics } from '../redux/actions/topicActions';
 // import Partners from "../layouts/Partners/Partners"
-import { getRole } from '../redux/actions/userActions';
+import { getRole, getUserGoogle } from '../redux/actions/userActions';
 // import Products from "../components/Products/Products";
 
 const HomeScreen = () => {
@@ -23,6 +22,9 @@ const HomeScreen = () => {
         localStorage.getItem('userInfo') !== null
             ? JSON.parse(localStorage.getItem('userInfo'))._id
             : null;
+    const authGoogle = localStorage.getItem('authGoogle')
+        ? JSON.parse(localStorage.getItem('authGoogle')).isGoogle
+        : false;
     useEffect(() => {
         dispatch(getCategories());
         dispatch(getProducts());
@@ -34,7 +36,10 @@ const HomeScreen = () => {
             window.location.reload();
         }
         if (id) dispatch(getRole(id));
-    }, [id, dispatch]);
+        if (authGoogle === true) {
+            dispatch(getUserGoogle());
+        }
+    }, [id, dispatch, authGoogle]);
     return (
         <div>
             {/* <Hero /> */}
@@ -44,7 +49,6 @@ const HomeScreen = () => {
                 listFeMale={lstCate.Categories}
                 listProFeMale={lstPro.Products}
             />
-            <DealWeek />
             <ProductRight
                 listMale={lstCate.Categories}
                 listProMale={lstPro.Products}

@@ -2,17 +2,13 @@
 /* eslint-disable array-callback-return */
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
-import { Link, Redirect, useHistory, useRouteMatch } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { Link, Redirect, useRouteMatch } from 'react-router-dom';
 import './menuleft.scss';
 
 const MenuLeft = (props) => {
-    let match = useRouteMatch('/category/:slug');
-
-    const slugCate = match ? match.params.slug : props.slugCate;
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
     var arrCate = [];
-    let history = useHistory();
     var [typeCate, setTypeCate] = useState();
     var [actCate, setActCat] = useState([]);
     var [childCate, setChildCate] = useState(arrCate);
@@ -23,7 +19,32 @@ const MenuLeft = (props) => {
     const lstCate = props.listCate;
     const lstColor = props.listColor;
     const lstSize = props.listSize;
+    const product = useSelector((state) => state.product.product);
+    let match = useRouteMatch('/category/:slug');
+    let match2 = useRouteMatch('/product/:slug');
+    var slugCate = '';
+
+    if (match) {
+        slugCate = match.params.slug;
+    } else if (match2) {
+        if (product) {
+            const checkSlug = () => {
+                var catArr = [];
+                if (product._id && lstCate.Categories) {
+                    lstCate.Categories.forEach((value) => {
+                        if (product._id.includes(value._id)) {
+                            catArr.push(value.slug);
+                        }
+                    });
+                }
+                return catArr[0];
+            };
+            console.log(checkSlug());
+        }
+    }
+
     var lstParentCate = [];
+
     if (lstCate) {
         lstParentCate = lstCate.filter(
             (value) => value.parentCate === '' && value.status === '1'
@@ -64,13 +85,6 @@ const MenuLeft = (props) => {
         selectedItem === id ? setSelectedItem(null) : setSelectedItem(id);
     };
 
-    // const handleClick = (data) => {
-    //     getGrandChild(data._id, typeCate)
-    //     if (grandChildCate.length === 0) {
-    //         console.log(data.slug)
-    //     }
-    // }
-
     useEffect(() => {
         var idCate = '';
         var arrActCate = '';
@@ -93,7 +107,7 @@ const MenuLeft = (props) => {
                 }
             });
         }
-    }, [match, lstParentCate, lstCate, arrCate]);
+    }, [lstParentCate, lstCate, arrCate]);
 
     return (
         <>

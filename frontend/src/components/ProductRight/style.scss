@@ -1,4 +1,4 @@
-.slick-arrow{
+.slick-arrow {
     background-color: transparent;
     height: 35px;
     width: 35px;
@@ -6,11 +6,11 @@
     color: white;
 }
 .slick-arrow:hover,
-.slick-arrow:active{
+.slick-arrow:active {
     background-color: transparent !important;
 }
 .slick-prev,
-.slick-next{
+.slick-next {
     top: 35%;
 }
 .slick-next {
@@ -28,4 +28,11 @@
     content: '→';
     font-size: 30px;
     color: rgb(0, 0, 0) !important;
+}
+.man-banner {
+    padding-top: 0px !important;
+    padding-bottom: 60px !important;
+}
+.large-men {
+    margin-left: -45px !important;
 }

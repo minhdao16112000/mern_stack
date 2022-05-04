@@ -2,6 +2,7 @@ import moment from 'moment';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import './style.scss';
 
 const Blogs = () => {
     const post = useSelector((state) => state.post.posts_list);

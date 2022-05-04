@@ -1,8 +1,35 @@
-.qtybutton{
+.qtybutton {
     font-size: 24px;
     color: #b2b2b2;
     float: left;
     line-height: 38px;
     cursor: pointer;
     width: 18px;
+}
+
+.no-product {
+    text-align: center;
+}
+
+.show-shoppingCart {
+    padding-top: 40px;
+    padding-bottom: 45px;
+}
+
+.text-noPro {
+    font-size: 30px;
+    margin-bottom: 20px;
+}
+
+.active-for-click {
+    color: #007bff;
+    text-decoration: none;
+    background-color: transparent;
+    font-size: 20px;
+}
+
+.active-for-click:hover {
+    color: #0561c3;
+    text-decoration: none;
+    background-color: transparent;
 }

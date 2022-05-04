@@ -13,7 +13,6 @@ const pageRouter = require('./page');
 // const testRouter = require('./test');
 
 function router(app) {
-
     app.use('/api/category', catRouter);
     app.use('/api/size', sizeRouter);
     app.use('/api/color', colorRouter);

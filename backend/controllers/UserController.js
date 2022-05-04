@@ -1,12 +1,8 @@
 const userModel = require('../models/UserModel');
-// const { mongooseToObject } = require('../util/mongoose');
-// const uploadFile = require('../util/multer');
 const bcryptjs = require('bcryptjs');
 const nodemailer = require('nodemailer');
 
 class UserController {
-    // uploadImg = uploadFile.single('image');
-
     // [POST] /login
     login = async (req, res, next) => {
         try {
@@ -115,12 +111,12 @@ class UserController {
 
     //[PUT] /changePassword
     changePassword = async (req, res, err) => {
-        const newUser = new userModel({
-            ...req.body,
-            password: bcryptjs.hashSync(req.body.password, 8),
-        });
+        const user = await userModel.findOne({ _id: req.body.id });
+        if (user) {
+            user.password = bcryptjs.hashSync(req.body.password, 8);
+        }
         userModel
-            .findOneAndUpdate({ _id: newUser.id }, newUser, {
+            .findOneAndUpdate({ _id: req.body.id }, user, {
                 returnOriginal: false,
             })
             .then((User) =>
@@ -129,7 +125,7 @@ class UserController {
                     user: User,
                 })
             )
-            .catch(() => res.send({ message: 'Password Not Found !!!' }));
+            .catch(() => res.send({ message: 'User Not Found !!!' }));
     };
 
     // [GET] /
@@ -142,6 +138,23 @@ class UserController {
                 })
             )
             .catch(next);
+    }
+
+    //[GET] /login-google/callback
+    redirectToken(req, res) {
+        res.redirect('http://localhost:3000');
+    }
+
+    //[GET] /login-google/success
+    successGoogle(req, res, next) {
+        res.send(req.user);
+    }
+
+    //[GET] /login-google/failed
+    loginGoogleFailed(req, res, next) {
+        res.status(401).send({
+            message: 'Đăng nhập tài khoản Google không thành công. ',
+        });
     }
 
     // [GET] /trash
@@ -212,7 +225,7 @@ class UserController {
         }
     }
 
-    // [PUT] /:id/favorites
+    // [PATCH] /:id/favorites
     addFavorites = async (req, res, next) => {
         try {
             const user = await userModel.findOne({ _id: req.params.id });

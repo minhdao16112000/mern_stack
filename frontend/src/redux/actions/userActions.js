@@ -1,11 +1,12 @@
+import { toast } from 'react-toastify';
 import api from '../../api';
 import {
     REMOVE_USER,
-    RESET_MESSAGE,
-    SET_ROLE,
     SET_USER,
+    SET_ROLE,
     SET_USERS,
     USER_LOGIN_FAIL,
+    RESET_MESSAGE,
 } from '../../constants/userConstant';
 
 //GET ACTION BEGIN
@@ -28,6 +29,32 @@ export const getUser = (id) => async (dispatch) => {
             type: SET_USER,
             payload: res.data,
         });
+    } catch (e) {
+        console.log(e);
+    }
+};
+
+export const getUserGoogle = () => async (dispatch) => {
+    try {
+        await api
+            .get('api/user/login-google/success', { withCredentials: true })
+            .then((res) => {
+                if (res.data) {
+                    localStorage.setItem(
+                        'userInfo',
+                        JSON.stringify(res.data.info)
+                    );
+                    localStorage.setItem(
+                        'message-user',
+                        JSON.stringify(res.data.message)
+                    );
+                    dispatch({
+                        type: SET_USER,
+                        payload: res.data.info,
+                    });
+                }
+            })
+            .catch((err) => console.log(err));
     } catch (e) {
         console.log(e);
     }
@@ -89,23 +116,37 @@ export const login = (data) => async (dispatch) => {
             email: data.email,
             password: data.password,
         });
-        const user = {
-            _id: res.data.info._id,
-            firstName: res.data.info.firstName,
-            lastName: res.data.info.lastName,
-            phone: res.data.info.phone,
-            email: res.data.info.email,
-            address: res.data.info.address,
-            role: res.data.info.role,
-            sex: res.data.info.sex,
-        };
-        localStorage.setItem('userInfo', JSON.stringify(user));
-        localStorage.setItem('message-user', JSON.stringify(res.data.message));
-        dispatch({
-            type: SET_USER,
-            payload: res.data.info,
-        });
-        document.location.href = '/';
+        if (res.data.info) {
+            const user = {
+                _id: res.data.info._id,
+                firstName: res.data.info.firstName,
+                lastName: res.data.info.lastName,
+                phone: res.data.info.phone,
+                email: res.data.info.email,
+                address: res.data.info.address,
+                role: res.data.info.role,
+                sex: res.data.info.sex,
+            };
+            localStorage.setItem('userInfo', JSON.stringify(user));
+            localStorage.setItem(
+                'message-user',
+                JSON.stringify(res.data.message)
+            );
+            dispatch({
+                type: SET_USER,
+                payload: res.data.info,
+            });
+            document.location.href = '/';
+        } else {
+            dispatch({
+                type: USER_LOGIN_FAIL,
+                payload: res.data.message,
+            });
+            localStorage.setItem(
+                'message-user_error',
+                JSON.stringify(res.data)
+            );
+        }
     } catch (error) {
         console.log(error.response);
         dispatch({
@@ -126,6 +167,7 @@ export const login = (data) => async (dispatch) => {
 export const logout = () => (dispatch) => {
     localStorage.removeItem('userInfo');
     localStorage.removeItem('persist:root');
+    localStorage.removeItem('authGoogle');
     localStorage.setItem(
         'message-user',
         JSON.stringify({ message: 'Đăng xuất thành công!' })
@@ -207,23 +249,22 @@ export const updateUser = (user) => async (dispatch) => {
 // Forget PassWord Begin
 export const forget = (user) => async (dispatch) => {
     try {
-        const data = await api.post(`api/user/forgetPassword`, user);
-        alert('Vui lòng kiểm tra email của bạn');
-        localStorage.setItem('user', JSON.stringify(data.data));
+        await api.post(`api/user/forgetPassword`, user);
+        // localStorage.setItem('user', JSON.stringify(data.data));
     } catch (e) {
         console.log(e);
     }
 };
 
-export const change = (passWord) => async (dispatch) => {
+export const change = (values) => async (dispatch) => {
     try {
-        const userOld = JSON.parse(localStorage.getItem('user'));
-        userOld.password = passWord.password;
-        const data = await api.put(`api/user/changePassword`, userOld);
-        alert('Bạn đã đổi mật khẩu thành công');
-        if (data) {
+        const data = await api.put(`api/user/changePassword`, values);
+        if (data.data.user) {
+            alert(data.data.message);
             localStorage.setItem('userInfo', JSON.stringify(data.data.user));
             document.location.href = '/';
+        } else {
+            toast.error(data.data.message);
         }
     } catch (e) {
         console.log(e);
@@ -231,3 +272,21 @@ export const change = (passWord) => async (dispatch) => {
 };
 
 // Forget PassWord End
+
+//OPEN GOOGLE
+export const openGoogle = () => async (dispatch) => {
+    try {
+        window.open('http://localhost:5000/api/user/login-google', '_self');
+    } catch (e) {
+        console.log(e);
+    }
+};
+
+//OPEN FACEBOOK
+export const openFacebook = () => async (dispatch) => {
+    try {
+        window.open('http://localhost:5000/api/user/login-facebook', '_self');
+    } catch (e) {
+        console.log(e);
+    }
+};

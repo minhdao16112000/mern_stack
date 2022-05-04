@@ -10,6 +10,7 @@ import {
     getProducts,
     getSizes,
 } from '../redux/actions/productActions';
+import './styles/showProduct.scss';
 
 const ProductsScreen = () => {
     const dispatch = useDispatch();
@@ -260,7 +261,7 @@ const ProductsScreen = () => {
             </div>
             {/* -- Breadcrumb Section End -- */}
             {/* -- Product Shop Section Begin -- */}
-            <section className="product-shop spad">
+            <section className="product-shop spad products-show">
                 <div className="container">
                     <div className="row">
                         <div className="col-lg-3 col-md-6 col-sm-8 order-2 order-lg-1 produts-sidebar-filter">

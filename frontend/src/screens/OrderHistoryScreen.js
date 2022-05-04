@@ -1,6 +1,7 @@
-import React, { useEffect } from "react";
-import { listOrderMine } from "../redux/actions/orderActions";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect } from 'react';
+import { listOrderMine } from '../redux/actions/orderActions';
+import { useDispatch, useSelector } from 'react-redux';
+import './styles/history.scss';
 
 const OrderHistoryScreen = (props) => {
     const dispatch = useDispatch();
@@ -8,9 +9,9 @@ const OrderHistoryScreen = (props) => {
     const { orders } = orderMineList;
 
     const formatVND = (value) => {
-        return new Intl.NumberFormat("vi-VN", {
-            style: "currency",
-            currency: "VND",
+        return new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND',
         }).format(value);
     };
 
@@ -38,7 +39,7 @@ const OrderHistoryScreen = (props) => {
             {/* !-- Breadcrumb Section End -- */}
 
             {/* !-- Shopping Cart Section Begin -- */}
-            <section className="shopping-cart spad">
+            <section className="shopping-cart spad show-historyOrder">
                 <div className="container">
                     <div className="row">
                         <div className="col-lg-12">
@@ -99,7 +100,7 @@ const OrderHistoryScreen = (props) => {
                                                         <td className="qua-col first-row">
                                                             <div className="quantity">
                                                                 {item.delivered ===
-                                                                "Delivered" ? (
+                                                                'Delivered' ? (
                                                                     <span className="text-success">
                                                                         <b>
                                                                             {item.deliveredAt.substring(
@@ -109,7 +110,7 @@ const OrderHistoryScreen = (props) => {
                                                                         </b>
                                                                     </span>
                                                                 ) : item.delivered ===
-                                                                  "Delivering" ? (
+                                                                  'Delivering' ? (
                                                                     <span className="text-info">
                                                                         <b>
                                                                             Đang
@@ -143,7 +144,7 @@ const OrderHistoryScreen = (props) => {
                                                 <td colSpan="5">
                                                     <h2
                                                         style={{
-                                                            textAlign: "center",
+                                                            textAlign: 'center',
                                                         }}
                                                     >
                                                         Bạn Chưa Có Đơn Hàng Nào

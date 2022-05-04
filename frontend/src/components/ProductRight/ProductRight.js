@@ -228,7 +228,7 @@ const ProductRight = (props) => {
                     <div className="col-lg-3 offset-lg-1">
                         {img.length !== 0 ? (
                             <div
-                                className="product-large set-bg m-large"
+                                className="product-large set-bg m-large large-men"
                                 style={{
                                     backgroundImage: `url(http://localhost:5000/images/${img[0].image})`,
                                 }}
