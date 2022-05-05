@@ -161,7 +161,15 @@ const ProductRight = (props) => {
                                         key={key}
                                         className="product-item col-12"
                                     >
-                                        <Link to={`/product/${value.slug}`}>
+                                        <Link
+                                            to={`/product/${value.slug}`}
+                                            onClick={() =>
+                                                localStorage.setItem(
+                                                    'proCate',
+                                                    value.categoryId
+                                                )
+                                            }
+                                        >
                                             <div className="pi-pic">
                                                 <img
                                                     src={`http://localhost:5000/products/${checkImage(

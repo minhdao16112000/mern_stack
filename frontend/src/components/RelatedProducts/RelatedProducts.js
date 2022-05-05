@@ -83,7 +83,15 @@ const RelatedProducts = (props) => {
                         relatedPro.map((value, key) => {
                             return (
                                 <div key={key} className="col-lg-3 col-sm-6">
-                                    <Link to={`/product/${value.slug}`}>
+                                    <Link
+                                        to={`/product/${value.slug}`}
+                                        onClick={() =>
+                                            localStorage.setItem(
+                                                'proCate',
+                                                value.categoryId
+                                            )
+                                        }
+                                    >
                                         <div className="product-item">
                                             <div className="pi-pic">
                                                 <img

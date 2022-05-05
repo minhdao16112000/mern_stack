@@ -104,6 +104,12 @@ const FavoritesScreen = () => {
                                                 >
                                                     <Link
                                                         to={`/product/${value.slug}`}
+                                                        onClick={() =>
+                                                            localStorage.setItem(
+                                                                'proCate',
+                                                                value.categoryId
+                                                            )
+                                                        }
                                                     >
                                                         <div className="product-item">
                                                             <div className="pi-pic favorite-image">

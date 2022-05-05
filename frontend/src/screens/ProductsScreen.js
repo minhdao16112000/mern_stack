@@ -152,7 +152,7 @@ const ProductsScreen = () => {
                     });
                 }
             }
-        } else if (match1) {
+        } else if (match1 && lstCate && lstCate.Categories) {
             const catSlug = lstCate.Categories.filter(
                 (value) => value.slug === match1.params.slug
             );
@@ -283,6 +283,12 @@ const ProductsScreen = () => {
                                                 >
                                                     <Link
                                                         to={`/product/${value.slug}`}
+                                                        onClick={() =>
+                                                            localStorage.setItem(
+                                                                'proCate',
+                                                                value.categoryId
+                                                            )
+                                                        }
                                                     >
                                                         <div className="product-item">
                                                             <div className="pi-pic">
