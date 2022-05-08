@@ -76,7 +76,7 @@ const OrderScreen = (props) => {
             {/* !-- Breadcrumb Section End -- */}
 
             {/* !-- Checkout Section End -- */}
-            <section className="checkout-section spad">
+            <section className="checkout-section spad show-order">
                 <div className="container">
                     <form action="#" className="checkout-form">
                         <div className="row">

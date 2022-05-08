@@ -147,34 +147,36 @@ const CartScreen = () => {
             {/* !-- Breadcrumb Section End -- */}
 
             {/* !-- Shopping Cart Section Begin -- */}
-            <section className="shopping-cart spad">
-                <div className="container">
-                    <div className="row">
-                        <div className="col-lg-12">
-                            <div className="cart-table">
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>Hình Ảnh</th>
-                                            <th className="p-name">
-                                                Tên Sản Phẩm
-                                            </th>
-                                            <th>Size</th>
-                                            <th>Màu</th>
-                                            <th>Giá</th>
-                                            <th>Số Lượng</th>
-                                            <th>Tổng</th>
-                                            <th>
-                                                <i
-                                                    onClick={() => deleteAll()}
-                                                    className="ti-close"
-                                                ></i>
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {proCart.length !== 0 ? (
-                                            proCart.map((item, key) => {
+            {proCart.length !== 0 ? (
+                <section className="shopping-cart spad show-shoppingCart">
+                    <div className="container">
+                        <div className="row">
+                            <div className="col-lg-12">
+                                <div className="cart-table">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Hình Ảnh</th>
+                                                <th className="p-name">
+                                                    Tên Sản Phẩm
+                                                </th>
+                                                <th>Size</th>
+                                                <th>Màu</th>
+                                                <th>Giá</th>
+                                                <th>Số Lượng</th>
+                                                <th>Tổng</th>
+                                                <th>
+                                                    <i
+                                                        onClick={() =>
+                                                            deleteAll()
+                                                        }
+                                                        className="ti-close"
+                                                    ></i>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {proCart.map((item, key) => {
                                                 return (
                                                     <tr key={key}>
                                                         <td className="cart-pic first-row">
@@ -313,87 +315,90 @@ const CartScreen = () => {
                                                         </td>
                                                     </tr>
                                                 );
-                                            })
-                                        ) : (
-                                            <tr>
-                                                <td colSpan="5">
-                                                    <h2
-                                                        style={{
-                                                            textAlign: 'center',
-                                                        }}
-                                                    >
-                                                        Không có sản phẩm nào
-                                                        trong giỏ hàng.
-                                                    </h2>
-                                                </td>
-                                            </tr>
-                                        )}
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div className="row">
-                                <div className="col-lg-4">
-                                    <div className="cart-buttons">
-                                        <Link
-                                            to="/"
-                                            className="primary-btn continue-shop"
-                                        >
-                                            Tiếp Tục Mua Sắm
-                                        </Link>
-                                    </div>
-                                    <div className="discount-coupon">
-                                        <h6>Mã Giảm Giá</h6>
-                                        <form
-                                            action="#"
-                                            className="coupon-form"
-                                        >
-                                            <input
-                                                type="text"
-                                                placeholder="Nhập Mã Giảm Giá"
-                                            />
-                                            <button
-                                                type="submit"
-                                                className="site-btn coupon-btn"
-                                            >
-                                                Áp Dụng
-                                            </button>
-                                        </form>
-                                    </div>
+                                            })}
+                                        </tbody>
+                                    </table>
                                 </div>
-                                <div className="col-lg-4 offset-lg-4">
-                                    <div className="proceed-checkout">
-                                        <ul>
-                                            <li className="subtotal">
-                                                Tạm tính({' '}
-                                                {proCart.reduce(
-                                                    (a, c) => a + c.quantity,
-                                                    0
-                                                )}{' '}
-                                                Sản Phẩm ){' '}
-                                                <span>
-                                                    {formatVND(totalCart)}
-                                                </span>
-                                            </li>
-                                            <li className="cart-total">
-                                                Tổng tiền{' '}
-                                                <span>
-                                                    {formatVND(totalCart)}
-                                                </span>
-                                            </li>
-                                        </ul>
-                                        <Link
-                                            to={`${url}/check-out`}
-                                            className="proceed-btn"
-                                        >
-                                            Tiến Hành Thanh Toán
-                                        </Link>
+                                <div className="row">
+                                    <div className="col-lg-4">
+                                        <div className="cart-buttons">
+                                            <Link
+                                                to="/"
+                                                className="primary-btn continue-shop"
+                                            >
+                                                Tiếp Tục Mua Sắm
+                                            </Link>
+                                        </div>
+                                        <div className="discount-coupon">
+                                            <h6>Mã Giảm Giá</h6>
+                                            <form
+                                                action="#"
+                                                className="coupon-form"
+                                            >
+                                                <input
+                                                    type="text"
+                                                    placeholder="Nhập Mã Giảm Giá"
+                                                />
+                                                <button
+                                                    type="submit"
+                                                    className="site-btn coupon-btn"
+                                                >
+                                                    Áp Dụng
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div className="col-lg-4 offset-lg-4">
+                                        <div className="proceed-checkout">
+                                            <ul>
+                                                <li className="subtotal">
+                                                    Tạm tính({' '}
+                                                    {proCart.reduce(
+                                                        (a, c) =>
+                                                            a + c.quantity,
+                                                        0
+                                                    )}{' '}
+                                                    Sản Phẩm ){' '}
+                                                    <span>
+                                                        {formatVND(totalCart)}
+                                                    </span>
+                                                </li>
+                                                <li className="cart-total">
+                                                    Tổng tiền{' '}
+                                                    <span>
+                                                        {formatVND(totalCart)}
+                                                    </span>
+                                                </li>
+                                            </ul>
+                                            <Link
+                                                to={`${url}/check-out`}
+                                                className="proceed-btn"
+                                            >
+                                                Tiến Hành Thanh Toán
+                                            </Link>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </section>
+                </section>
+            ) : (
+                <section className="shopping-cart spad show-shoppingCart">
+                    <div className="container">
+                        <div className="row">
+                            <div className="col-lg-12 no-product">
+                                <p className="text-noPro">
+                                    Không có sản phẩm trong giỏ hàng.
+                                </p>
+                                <Link to="/" className="active-for-click">
+                                    Về trang chủ
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            )}
             {/* !-- Shopping Cart Section End -- */}
         </div>
     );

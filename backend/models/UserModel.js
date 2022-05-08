@@ -11,9 +11,9 @@ const UserModel = new Schema(
         email: { type: String, required: true, unique: true },
         password: { type: String, required: true },
         role: { type: Number, default: 0 },
-        sex: { type: Number, required: true },
-        phone: { type: String, required: true, unique: true },
-        address: { type: String, required: true },
+        sex: { type: Number, required: true, default: 0 },
+        phone: { type: String, required: true, unique: true, default: 0 },
+        address: { type: String, default: '' },
         favorites: [
             {
                 id: {
@@ -23,6 +23,9 @@ const UserModel = new Schema(
                 },
             },
         ],
+        faceBookId: { type: String, default: '' },
+        googleId: { type: String, default: '' },
+        provider: { type: String, default: '' },
     },
     {
         timestamps: true,

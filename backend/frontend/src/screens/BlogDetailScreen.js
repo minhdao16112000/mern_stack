@@ -13,7 +13,7 @@ const BlogDetailScreen = (props) => {
     const listPost = useSelector((state) => state.post.posts_list);
     const post = useSelector((state) => state.post.post);
     var listPostByTopic = [];
-    if (listPost.Posts) {
+    if (listPost.Posts && listPost.Posts) {
         listPostByTopic = listPost.Posts.filter(
             (value) => value.topicId === post.topicId && value.status === '1'
         );
@@ -33,7 +33,7 @@ const BlogDetailScreen = (props) => {
                 topicArr.push(value.name);
             }
         });
-        return topicArr[0].toString();
+        return topicArr.toString();
     };
 
     useEffect(() => {
@@ -69,7 +69,7 @@ const BlogDetailScreen = (props) => {
                 {/* !-- Breadcrumb Section End -- */}
 
                 {post.length !== 0 ? (
-                    <section className="blog-details spad">
+                    <section className="blog-details spad show-blogDetail">
                         <div className="container">
                             <div className="row">
                                 <div className="col-lg-12">
@@ -137,13 +137,18 @@ const BlogDetailScreen = (props) => {
                                                                 )[2]
                                                         ).map((value) => {
                                                             return (
-                                                                <li
+                                                                <Link
+                                                                    to={`/chu-de/${value.slug}`}
                                                                     key={
                                                                         value._id
                                                                     }
                                                                 >
-                                                                    {value.name}
-                                                                </li>
+                                                                    <li>
+                                                                        {
+                                                                            value.name
+                                                                        }
+                                                                    </li>
+                                                                </Link>
                                                             );
                                                         })
                                                     ) : (

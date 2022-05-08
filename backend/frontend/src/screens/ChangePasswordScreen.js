@@ -6,13 +6,13 @@ import InputField from '../components/InputField/InputField';
 import { change } from '../redux/actions/userActions';
 import { Link } from 'react-router-dom';
 
-const ChangePasswordScreen = () => {
+const ChangePasswordScreen = (props) => {
     const dispatch = useDispatch();
     const initialValues = {
         password: '',
         confirmPassword: '',
     };
-
+    const user = localStorage.getItem('userInfo');
     const validationSchema = Yup.object().shape({
         password: Yup.string()
             .matches(
@@ -38,9 +38,8 @@ const ChangePasswordScreen = () => {
             initialValues={initialValues}
             validationSchema={validationSchema}
             onSubmit={(values) => {
-                // console.log(values);
+                values.id = props.match.params.id;
                 dispatch(change(values));
-                // setConfirm(true)
             }}
         >
             {(FormikProps) => {
@@ -51,7 +50,7 @@ const ChangePasswordScreen = () => {
                             <div className="row">
                                 <div className="col-lg-6 offset-lg-3">
                                     <div className="login-form">
-                                        <h2>Change Password</h2>
+                                        <h2>Đổi Mật Khẩu</h2>
                                         <Form>
                                             <FastField
                                                 type="password"
@@ -71,19 +70,28 @@ const ChangePasswordScreen = () => {
                                             />
                                             <div className="group-input gi-check">
                                                 <div className="gi-more">
-                                                    <Link
-                                                        to="/dang-nhap"
-                                                        className="forget-pass"
-                                                    >
-                                                        Login
-                                                    </Link>
+                                                    {user ? (
+                                                        <Link
+                                                            to="/thong-tin-tai-khoan"
+                                                            className="forget-pass"
+                                                        >
+                                                            Quay lại
+                                                        </Link>
+                                                    ) : (
+                                                        <Link
+                                                            to="/dang-nhap"
+                                                            className="forget-pass"
+                                                        >
+                                                            Đăng nhập
+                                                        </Link>
+                                                    )}
                                                 </div>
                                             </div>
                                             <button
                                                 type="submit"
                                                 className="site-btn login-btn"
                                             >
-                                                Confirm
+                                                Xác nhận
                                             </button>
                                         </Form>
                                     </div>

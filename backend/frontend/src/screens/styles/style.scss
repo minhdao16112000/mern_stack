@@ -25,6 +25,7 @@ input {
     }
 }
 button[type='submit'] {
+    border-radius: 8px;
     transition: all 0.2s linear;
     &:hover {
         background: #e9b961;
@@ -34,4 +35,12 @@ button[type='submit'] {
         border: 1px solid #e7ab3c;
         color: #e29c1a;
     }
+}
+.inner-header {
+    padding: 20px 0 !important;
+}
+
+.breadcrumb-text {
+    border-bottom: 1px solid #ebebeb;
+    padding: 10px 0;
 }

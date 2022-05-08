@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useLocation, useRouteMatch } from 'react-router-dom';
 import { getPosts } from '../redux/actions/postActions';
 import { getTopics } from '../redux/actions/topicActions';
+import './styles/blogs.scss';
 
 const BlogsScreen = () => {
     const dispatch = useDispatch();
@@ -35,20 +36,6 @@ const BlogsScreen = () => {
             });
         }
     }
-
-    // console.log(list)
-
-    const checkSlug = (id) => {
-        var topicSlug = '';
-        if (listTopic.Topics) {
-            listTopic.Topics.forEach((value) => {
-                if (id.includes(value._id)) {
-                    topicSlug += value.slug + '/';
-                }
-            });
-        }
-        return topicSlug.slice(0, -1);
-    };
 
     const checkTopic = (id) => {
         if (id && listTopic.Topics) {
@@ -88,7 +75,7 @@ const BlogsScreen = () => {
             {/* !-- Breadcrumb Section End -- */}
 
             {/* !-- Blog Section Begin -- */}
-            <section className="blog-section spad">
+            <section className="blog-section spad show-blogs">
                 <div className="container">
                     <div className="row">
                         <div className="col-lg-3 col-md-6 col-sm-8 order-2 order-lg-1">
@@ -192,19 +179,9 @@ const BlogsScreen = () => {
                                                             />
                                                         </div>
                                                         <div className="bi-text">
-                                                            <Link
-                                                                to={`/tin-tuc/${checkSlug(
-                                                                    value.topicId
-                                                                )}/post/${
-                                                                    value.slug
-                                                                }`}
-                                                            >
-                                                                <h4>
-                                                                    {
-                                                                        value.title
-                                                                    }
-                                                                </h4>
-                                                            </Link>
+                                                            <h4>
+                                                                {value.title}
+                                                            </h4>
                                                             <p>
                                                                 {checkTopic(
                                                                     value.topicId

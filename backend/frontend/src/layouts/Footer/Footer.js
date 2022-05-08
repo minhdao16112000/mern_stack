@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getPages } from '../../redux/actions/pageActions';
+import './style.scss';
 
 const Footer = () => {
     const dispatch = useDispatch();
@@ -50,7 +51,7 @@ const Footer = () => {
                         </div>
                     </div>
                     <div className="col-lg-2 offset-lg-1">
-                        <div className="footer-widget">
+                        <div className="footer-widget show-infoPage">
                             <h5>Thông Tin</h5>
                             <ul>
                                 {pages ? (

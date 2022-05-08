@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify';
 import api from '../../api';
 import {
     REMOVE_USER,
@@ -28,6 +29,60 @@ export const getUser = (id) => async (dispatch) => {
             type: SET_USER,
             payload: res.data,
         });
+    } catch (e) {
+        console.log(e);
+    }
+};
+
+export const getUserGoogle = () => async (dispatch) => {
+    try {
+        await api
+            .get('api/user/login-google/success', { withCredentials: true })
+            .then((res) => {
+                if (res.data) {
+                    localStorage.setItem(
+                        'userInfo',
+                        JSON.stringify(res.data.info)
+                    );
+                    localStorage.setItem(
+                        'message-user',
+                        JSON.stringify(res.data.message)
+                    );
+                    dispatch({
+                        type: SET_USER,
+                        payload: res.data.info,
+                    });
+                }
+            })
+            .catch((err) => console.log(err));
+    } catch (e) {
+        console.log(e);
+    }
+};
+
+export const getUserFacebook = () => async (dispatch) => {
+    try {
+        await api
+            .get('api/user/login-facebook/success', {
+                withCredentials: true,
+            })
+            .then((res) => {
+                if (res.data) {
+                    localStorage.setItem(
+                        'userInfo',
+                        JSON.stringify(res.data.info)
+                    );
+                    localStorage.setItem(
+                        'message-user',
+                        JSON.stringify(res.data.message)
+                    );
+                    dispatch({
+                        type: SET_USER,
+                        payload: res.data.info,
+                    });
+                }
+            })
+            .catch((err) => console.log(err));
     } catch (e) {
         console.log(e);
     }
@@ -140,6 +195,8 @@ export const login = (data) => async (dispatch) => {
 export const logout = () => (dispatch) => {
     localStorage.removeItem('userInfo');
     localStorage.removeItem('persist:root');
+    localStorage.removeItem('authGoogle');
+    localStorage.removeItem('authFacebook');
     localStorage.setItem(
         'message-user',
         JSON.stringify({ message: 'Đăng xuất thành công!' })
@@ -221,24 +278,21 @@ export const updateUser = (user) => async (dispatch) => {
 // Forget PassWord Begin
 export const forget = (user) => async (dispatch) => {
     try {
-        const data = await api.post(`api/user/forgetPassword`, user);
-        alert('Vui lòng kiểm tra email của bạn');
-        console.log(data);
-        // localStorage.setItem('user', JSON.stringify(data.data));
+        await api.post(`api/user/forgetPassword`, user);
     } catch (e) {
         console.log(e);
     }
 };
 
-export const change = (passWord) => async (dispatch) => {
+export const change = (values) => async (dispatch) => {
     try {
-        const userOld = JSON.parse(localStorage.getItem('user'));
-        userOld.password = passWord.password;
-        const data = await api.put(`api/user/changePassword`, userOld);
-        alert('Bạn đã đổi mật khẩu thành công');
-        if (data) {
+        const data = await api.put(`api/user/changePassword`, values);
+        if (data.data.user) {
+            alert(data.data.message);
             localStorage.setItem('userInfo', JSON.stringify(data.data.user));
             document.location.href = '/';
+        } else {
+            toast.error(data.data.message);
         }
     } catch (e) {
         console.log(e);
@@ -246,3 +300,21 @@ export const change = (passWord) => async (dispatch) => {
 };
 
 // Forget PassWord End
+
+//OPEN GOOGLE
+export const openGoogle = () => async (dispatch) => {
+    try {
+        window.open('http://localhost:5000/api/user/login-google', '_self');
+    } catch (e) {
+        console.log(e);
+    }
+};
+
+//OPEN FACEBOOK
+export const openFacebook = () => async (dispatch) => {
+    try {
+        window.open('http://localhost:5000/api/user/login-facebook', '_self');
+    } catch (e) {
+        console.log(e);
+    }
+};

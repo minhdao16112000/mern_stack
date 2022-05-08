@@ -9,6 +9,7 @@ import TextareaField from '../components/InputField/TextareaField';
 import { createContact } from '../redux/actions/contactAction';
 import MessageBox from '../components/Box/MessageBox';
 import { Link } from 'react-router-dom';
+import './styles/contact.scss';
 
 const ContactScreen = () => {
     const dispatch = useDispatch();
@@ -97,7 +98,7 @@ const ContactScreen = () => {
                         {/*!-- Breadcrumb Section Begin --*/}
 
                         {/*!-- Map Section Begin --*/}
-                        <div className="map spad">
+                        <div className="map spad  show-map">
                             <div className="container">
                                 <div className="map-inner">
                                     <div
@@ -112,7 +113,7 @@ const ContactScreen = () => {
                         {/*!-- Map Section Begin --*/}
 
                         {/*!-- Contact Section Begin --*/}
-                        <section className="contact-section spad">
+                        <section className="contact-section spad show-map">
                             <div className="container">
                                 <div className="row">
                                     <div className="col-lg-5">

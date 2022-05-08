@@ -61,6 +61,7 @@ const HomeAdmin = () => {
                             message: item.comment,
                             time: moment(timeAgo).fromNow(),
                             sortTime: timeAgo,
+                            sex: item.sex,
                         });
                         notify++;
                     }
@@ -500,10 +501,18 @@ const HomeAdmin = () => {
                                                                     to={`/product/${value.slug}`}
                                                                 >
                                                                     <div className="image">
-                                                                        <img
-                                                                            src="https://kiemtientuweb.com/ckfinder/userfiles/images/avatar-cute/avatar-cute-12.jpg"
-                                                                            alt=""
-                                                                        />
+                                                                        {value.sex ===
+                                                                        0 ? (
+                                                                            <img
+                                                                                src="https://i.pinimg.com/originals/7c/c7/a6/7cc7a630624d20f7797cb4c8e93c09c1.png"
+                                                                                alt=""
+                                                                            />
+                                                                        ) : (
+                                                                            <img
+                                                                                src="https://images.clipartlogo.com/files/istock/previews/9730/97305655-avatar-icon-of-girl-in-a-wide-brim-felt-hat.jpg"
+                                                                                alt=""
+                                                                            />
+                                                                        )}
                                                                     </div>
                                                                     <div className="content">
                                                                         <h6>

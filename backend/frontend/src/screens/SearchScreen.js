@@ -3,11 +3,16 @@ import Pagination from 'react-js-pagination';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
+import MenuLeft from '../components/MenuLeft/MenuLeft';
 import { getCategories } from '../redux/actions/categoryActions';
+import { getColors, getSizes } from '../redux/actions/productActions';
+import './styles/search.scss';
 
 const SearchScreen = () => {
     const dispatch = useDispatch();
     const lstCate = useSelector((state) => state.category.categories);
+    const lstColor = useSelector((state) => state.product.colors_list);
+    const lstSize = useSelector((state) => state.product.sizes_list);
     const lstPro = useSelector((state) => state.product.products_search);
     const user = useSelector((state) => state.user.user);
     var showPro = [];
@@ -85,6 +90,8 @@ const SearchScreen = () => {
 
     useEffect(() => {
         dispatch(getCategories());
+        dispatch(getColors());
+        dispatch(getSizes());
     }, [dispatch]);
 
     return (
@@ -106,10 +113,17 @@ const SearchScreen = () => {
             </div>
             {/* -- Breadcrumb Section End -- */}
             {/* -- Product Shop Section Begin -- */}
-            <section className="product-shop spad">
+            <section className="product-shop spad show-search">
                 <div className="container">
                     <div className="row">
-                        <div className="col-lg-12 order-1 order-lg-2">
+                        <div className="col-lg-3 col-md-6 col-sm-8 order-2 order-lg-1 produts-sidebar-filter">
+                            <MenuLeft
+                                listCate={lstCate.Categories}
+                                listColor={lstColor.Colors}
+                                listSize={lstSize.Sizes}
+                            />
+                        </div>
+                        <div className="col-lg-9 order-1 order-lg-2">
                             <div className="product-list">
                                 <div className="row">
                                     {currentTodos.length !== 0 ? (
@@ -121,6 +135,12 @@ const SearchScreen = () => {
                                                 >
                                                     <Link
                                                         to={`/product/${value.slug}`}
+                                                        onClick={() =>
+                                                            localStorage.setItem(
+                                                                'proCate',
+                                                                value.categoryId
+                                                            )
+                                                        }
                                                     >
                                                         <div className="product-item">
                                                             <div className="pi-pic">

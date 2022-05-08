@@ -111,12 +111,12 @@ class UserController {
 
     //[PUT] /changePassword
     changePassword = async (req, res, err) => {
-        const newUser = new userModel({
-            ...req.body,
-            password: bcryptjs.hashSync(req.body.password, 8),
-        });
+        const newUser = await userModel.findOne({ _id: req.body.id });
+        if (user) {
+            user.password = bcryptjs.hashSync(req.body.password, 8);
+        }
         userModel
-            .findOneAndUpdate({ _id: newUser.id }, newUser, {
+            .findOneAndUpdate({ _id: req.body.id }, user, {
                 returnOriginal: false,
             })
             .then((User) =>
@@ -125,7 +125,7 @@ class UserController {
                     user: User,
                 })
             )
-            .catch(() => res.send({ message: 'Password Not Found !!!' }));
+            .catch(() => res.send({ message: 'User Not Found !!!' }));
     };
 
     // [GET] /
@@ -138,6 +138,23 @@ class UserController {
                 })
             )
             .catch(next);
+    }
+
+    //[GET] /login-google/callback || /login-facebook/callback
+    redirectToken(req, res) {
+        res.redirect('http://localhost:3000');
+    }
+
+    //[GET] /login-google/success || /login-facebook/success
+    successLogin(req, res, next) {
+        res.send(req.user);
+    }
+
+    //[GET] /login-google/failed
+    loginGoogleFailed(req, res, next) {
+        res.status(401).send({
+            message: 'Đăng nhập không thành công. ',
+        });
     }
 
     // [GET] /trash

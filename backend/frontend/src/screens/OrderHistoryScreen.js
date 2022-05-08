@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { listOrderMine } from '../redux/actions/orderActions';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import './styles/history.scss';
 
 const OrderHistoryScreen = (props) => {
     const dispatch = useDispatch();
@@ -39,7 +40,7 @@ const OrderHistoryScreen = (props) => {
             {/* !-- Breadcrumb Section End -- */}
 
             {/* !-- Shopping Cart Section Begin -- */}
-            <section className="shopping-cart spad">
+            <section className="shopping-cart spad show-historyOrder">
                 <div className="container">
                     <div className="row">
                         <div className="col-lg-12">

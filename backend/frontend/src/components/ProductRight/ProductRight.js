@@ -161,7 +161,15 @@ const ProductRight = (props) => {
                                         key={key}
                                         className="product-item col-12"
                                     >
-                                        <Link to={`/product/${value.slug}`}>
+                                        <Link
+                                            to={`/product/${value.slug}`}
+                                            onClick={() =>
+                                                localStorage.setItem(
+                                                    'proCate',
+                                                    value.categoryId
+                                                )
+                                            }
+                                        >
                                             <div className="pi-pic">
                                                 <img
                                                     src={`https://shopfashi.herokuapp.com/products/${checkImage(
@@ -228,7 +236,7 @@ const ProductRight = (props) => {
                     <div className="col-lg-3 offset-lg-1">
                         {img.length !== 0 ? (
                             <div
-                                className="product-large set-bg m-large"
+                                className="product-large set-bg m-large large-men"
                                 style={{
                                     backgroundImage: `url(https://shopfashi.herokuapp.com/images/${img[0].image})`,
                                 }}
