@@ -1,11 +1,10 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
-import { forget } from '../redux/actions/userActions';
+import { useHistory } from 'react-router-dom';
 import './styles/infoUser.scss';
 
 const InfoUserScreen = () => {
     const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-    const dispatch = useDispatch();
+    const history = useHistory();
     return (
         <section className="tab-components info-list">
             <div className="container-fluid">
@@ -120,10 +119,8 @@ const InfoUserScreen = () => {
                                                             <button
                                                                 className="main-btn rounded-full btn-hover change_password"
                                                                 onClick={() =>
-                                                                    dispatch(
-                                                                        forget(
-                                                                            userInfo.email
-                                                                        )
+                                                                    history.push(
+                                                                        `/change-password/${userInfo._id}`
                                                                     )
                                                                 }
                                                             >
