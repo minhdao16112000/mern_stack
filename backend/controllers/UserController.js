@@ -140,13 +140,13 @@ class UserController {
             .catch(next);
     }
 
-    //[GET] /login-google/callback
+    //[GET] /login-google/callback || /login-facebook/callback
     redirectToken(req, res) {
         res.redirect('http://localhost:3000');
     }
 
-    //[GET] /login-google/success
-    successGoogle(req, res, next) {
+    //[GET] /login-google/success || /login-facebook/success
+    successLogin(req, res, next) {
         res.send(req.user);
     }
 

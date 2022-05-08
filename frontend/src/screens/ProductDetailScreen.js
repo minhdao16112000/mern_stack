@@ -62,7 +62,7 @@ const ProductDetailScreen = () => {
     var check = false;
     var noComment = false;
 
-    if (user && pro) {
+    if (user && pro && user.favorites) {
         user.favorites.forEach((values) => {
             if (values._id === pro._id) {
                 return (check = true);
@@ -339,6 +339,10 @@ const ProductDetailScreen = () => {
         }
         return sizeArr;
     };
+
+    pro.reviews.forEach((value) => {
+        console.log(typeof value.sex);
+    });
 
     useEffect(() => {
         if (successReviewCreate) {
@@ -830,22 +834,15 @@ const ProductDetailScreen = () => {
                                                                         className="co-item"
                                                                     >
                                                                         <div className="avatar-pic">
-                                                                            {value.sex ? (
-                                                                                value.sex ===
-                                                                                1 ? (
-                                                                                    <img
-                                                                                        src="https://i.pinimg.com/originals/7c/c7/a6/7cc7a630624d20f7797cb4c8e93c09c1.png"
-                                                                                        alt=""
-                                                                                    />
-                                                                                ) : (
-                                                                                    <img
-                                                                                        src="https://images.clipartlogo.com/files/istock/previews/9730/97305655-avatar-icon-of-girl-in-a-wide-brim-felt-hat.jpg"
-                                                                                        alt=""
-                                                                                    />
-                                                                                )
+                                                                            {value.sex ===
+                                                                            0 ? (
+                                                                                <img
+                                                                                    src="https://i.pinimg.com/originals/7c/c7/a6/7cc7a630624d20f7797cb4c8e93c09c1.png"
+                                                                                    alt=""
+                                                                                />
                                                                             ) : (
                                                                                 <img
-                                                                                    src="https://kiemtientuweb.com/ckfinder/userfiles/images/avatar-cute/avatar-cute-12.jpg"
+                                                                                    src="https://images.clipartlogo.com/files/istock/previews/9730/97305655-avatar-icon-of-girl-in-a-wide-brim-felt-hat.jpg"
                                                                                     alt=""
                                                                                 />
                                                                             )}

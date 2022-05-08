@@ -130,6 +130,8 @@ passport.use(
                                     role: newUser.role,
                                     sex: newUser.sex,
                                     address: newUser.address,
+                                    googleId: getUser.googleId,
+                                    provider: getUser.provider,
                                     token: accessToken,
                                     avatar: profile.photos[0].value,
                                 },
@@ -155,10 +157,115 @@ passport.use(
             clientID: process.env.FACEBOOK_APP_ID,
             clientSecret: process.env.FACEBOOK_APP_SECRET,
             callbackURL: '/api/user/login-facebook/callback',
+            profileFields: [
+                'id',
+                'displayName',
+                'photos',
+                'email',
+                'gender',
+                'birthday',
+            ],
         },
-        function (accessToken, refreshToken, profile, done) {
-            console.log(profile);
-            done(null, profile);
+        async function (accessToken, refreshToken, profile, done) {
+            const getUser = await User.findOne({
+                faceBookId: profile.id,
+            });
+            if (getUser) {
+                var user = {
+                    _id: getUser._id,
+                    firstName: getUser.firstName,
+                    lastName: getUser.lastName,
+                    email: getUser.email,
+                    role: getUser.role,
+                    sex: getUser.sex,
+                    phone: getUser.phone,
+                    address: getUser.address,
+                    faceBookId: getUser.faceBookId,
+                    provider: getUser.provider,
+                    token: accessToken,
+                    avatar: profile.photos[0].value,
+                };
+                done(null, {
+                    info: user,
+                    message: {
+                        message: 'Đăng nhập thành công !',
+                    },
+                });
+            } else {
+                const findUserByEmail = await User.findOne({
+                    email: profile.emails[0].value,
+                });
+                if (findUserByEmail) {
+                    console.log('find Email');
+                    findUserByEmail.provider = profile.provider;
+                    findUserByEmail.faceBookId = profile.id;
+                    User.findOneAndUpdate(
+                        { email: profile.emails[0].value },
+                        findUserByEmail,
+                        {
+                            returnOriginal: false,
+                        }
+                    )
+                        .then((user) =>
+                            done(null, {
+                                info: {
+                                    ...user,
+                                    token: accessToken,
+                                    avatar: profile.photos[0].value,
+                                },
+                                message: {
+                                    message: 'Đăng nhập thành công !',
+                                },
+                            })
+                        )
+                        .catch(() =>
+                            done(null, { message: 'User Not Found !!!' })
+                        );
+                    // done(null, 'find Email');
+                } else {
+                    var newUser = new User();
+                    var userName = profile.displayName.split(' ');
+                    newUser.lastName = userName[userName.length - 1];
+                    userName.pop();
+                    userName.forEach((value) => {
+                        newUser.firstName += value;
+                    });
+                    newUser.provider = profile.provider;
+                    newUser.password = bcryptjs.hashSync(
+                        profile.id + profile.provider,
+                        8
+                    );
+                    newUser.faceBookId = profile.id;
+                    newUser.email = profile.emails[0].value;
+                    await newUser
+                        .save()
+                        .then(() =>
+                            done(null, {
+                                info: {
+                                    _id: newUser._id,
+                                    firstName: newUser.firstName,
+                                    lastName: newUser.lastName,
+                                    email: newUser.email,
+                                    phone: newUser.phone,
+                                    role: newUser.role,
+                                    sex: newUser.sex,
+                                    address: newUser.address,
+                                    faceBookId: getUser.faceBookId,
+                                    provider: getUser.provider,
+                                    token: accessToken,
+                                    avatar: profile.photos[0].value,
+                                },
+                                message: {
+                                    message: 'Đăng nhập thành công !',
+                                },
+                            })
+                        )
+                        .catch((err) =>
+                            // res.status(500).json({ error: err.message })
+                            done(null, err)
+                        );
+                }
+            }
         }
     )
 );

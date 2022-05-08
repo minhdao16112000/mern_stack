@@ -23,6 +23,7 @@ const UserModel = new Schema(
                 },
             },
         ],
+        faceBookId: { type: String, default: '' },
         googleId: { type: String, default: '' },
         provider: { type: String, default: '' },
     },

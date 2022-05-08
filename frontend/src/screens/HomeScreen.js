@@ -11,35 +11,53 @@ import { getPosts } from '../redux/actions/postActions';
 import { getProducts } from '../redux/actions/productActions';
 import { getTopics } from '../redux/actions/topicActions';
 // import Partners from "../layouts/Partners/Partners"
-import { getRole, getUserGoogle } from '../redux/actions/userActions';
+import {
+    getRole,
+    getUserFacebook,
+    getUserGoogle,
+} from '../redux/actions/userActions';
 // import Products from "../components/Products/Products";
 
 const HomeScreen = () => {
     const dispatch = useDispatch();
     const lstCate = useSelector((state) => state.category.categories);
     const lstPro = useSelector((state) => state.product.products_list);
+
     const id =
         localStorage.getItem('userInfo') !== null
             ? JSON.parse(localStorage.getItem('userInfo'))._id
             : null;
+
     const authGoogle = localStorage.getItem('authGoogle')
         ? JSON.parse(localStorage.getItem('authGoogle')).isGoogle
         : false;
+
+    const authFacebook = localStorage.getItem('authFacebook')
+        ? JSON.parse(localStorage.getItem('authFacebook')).isFacebook
+        : false;
+
     useEffect(() => {
         dispatch(getCategories());
         dispatch(getProducts());
         dispatch(getPosts());
         dispatch(getTopics());
         dispatch(getImages());
+
         if (!window.location.hash) {
             window.location = window.location + '#trang-chu';
             window.location.reload();
         }
+
         if (id) dispatch(getRole(id));
+
         if (authGoogle === true) {
             dispatch(getUserGoogle());
         }
-    }, [id, dispatch, authGoogle]);
+
+        if (authFacebook === true) {
+            dispatch(getUserFacebook());
+        }
+    }, [id, dispatch, authGoogle, authFacebook]);
     return (
         <div>
             {/* <Hero /> */}

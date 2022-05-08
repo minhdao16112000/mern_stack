@@ -60,6 +60,34 @@ export const getUserGoogle = () => async (dispatch) => {
     }
 };
 
+export const getUserFacebook = () => async (dispatch) => {
+    try {
+        await api
+            .get('api/user/login-facebook/success', {
+                withCredentials: true,
+            })
+            .then((res) => {
+                if (res.data) {
+                    localStorage.setItem(
+                        'userInfo',
+                        JSON.stringify(res.data.info)
+                    );
+                    localStorage.setItem(
+                        'message-user',
+                        JSON.stringify(res.data.message)
+                    );
+                    dispatch({
+                        type: SET_USER,
+                        payload: res.data.info,
+                    });
+                }
+            })
+            .catch((err) => console.log(err));
+    } catch (e) {
+        console.log(e);
+    }
+};
+
 export const getTrashUsers = () => async (dispatch) => {
     try {
         const res = await api.get('api/user/trash');
@@ -168,6 +196,7 @@ export const logout = () => (dispatch) => {
     localStorage.removeItem('userInfo');
     localStorage.removeItem('persist:root');
     localStorage.removeItem('authGoogle');
+    localStorage.removeItem('authFacebook');
     localStorage.setItem(
         'message-user',
         JSON.stringify({ message: 'Đăng xuất thành công!' })

@@ -36,6 +36,10 @@ const LoginScreen = () => {
     };
 
     const facebook = () => {
+        localStorage.setItem(
+            'authFacebook',
+            JSON.stringify({ isFacebook: true })
+        );
         dispatch(openFacebook());
     };
 

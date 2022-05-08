@@ -28,20 +28,15 @@ router.get(
     }),
     userController.redirectToken
 );
-router.get('/login-google/success', userController.successGoogle);
-router.get('/login-facebook/success', userController.successGoogle);
+router.get('/login-google/success', userController.successLogin);
+router.get('/login-facebook/success', userController.successLogin);
 router.get(
     '/login-google',
     passport.authenticate('google', {
         scope: ['profile', 'email'],
     })
 );
-router.get(
-    '/login-facebook',
-    passport.authenticate('facebook', {
-        scope: ['email'],
-    })
-);
+router.get('/login-facebook', passport.authenticate('facebook'));
 router.get('/trash', userController.trash);
 router.get('/:id/edit', userController.edit);
 router.get('/', userController.show);
