@@ -352,10 +352,6 @@ const ProductDetailScreen = () => {
         return sizeArr;
     };
 
-    pro.reviews.forEach((value) => {
-        console.log(typeof value.sex);
-    });
-
     useEffect(() => {
         if (successReviewCreate) {
             toast.success('Cám ơn bạn đã đánh giá !.', {
