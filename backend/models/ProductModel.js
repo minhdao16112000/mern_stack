@@ -10,7 +10,7 @@ const reviewSchema = new mongoose.Schema(
             ref: 'User',
             required: true,
         },
-        sex: { type: Number, required: true },
+        sex: { type: Number, required: true, default: 0 },
         name: { type: String, required: true },
         comment: { type: String, required: true },
         rating: { type: Number, required: true },
