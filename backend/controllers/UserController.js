@@ -142,7 +142,7 @@ class UserController {
 
     //[GET] /login-google/callback || /login-facebook/callback
     redirectToken(req, res) {
-        res.redirect('http://localhost:3000');
+        res.redirect('https://shopfashi.herokuapp.com');
     }
 
     //[GET] /login-google/success || /login-facebook/success
