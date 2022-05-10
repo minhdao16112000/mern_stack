@@ -1,9 +1,9 @@
-import React from "react";
-import { useHistory } from "react-router-dom";
-import "./styles/infoUser.scss";
+import React from 'react';
+import { useHistory } from 'react-router-dom';
+import './styles/infoUser.scss';
 
 const InfoUserScreen = () => {
-    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
     const history = useHistory();
     return (
         <section className="tab-components info-list">
@@ -15,10 +15,10 @@ const InfoUserScreen = () => {
                             <div>
                                 <h4
                                     style={{
-                                        fontSize: "25px",
-                                        fontWeight: "700",
-                                        color: "#595959",
-                                        marginBottom: "5px",
+                                        fontSize: '25px',
+                                        fontWeight: '700',
+                                        color: '#595959',
+                                        marginBottom: '5px',
                                     }}
                                 >
                                     <i className="fas fa-info"></i> Thông Tin
@@ -42,7 +42,7 @@ const InfoUserScreen = () => {
                                                                 <strong>
                                                                     {
                                                                         userInfo.firstName
-                                                                    }{" "}
+                                                                    }{' '}
                                                                     {
                                                                         userInfo.lastName
                                                                     }
@@ -120,7 +120,7 @@ const InfoUserScreen = () => {
                                                                 className="main-btn rounded-full btn-hover change_password"
                                                                 onClick={() =>
                                                                     history.push(
-                                                                        "/change-password"
+                                                                        `/change-password/${userInfo._id}`
                                                                     )
                                                                 }
                                                             >
