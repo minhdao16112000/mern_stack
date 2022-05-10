@@ -35,18 +35,12 @@ const Footer = () => {
                                 <li>Email: bluroller161@gmail.com</li>
                             </ul>
                             <div className="footer-social">
-                                <a href="/">
+                                <Link href="https://www.facebook.com/vanminh.dao1611">
                                     <i className="fa fa-facebook"></i>
-                                </a>
-                                <a href="/">
+                                </Link>
+                                <Link href="https://www.instagram.com/vnminhminh/">
                                     <i className="fa fa-instagram"></i>
-                                </a>
-                                <a href="/">
-                                    <i className="fa fa-twitter"></i>
-                                </a>
-                                <a href="/">
-                                    <i className="fa fa-pinterest"></i>
-                                </a>
+                                </Link>
                             </div>
                         </div>
                     </div>
