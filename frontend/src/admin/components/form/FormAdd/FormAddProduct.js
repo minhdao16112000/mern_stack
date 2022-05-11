@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import * as Yup from 'yup';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { getCategories } from '../../../../redux/actions/categoryActions';
 import {
     getColors,
@@ -131,15 +133,27 @@ const FromAddProduct = () => {
                     quantity: values.quantity,
                     status: values.status,
                 };
-                const formData = new FormData();
-                for (let i = 0; i < file.length; i++) {
-                    formData.append('image', file[i]);
-                }
-                formData.append('infos', JSON.stringify(value));
-                if (save === 'true') {
-                    dispatch(storeProduct(formData));
+                if (value.price < value.priceDiscount) {
+                    toast.error('Giá khuyến mãi không được lớn hơn giá gốc.', {
+                        position: 'top-center',
+                        autoClose: 2000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                    });
                 } else {
-                    dispatch(storeProductAndContinue(formData));
+                    const formData = new FormData();
+                    for (let i = 0; i < file.length; i++) {
+                        formData.append('image', file[i]);
+                    }
+                    formData.append('infos', JSON.stringify(value));
+                    if (save === 'true') {
+                        dispatch(storeProduct(formData));
+                    } else {
+                        dispatch(storeProductAndContinue(formData));
+                    }
                 }
             }}
         >

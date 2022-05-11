@@ -271,7 +271,37 @@ const ProductDetailScreen = () => {
     };
 
     const handleAddCart = (data) => {
-        if (data.color.length === 0) {
+        if (!data.getQty) {
+            toast.error('Bạn cần nhập số lượng sản phẩm.', {
+                position: 'top-center',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+        } else if (data.getQty < 1) {
+            toast.error('Số lượng sản phẩm phải lớn hơn 0.', {
+                position: 'top-center',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+        } else if (data.getQty > pro.quantity) {
+            toast.error('Số lượng bạn nhập không phù hợp.', {
+                position: 'top-center',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+        } else if (data.color.length === 0) {
             notifyErrorColor();
         } else if (data.size.length === 0) {
             notifyErrorSize();
