@@ -156,7 +156,8 @@ passport.use(
         {
             clientID: process.env.FACEBOOK_APP_ID,
             clientSecret: process.env.FACEBOOK_APP_SECRET,
-            callbackURL: '/api/user/login-facebook/callback',
+            callbackURL:
+                'https://shopfashi.herokuapp.com/api/user/login-facebook/callback',
             profileFields: [
                 'id',
                 'displayName',

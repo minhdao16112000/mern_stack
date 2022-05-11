@@ -156,7 +156,7 @@ const BlogDetailScreen = (props) => {
                                                     )}
                                                 </ul>
                                             </div>
-                                            <div className="blog-share">
+                                            {/* <div className="blog-share">
                                                 <span>Share:</span>
                                                 <div className="social-links">
                                                     <a href=".#">
@@ -175,7 +175,7 @@ const BlogDetailScreen = (props) => {
                                                         <i className="fa fa-youtube-play"></i>
                                                     </a>
                                                 </div>
-                                            </div>
+                                            </div> */}
                                         </div>
                                         <div className="blog-post">
                                             <div className="row">
@@ -361,59 +361,6 @@ const BlogDetailScreen = (props) => {
                                                     <></>
                                                 )}
                                             </div>
-                                        </div>
-                                        <div className="posted-by">
-                                            <div className="pb-pic">
-                                                <img
-                                                    src="assets/img/blog/post-by.png"
-                                                    alt=""
-                                                />
-                                            </div>
-                                            <div className="pb-text">
-                                                <a href=".#">
-                                                    <h5>Shane Lynch</h5>
-                                                </a>
-                                                <p>
-                                                    Aliquip ex ea commodo
-                                                    consequat. Duis aute irure
-                                                    dolor in reprehenderit in
-                                                    voluptate velit esse cillum
-                                                    bore et dolore magna aliqua.
-                                                    Ut enim ad minim veniam,
-                                                    quis nostrud amodo
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <div className="leave-comment">
-                                            <h4>Leave A Comment</h4>
-                                            <form
-                                                action="#"
-                                                className="comment-form"
-                                            >
-                                                <div className="row">
-                                                    <div className="col-lg-6">
-                                                        <input
-                                                            type="text"
-                                                            placeholder="Name"
-                                                        />
-                                                    </div>
-                                                    <div className="col-lg-6">
-                                                        <input
-                                                            type="text"
-                                                            placeholder="Email"
-                                                        />
-                                                    </div>
-                                                    <div className="col-lg-12">
-                                                        <textarea placeholder="Messages"></textarea>
-                                                        <button
-                                                            type="submit"
-                                                            className="site-btn"
-                                                        >
-                                                            Send message
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </form>
                                         </div>
                                     </div>
                                 </div>

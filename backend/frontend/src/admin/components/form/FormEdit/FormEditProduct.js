@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 // import SelectField from '../../add/SelectField';
 import { Link } from 'react-router-dom';
 import * as Yup from 'yup';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { getCategories } from '../../../../redux/actions/categoryActions';
 import {
     getColors,
@@ -131,17 +133,29 @@ const FromEditProduct = (props) => {
                     quantity: values.quantity,
                     status: values.status,
                 };
-                const formData = new FormData();
-                for (let i = 0; i < file.length; i++) {
-                    formData.append('image', file[i]);
+                if (value.price < value.priceDiscount) {
+                    toast.error('Giá khuyến mãi không được lớn hơn giá gốc.', {
+                        position: 'top-center',
+                        autoClose: 2000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                    });
+                } else {
+                    const formData = new FormData();
+                    for (let i = 0; i < file.length; i++) {
+                        formData.append('image', file[i]);
+                    }
+                    formData.append('infos', JSON.stringify(value));
+                    dispatch(
+                        updateProduct({
+                            formData: formData,
+                            id: props.match.params.id,
+                        })
+                    );
                 }
-                formData.append('infos', JSON.stringify(value));
-                dispatch(
-                    updateProduct({
-                        formData: formData,
-                        id: props.match.params.id,
-                    })
-                );
             }}
             // enableReinitialize
         >

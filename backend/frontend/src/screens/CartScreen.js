@@ -9,6 +9,7 @@ import {
     increaseQuantity,
 } from '../redux/actions/cartActions';
 import { getColors, getSizes } from '../redux/actions/productActions';
+import './styles/shoppingCart.scss';
 
 const CartScreen = () => {
     const dispatch = useDispatch();
