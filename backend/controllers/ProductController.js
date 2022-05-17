@@ -1,4 +1,5 @@
 const { JsonWebTokenError } = require('jsonwebtoken');
+const fs = require('fs');
 const productModel = require('../models/ProductModel');
 const uploadFile = require('../util/multerProduct');
 
@@ -20,7 +21,7 @@ class ProductController {
         const info = JSON.parse(req.body.infos);
         let imagesArray = '';
         req.files.forEach((element, key) => {
-            imagesArray += element.path.slice(25) + ',';
+            imagesArray += element.path.slice(17) + ',';
         });
         const product = new productModel({
             name: info.name,
@@ -35,6 +36,7 @@ class ProductController {
             quantity: info.quantity,
             status: info.status,
         });
+
         product
             .save()
             .then(() =>
@@ -48,7 +50,7 @@ class ProductController {
                 })
             )
             .catch((err) => {
-                res.json({ error: err });
+                res.send({ message: err });
             });
     }
 
@@ -144,15 +146,6 @@ class ProductController {
     }
     /* ----End Actions Show product ---- */
 
-    // [GET] /:slug
-    // showBySlug(req, res, next) {
-    //     productModel.findOne({ slug: req.params.slug })
-    //         .then(products => {
-    //             res.json(products)
-    //         })
-    //         .catch(next)
-    // }
-
     /* ----Begin Actions Update product ---- */
     // [PATCH] /:id/active
     active = async (req, res, next) => {
@@ -165,14 +158,18 @@ class ProductController {
                       .findOneAndUpdate({ _id: product.id }, hidden, {
                           returnOriginal: false,
                       })
-                      .then(() => res.send('hidden'))
-                      .catch(next)
+                      .then((Pro) => res.send({ message: 'hidden', pro: Pro }))
+                      .catch(() =>
+                          res.send({ message: 'Product Not Found !!!' })
+                      )
                 : productModel
                       .findOneAndUpdate({ _id: req.params.id }, show, {
                           returnOriginal: false,
                       })
-                      .then(() => res.send('show'))
-                      .catch(next);
+                      .then((Pro) => res.send({ message: 'show', pro: Pro }))
+                      .catch(() =>
+                          res.send({ message: 'Product Not Found !!!' })
+                      );
         } catch (error) {
             res.send({ error: 'Error' });
         }
@@ -186,7 +183,7 @@ class ProductController {
 
         if (req.files.length !== 0) {
             req.files.forEach((element, key) => {
-                arr += element.path.slice(25) + ',';
+                arr += element.path.slice(17) + ',';
             });
             imagesArray = arr.slice(0, -1);
         }
@@ -243,7 +240,7 @@ class ProductController {
                 .then(() => res.send('Mark Successfully !!!'))
                 .catch(next);
         } catch (error) {
-            res.send({ mess: 'error' });
+            res.send({ message: 'error' });
         }
     };
     /* ----End Actions Update product ---- */
@@ -253,11 +250,10 @@ class ProductController {
     destroy(req, res, next) {
         const ids = req.body.id;
         const idArr = ids.split(',');
-
         productModel
             .delete({ _id: idArr })
-            .then(() => res.send('Delete Successfully !!!'))
-            .catch(next);
+            .then((Pro) => res.send('Delete Successfully !!!'))
+            .catch(() => res.send({ message: 'Delete failed' }));
     }
 
     // [DELETE] /force
@@ -267,7 +263,7 @@ class ProductController {
         productModel
             .deleteMany({ _id: idArr })
             .then(() => res.send('Delete Forever Successfully !!!'))
-            .catch(next);
+            .catch(() => res.send({ message: 'Delete Forever failed' }));
     }
     /* ----End Actions Delete product ---- */
 
@@ -284,7 +280,7 @@ class ProductController {
             );
             res.send('Restore Successfully !!!');
         } catch (error) {
-            res.json({ error: err });
+            res.send({ message: err });
         }
     }
     /* ----End Actions Restore product ---- */

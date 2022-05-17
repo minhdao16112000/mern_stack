@@ -2,7 +2,6 @@ const { JsonWebTokenError } = require('jsonwebtoken');
 const pageModel = require('../models/PageModel');
 
 class PageController {
-
     /* ----Begin Actions Add Page ---- */
 
     // [POST] /store
@@ -10,7 +9,7 @@ class PageController {
         const page = new pageModel(req.body);
         page.save()
             .then(() => res.send(page))
-            .catch(next)
+            .catch(next);
     }
 
     /* ----End Actions Add Page ---- */
@@ -25,34 +24,39 @@ class PageController {
             pages.content = req.body.values.content;
             pages.updatedBy = req.body.values.updatedBy;
         }
-        pageModel.findOneAndUpdate({ _id: pages.id }, pages, {
-            returnOriginal: false
-        })
-            .then((Page) => res.send({ message: 'Page Update Successfully', page: Page }))
-            .catch(() => res.send({ message: 'Page Not Found !!!' }))
-    }
+        pageModel
+            .findOneAndUpdate({ _id: pages.id }, pages, {
+                returnOriginal: false,
+            })
+            .then((Page) =>
+                res.send({ message: 'Page Update Successfully', page: Page })
+            )
+            .catch(() => res.send({ message: 'Page Not Found !!!' }));
+    };
 
     // [PATCH] /:id/active
     active = async (req, res, next) => {
         try {
             const page = await pageModel.findOne({ _id: req.params.id });
-            const show = { status: "1" };
-            const hidden = { status: "0" };
-            page.status === "1"
-                ? pageModel.findOneAndUpdate({ _id: page.id }, hidden, {
-                    returnOriginal: false
-                })
-                    .then(() => res.send('hidden'))
-                    .catch(next)
-                : pageModel.findOneAndUpdate({ _id: req.params.id }, show, {
-                    returnOriginal: false
-                })
-                    .then(() => res.send('show'))
-                    .catch(next)
+            const show = { status: '1' };
+            const hidden = { status: '0' };
+            page.status === '1'
+                ? pageModel
+                      .findOneAndUpdate({ _id: page.id }, hidden, {
+                          returnOriginal: false,
+                      })
+                      .then(() => res.send('hidden'))
+                      .catch(() => res.send({ message: 'Page Not Found !!!' }))
+                : pageModel
+                      .findOneAndUpdate({ _id: req.params.id }, show, {
+                          returnOriginal: false,
+                      })
+                      .then(() => res.send('show'))
+                      .catch(() => res.send({ message: 'Page Not Found !!!' }));
         } catch (error) {
-            res.send({ error: "Error" });
+            res.send({ message: 'Error' });
         }
-    }
+    };
 
     /* ----End Actions Update Page ---- */
 
@@ -62,15 +66,16 @@ class PageController {
     restore(req, res, next) {
         try {
             const ids = req.body.data;
-            ids.forEach(value => pageModel.restore({ _id: value }, (err, result) => {
-                if (err) throw err;
-                console.log(result);
-            }));
+            ids.forEach((value) =>
+                pageModel.restore({ _id: value }, (err, result) => {
+                    if (err) throw err;
+                    console.log(result);
+                })
+            );
             res.send('Restore Successfully !!!');
         } catch (error) {
-            res.json({ error: err });
+            res.send({ message: err });
         }
-
     }
 
     /* ----End Actions Restore Page ---- */
@@ -81,18 +86,20 @@ class PageController {
     forceDestroy(req, res, next) {
         const ids = req.body.id;
         const idArr = ids.split(',');
-        pageModel.deleteMany({ _id: idArr })
+        pageModel
+            .deleteMany({ _id: idArr })
             .then(() => res.send('Delete Forever Successfully !!!'))
-            .catch(next);
+            .catch(() => res.send({ message: 'Delete Forever failed' }));
     }
 
     // [DELETE] /
     destroy(req, res, next) {
         const ids = req.body.id;
         const idArr = ids.split(',');
-        pageModel.delete({ _id: idArr })
+        pageModel
+            .delete({ _id: idArr })
             .then(() => res.send('Delete Successfully !!!'))
-            .catch(next);
+            .catch(() => res.send({ message: 'Delete failed' }));
     }
 
     /* ----End Actions Delete Page ---- */
@@ -104,35 +111,38 @@ class PageController {
             .then(([Pages, deletedCount]) =>
                 res.json({
                     deletedCount,
-                    Pages
+                    Pages,
                 })
             )
-            .catch(next)
+            .catch(next);
     }
 
     // [GET] /:id/edit
     showById(req, res, next) {
-        pageModel.findOne({ _id: req.params.id })
-            .then(page => {
-                res.json(page)
+        pageModel
+            .findOne({ _id: req.params.id })
+            .then((page) => {
+                res.json(page);
             })
-            .catch(next)
+            .catch(next);
     }
 
     // [GET] /:slug
     showBySlug(req, res, next) {
-        pageModel.findOne({ slug: req.params.slug })
-            .then(pages => {
-                res.json(pages)
+        pageModel
+            .findOne({ slug: req.params.slug })
+            .then((pages) => {
+                res.json(pages);
             })
-            .catch(next)
+            .catch(next);
     }
 
     // [GET] /trash
     trash(req, res, next) {
-        pageModel.findDeleted({})
-            .then(pages => res.json(pages))
-            .catch(next)
+        pageModel
+            .findDeleted({})
+            .then((pages) => res.json(pages))
+            .catch(next);
     }
     /* ----End Actions Show Page ---- */
 
@@ -150,7 +160,6 @@ class PageController {
     //             res.json({ message: 'Action in invalid' })
     //     }
     // }
-
 }
 
 module.exports = new PageController();

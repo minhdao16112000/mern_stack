@@ -19,9 +19,8 @@ class PostController {
     // [POST] /store
     store(req, res, next) {
         const info = JSON.parse(req.body.infos);
-        console.log(req.file.path);
         const post = new postModel({
-            image: req.file.path.slice(22),
+            image: req.file.path.slice(14),
             topicId: info.topicId,
             title: info.title,
             summary: info.summary,
@@ -42,7 +41,7 @@ class PostController {
                 })
             )
             .catch((err) => {
-                res.json({ error: err });
+                res.send({ message: err });
             });
     }
 
@@ -56,7 +55,7 @@ class PostController {
         let imagesArray = info.image;
 
         if (req.file) {
-            imagesArray = req.file.path.slice(22);
+            imagesArray = req.file.path.slice(14);
         }
         postModel
             .updateOne(
@@ -88,15 +87,15 @@ class PostController {
                           returnOriginal: false,
                       })
                       .then(() => res.send('hidden'))
-                      .catch(next)
+                      .catch(() => res.send({ message: 'Post Not Found !!!' }))
                 : postModel
                       .findOneAndUpdate({ _id: req.params.id }, show, {
                           returnOriginal: false,
                       })
                       .then(() => res.send('show'))
-                      .catch(next);
+                      .catch(() => res.send({ message: 'Post Not Found !!!' }));
         } catch (error) {
-            res.send({ error: 'Error' });
+            res.send({ message: 'Error' });
         }
     };
 
@@ -116,7 +115,7 @@ class PostController {
             );
             res.send('Restore Successfully !!!');
         } catch (error) {
-            res.json({ error: err });
+            res.send({ message: err });
         }
     }
 
@@ -131,7 +130,7 @@ class PostController {
         postModel
             .deleteMany({ _id: idArr })
             .then(() => res.send('Delete Forever Successfully !!!'))
-            .catch(next);
+            .catch(() => res.send({ message: 'Delete Forever failed' }));
     }
 
     // [DELETE] /
@@ -141,7 +140,7 @@ class PostController {
         postModel
             .delete({ _id: idArr })
             .then(() => res.send('Delete Successfully !!!'))
-            .catch(next);
+            .catch(() => res.send({ message: 'Delete failed' }));
     }
 
     /* ----End Actions Delete Post ---- */
