@@ -1,15 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Link, useRouteMatch } from "react-router-dom";
-import { getCategories } from "../../../redux/actions/categoryActions";
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useRouteMatch } from 'react-router-dom';
+import { getCategories } from '../../../redux/actions/categoryActions';
 import {
     deleteProducts,
     getColors,
     getProducts,
     getSizes,
-} from "../../../redux/actions/productActions";
-import ProductTable from "../../components/table/ProductTable";
+} from '../../../redux/actions/productActions';
+import ProductTable from '../../components/table/ProductTable';
 
 const ListProducts = () => {
     let { url } = useRouteMatch();
@@ -41,7 +41,7 @@ const ListProducts = () => {
     };
 
     useEffect(() => {
-        document.title = "Manage Products";
+        document.title = 'Manage Products';
         dispatch(getProducts());
         dispatch(getCategories());
         dispatch(getColors());
@@ -63,7 +63,7 @@ const ListProducts = () => {
                         <div className="col-md-6">
                             <div
                                 className="breadcrumb-wrapper"
-                                style={{ marginBottom: "5px" }}
+                                style={{ marginBottom: '5px' }}
                             >
                                 <nav aria-label="breadcrumb">
                                     <Link

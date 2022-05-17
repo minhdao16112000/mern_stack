@@ -1,10 +1,21 @@
-import moment from "moment";
-import React, { useEffect, useState } from "react";
-import Pagination from "react-js-pagination";
-import { useDispatch, useSelector } from "react-redux";
-import { Link, useRouteMatch } from "react-router-dom";
-import { activePosts } from "../../../redux/actions/postActions";
-import "./style.scss";
+import moment from 'moment';
+import React, { useEffect, useState } from 'react';
+import Pagination from 'react-js-pagination';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useRouteMatch } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import {
+    POST_DELETE_RESET,
+    POST_DESTROY_RESET,
+    POST_RESTORE_RESET,
+    POST_STATUS_RESET,
+} from '../../../constants/postConstant';
+import {
+    activePosts,
+    getPosts,
+    getTrashPosts,
+} from '../../../redux/actions/postActions';
+import './style.scss';
 
 const PostTable = (props) => {
     const list = props.list;
@@ -13,6 +24,16 @@ const PostTable = (props) => {
     const [itemsChecked, setItemsChecked] = useState([]);
     const lstTopic = useSelector((state) => state.topic.topics);
     const [activePage, setCurrentPage] = useState(1);
+
+    const handelPost = useSelector((state) => state.post);
+
+    const {
+        error: errorHandle,
+        active: activePost,
+        trash: pushPostToTrash,
+        delete: deletePost,
+        restore: restorePost,
+    } = handelPost;
 
     const indexOfLastTodo = activePage * 5;
 
@@ -53,8 +74,56 @@ const PostTable = (props) => {
     };
 
     useEffect(() => {
+        if (errorHandle && errorHandle.length !== 0) {
+            toast.error(errorHandle);
+        }
+
+        if (activePost && activePost === true) {
+            dispatch(getPosts());
+            dispatch({ type: POST_STATUS_RESET });
+        }
+
+        if (pushPostToTrash && pushPostToTrash === true) {
+            var inputs = document.querySelectorAll('#checkbox-1');
+            for (var i = 0; i < inputs.length; i++) {
+                inputs[i].checked = false;
+            }
+            setItemsChecked([]);
+            dispatch(getPosts());
+            dispatch({ type: POST_DELETE_RESET });
+        }
+
+        if (deletePost && deletePost === true) {
+            var inputsTrash = document.querySelectorAll('#checkbox-1');
+            for (var j = 0; j < inputsTrash.length; j++) {
+                inputsTrash[j].checked = false;
+            }
+            setItemsChecked([]);
+            dispatch(getTrashPosts());
+            dispatch({ type: POST_DESTROY_RESET });
+        }
+
+        if (restorePost && restorePost === true) {
+            var inputTrash = document.querySelectorAll('#checkbox-1');
+            for (var k = 0; k < inputTrash.length; k++) {
+                inputTrash[k].checked = false;
+            }
+            setItemsChecked([]);
+            dispatch(getTrashPosts());
+            dispatch({ type: POST_RESTORE_RESET });
+        }
+
         props.setDeleteItems(itemsChecked);
-    }, [itemsChecked, props]);
+    }, [
+        activePost,
+        deletePost,
+        dispatch,
+        errorHandle,
+        itemsChecked,
+        props,
+        pushPostToTrash,
+        restorePost,
+    ]);
 
     return (
         <div className="tables-wrapper">
@@ -89,7 +158,7 @@ const PostTable = (props) => {
                                         <th>
                                             <h6>Người Cập Nhật</h6>
                                         </th>
-                                        {url === "/admin/posts/trash" ? (
+                                        {url === '/admin/posts/trash' ? (
                                             <th>
                                                 <h6>Thời Điểm Tạo</h6>
                                             </th>
@@ -155,7 +224,7 @@ const PostTable = (props) => {
                                                             {value.summary.substring(
                                                                 0,
                                                                 50
-                                                            ) + "..."}
+                                                            ) + '...'}
                                                         </p>
                                                     </td>
                                                     <td className="min-width">
@@ -163,7 +232,7 @@ const PostTable = (props) => {
                                                             {value.content.substring(
                                                                 0,
                                                                 100
-                                                            ) + "..."}
+                                                            ) + '...'}
                                                         </p>
                                                     </td>
                                                     <td className="min-width">
@@ -177,7 +246,7 @@ const PostTable = (props) => {
                                                             <td>
                                                                 <div className="action">
                                                                     {value.status ===
-                                                                    "1" ? (
+                                                                    '1' ? (
                                                                         <button
                                                                             className="text-success"
                                                                             onClick={() =>
@@ -225,7 +294,7 @@ const PostTable = (props) => {
                                                                     )
                                                                         .utc()
                                                                         .format(
-                                                                            "DD-MM-YYYY HH:ss"
+                                                                            'DD-MM-YYYY HH:ss'
                                                                         )}
                                                                 </p>
                                                             </td>

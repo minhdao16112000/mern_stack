@@ -119,7 +119,7 @@ const FromAddProduct = () => {
         <Formik
             initialValues={initialValues}
             validationSchema={validationSchema}
-            onSubmit={(values) => {
+            onSubmit={(values, { resetForm }) => {
                 const value = {
                     name: values.name,
                     image: values.image,
@@ -153,6 +153,8 @@ const FromAddProduct = () => {
                         dispatch(storeProduct(formData));
                     } else {
                         dispatch(storeProductAndContinue(formData));
+                        resetForm();
+                        setFile([]);
                     }
                 }
             }}

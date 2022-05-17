@@ -20,7 +20,7 @@ import {
     getSizes,
 } from '../redux/actions/productActions';
 import { favoritesAdd, getUser } from '../redux/actions/userActions';
-import './styles/porductDetail.scss';
+import './styles/productDetail.scss';
 
 const ProductDetailScreen = () => {
     const dispatch = useDispatch();
@@ -545,6 +545,9 @@ const ProductDetailScreen = () => {
                                                     </div>
                                                 )
                                             ) : null}
+                                        </div>
+                                        <div className="pd-sold-pro">
+                                            <span>Đã bán: {pro.sold}</span>
                                         </div>
                                         {getStar()}
                                         <div className="pd-desc">

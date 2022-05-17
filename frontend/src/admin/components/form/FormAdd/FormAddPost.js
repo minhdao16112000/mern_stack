@@ -1,69 +1,71 @@
-import { FastField, Field, Form, Formik } from "formik";
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import * as Yup from "yup";
+import { FastField, Field, Form, Formik } from 'formik';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import * as Yup from 'yup';
 import {
     storePost,
     storePostAndContinue,
-} from "../../../../redux/actions/postActions";
-import { getTopics } from "../../../../redux/actions/topicActions";
-import AddField from "../../add/AddField";
-import CKEditorField from "../../add/CKEditorField";
-import ImageField from "../../add/ImageField";
-import SelectField from "../../add/SelectField";
-import "../style.scss";
+} from '../../../../redux/actions/postActions';
+import { getTopics } from '../../../../redux/actions/topicActions';
+import AddField from '../../add/AddField';
+import CKEditorField from '../../add/CKEditorField';
+import ImageField from '../../add/ImageField';
+import SelectField from '../../add/SelectField';
+import '../style.scss';
 
 const FormAddPost = () => {
     const dispatch = useDispatch();
 
     const [topic, setTopic] = useState([]);
     const [file, setFile] = useState([]);
-    const [save, setSave] = useState("true");
+    const [save, setSave] = useState('true');
 
     const lstTopic = useSelector((state) => state.topic.topics);
 
     const initialValues = {
-        title: "",
-        image: "",
-        topicId: "",
-        summary: "",
-        content: "",
-        type: "1",
-        createdBy: "Biên tập viên Fashi",
-        status: "1",
+        title: '',
+        image: '',
+        topicId: '',
+        summary: '',
+        content: '',
+        type: '1',
+        createdBy: 'Biên tập viên Fashi',
+        status: '1',
     };
 
     const setSelectTopic = () => {
-        lstTopic.Topics.forEach((value) => {
-            if (value.status === "1") {
-                let objTopic = { value: value._id, label: value.name };
-                setTopic((oldVal) => [...oldVal, objTopic]);
-            }
-        });
+        if (lstTopic && lstTopic.Topics) {
+            lstTopic.Topics.forEach((value) => {
+                if (value.status === '1') {
+                    let objTopic = { value: value._id, label: value.name };
+                    setTopic((oldVal) => [...oldVal, objTopic]);
+                }
+            });
+        }
     };
 
     const validationSchema = Yup.object().shape({
         title: Yup.string()
-            .min(5, "Tên bài viết tối thiểu 5 kí tự")
-            .required("Bạn phải nhập tên bài viết"),
-        image: Yup.string().required("Bạn phải chọn hình ảnh cho bài viết"),
-        topicId: Yup.string().required("Bạn phải chọn chủ đề cho bài viết"),
+            .min(5, 'Tên bài viết tối thiểu 5 kí tự')
+            .required('Bạn phải nhập tên bài viết'),
+        image: Yup.string().required('Bạn phải chọn hình ảnh cho bài viết'),
+        topicId: Yup.string().required('Bạn phải chọn chủ đề cho bài viết'),
         summary: Yup.string()
-            .min(15, "Mô tả ngắn của bài viết tối thiểu 15 kí tự")
-            .max(1000, "Mô tả ngắn của bài viết tối đa 1000 kí tự")
-            .required("Bạn phải nhập mô tả ngắn cho bài viết"),
+            .min(15, 'Mô tả ngắn của bài viết tối thiểu 15 kí tự')
+            .max(1000, 'Mô tả ngắn của bài viết tối đa 1000 kí tự')
+            .required('Bạn phải nhập mô tả ngắn cho bài viết'),
         content: Yup.string()
-            .min(1000, "Nội dung của bài viết tối thiểu 2000 kí tự")
-            .required("Bạn phải nhập nội dung cho bài viết"),
+            .min(1000, 'Nội dung của bài viết tối thiểu 2000 kí tự')
+            .required('Bạn phải nhập nội dung cho bài viết'),
         createdBy: Yup.string().required(
-            "Bạn phải nhập tên người tạo bài viết"
+            'Bạn phải nhập tên người tạo bài viết'
         ),
-        status: Yup.string().required("Bạn phải chọn trạng thái cho bài viết"),
+        status: Yup.string().required('Bạn phải chọn trạng thái cho bài viết'),
     });
 
     useEffect(() => {
-        document.title = "Manage Posts";
+        document.title = 'Manage Posts';
         dispatch(getTopics());
 
         setSelectTopic();
@@ -92,10 +94,10 @@ const FormAddPost = () => {
                 };
                 const formData = new FormData();
                 for (let i = 0; i < file.length; i++) {
-                    formData.append("image", file[i]);
+                    formData.append('image', file[i]);
                 }
-                formData.append("infos", JSON.stringify(value));
-                if (save === "true") {
+                formData.append('infos', JSON.stringify(value));
+                if (save === 'true') {
                     dispatch(storePost(formData));
                 } else {
                     dispatch(storePostAndContinue(formData));
@@ -133,7 +135,7 @@ const FormAddPost = () => {
                                                         type="submit"
                                                         className="main-btn success-btn btn-hover"
                                                         onClick={() =>
-                                                            setSave("true")
+                                                            setSave('true')
                                                         }
                                                     >
                                                         <i className="fas fa-save"></i>
@@ -144,7 +146,7 @@ const FormAddPost = () => {
                                                         type="submit"
                                                         className="main-btn info-btn btn-hover"
                                                         onClick={() =>
-                                                            setSave("false")
+                                                            setSave('false')
                                                         }
                                                     >
                                                         <i className="far fa-save"></i>
@@ -214,12 +216,12 @@ const FormAddPost = () => {
                                                     id="status"
                                                     options={[
                                                         {
-                                                            value: "1",
-                                                            label: "Hiện",
+                                                            value: '1',
+                                                            label: 'Hiện',
                                                         },
                                                         {
-                                                            value: "0",
-                                                            label: "Ẩn",
+                                                            value: '0',
+                                                            label: 'Ẩn',
                                                         },
                                                     ]}
                                                 />

@@ -1,10 +1,21 @@
-import moment from "moment";
-import React, { useEffect, useState } from "react";
-import Pagination from "react-js-pagination";
-import { useDispatch, useSelector } from "react-redux";
-import { Link, useRouteMatch } from "react-router-dom";
-import { activeProducts } from "../../../redux/actions/productActions";
-import "./style.scss";
+import moment from 'moment';
+import React, { useEffect, useState } from 'react';
+import Pagination from 'react-js-pagination';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useRouteMatch } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import {
+    PRODUCT_DELETE_RESET,
+    PRODUCT_DESTROY_RESET,
+    PRODUCT_RESTORE_RESET,
+    PRODUCT_STATUS_RESET,
+} from '../../../constants/productConstant';
+import {
+    activeProducts,
+    getProducts,
+    getTrashProducts,
+} from '../../../redux/actions/productActions';
+import './style.scss';
 
 const ProductTable = (props) => {
     const list = props.list;
@@ -15,6 +26,15 @@ const ProductTable = (props) => {
     const lstColors = useSelector((state) => state.product.colors_list);
     const lstSizes = useSelector((state) => state.product.sizes_list);
     const [activePage, setCurrentPage] = useState(1);
+    const handelPro = useSelector((state) => state.product);
+
+    const {
+        error: errorReviewCreate,
+        active: activePro,
+        trash: pushProToTrash,
+        delete: deletePro,
+        restore: restorePro,
+    } = handelPro;
 
     const indexOfLastTodo = activePage * 5;
 
@@ -30,9 +50,9 @@ const ProductTable = (props) => {
     };
 
     const formatVND = (value) => {
-        return new Intl.NumberFormat("vi-VN", {
-            style: "currency",
-            currency: "VND",
+        return new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND',
         }).format(value);
     };
 
@@ -76,7 +96,7 @@ const ProductTable = (props) => {
     const checkImage = (key) => {
         let Arr = [];
         currentTodos.forEach((value) => {
-            const imageArr = value.image.split(",");
+            const imageArr = value.image.split(',');
             Arr.push(imageArr[0]);
             // for(let i = 0; i< imageArr.length; i++){
             //     console.log(imageArr[i])
@@ -99,8 +119,56 @@ const ProductTable = (props) => {
     };
 
     useEffect(() => {
+        if (errorReviewCreate.length !== 0) {
+            toast.error(errorReviewCreate);
+        }
+
+        if (activePro && activePro === true) {
+            dispatch(getProducts());
+            dispatch({ type: PRODUCT_STATUS_RESET });
+        }
+
+        if (pushProToTrash && pushProToTrash === true) {
+            var inputs = document.querySelectorAll('#checkbox-1');
+            for (var i = 0; i < inputs.length; i++) {
+                inputs[i].checked = false;
+            }
+            setItemsChecked([]);
+            dispatch(getProducts());
+            dispatch({ type: PRODUCT_DELETE_RESET });
+        }
+
+        if (deletePro && deletePro === true) {
+            var inputsTrash = document.querySelectorAll('#checkbox-1');
+            for (var j = 0; j < inputsTrash.length; j++) {
+                inputsTrash[j].checked = false;
+            }
+            setItemsChecked([]);
+            dispatch(getTrashProducts());
+            dispatch({ type: PRODUCT_DESTROY_RESET });
+        }
+
+        if (restorePro && restorePro === true) {
+            var inputTrash = document.querySelectorAll('#checkbox-1');
+            for (var k = 0; k < inputTrash.length; k++) {
+                inputTrash[k].checked = false;
+            }
+            setItemsChecked([]);
+            dispatch(getTrashProducts());
+            dispatch({ type: PRODUCT_RESTORE_RESET });
+        }
+
         props.setDeleteItems(itemsChecked);
-    }, [itemsChecked, props]);
+    }, [
+        activePro,
+        deletePro,
+        dispatch,
+        errorReviewCreate,
+        itemsChecked,
+        props,
+        pushProToTrash,
+        restorePro,
+    ]);
 
     return (
         <div className="tables-wrapper">
@@ -135,7 +203,7 @@ const ProductTable = (props) => {
                                         <th>
                                             <h6>Giá Khuyến Mãi</h6>
                                         </th>
-                                        {url === "/admin/products/trash" ? (
+                                        {url === '/admin/products/trash' ? (
                                             <th>
                                                 <h6>Thời Điểm Xóa</h6>
                                             </th>
@@ -219,7 +287,7 @@ const ProductTable = (props) => {
                                                             <td>
                                                                 <div className="action">
                                                                     {value.status ===
-                                                                    "1" ? (
+                                                                    '1' ? (
                                                                         <button
                                                                             className="text-success"
                                                                             onClick={() =>
@@ -236,9 +304,13 @@ const ProductTable = (props) => {
                                                                     ) : (
                                                                         <button
                                                                             className="text-danger"
-                                                                            onClick={activeProducts(
-                                                                                value._id
-                                                                            )}
+                                                                            onClick={() =>
+                                                                                dispatch(
+                                                                                    activeProducts(
+                                                                                        value._id
+                                                                                    )
+                                                                                )
+                                                                            }
                                                                             title="Hidden"
                                                                         >
                                                                             <i className="far fa-eye-slash"></i>
@@ -267,7 +339,7 @@ const ProductTable = (props) => {
                                                                     )
                                                                         .utc()
                                                                         .format(
-                                                                            "DD-MM-YYYY HH:ss"
+                                                                            'DD-MM-YYYY HH:ss'
                                                                         )}
                                                                 </p>
                                                             </td>

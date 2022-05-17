@@ -1,10 +1,21 @@
-import moment from "moment";
-import React, { useEffect, useState } from "react";
-import Pagination from "react-js-pagination";
-import { useDispatch } from "react-redux";
-import { Link, useRouteMatch } from "react-router-dom";
-import { activeTopics } from "../../../redux/actions/topicActions";
-import "./style.scss";
+import moment from 'moment';
+import React, { useEffect, useState } from 'react';
+import Pagination from 'react-js-pagination';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useRouteMatch } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import {
+    TOPIC_DELETE_RESET,
+    TOPIC_DESTROY_RESET,
+    TOPIC_RESTORE_RESET,
+    TOPIC_STATUS_RESET,
+} from '../../../constants/topicConstant';
+import {
+    activeTopics,
+    getTopics,
+    getTrashTopics,
+} from '../../../redux/actions/topicActions';
+import './style.scss';
 
 const TopicTable = (props) => {
     const list = props.list;
@@ -12,6 +23,16 @@ const TopicTable = (props) => {
     let { url } = useRouteMatch();
     const [itemsChecked, setItemsChecked] = useState([]);
     const [activePage, setCurrentPage] = useState(1);
+
+    const handelTopic = useSelector((state) => state.topic);
+
+    const {
+        error: errorHandle,
+        active: activeTopic,
+        trash: pushTopicToTrash,
+        delete: deleteTopic,
+        restore: restoreTopic,
+    } = handelTopic;
 
     const indexOfLastTodo = activePage * 5;
 
@@ -50,8 +71,56 @@ const TopicTable = (props) => {
     };
 
     useEffect(() => {
+        if (errorHandle && errorHandle.length !== 0) {
+            toast.error(errorHandle);
+        }
+
+        if (activeTopic && activeTopic === true) {
+            dispatch(getTopics());
+            dispatch({ type: TOPIC_STATUS_RESET });
+        }
+
+        if (pushTopicToTrash && pushTopicToTrash === true) {
+            var inputs = document.querySelectorAll('#checkbox-1');
+            for (var i = 0; i < inputs.length; i++) {
+                inputs[i].checked = false;
+            }
+            setItemsChecked([]);
+            dispatch(getTopics());
+            dispatch({ type: TOPIC_DELETE_RESET });
+        }
+
+        if (deleteTopic && deleteTopic === true) {
+            var inputsTrash = document.querySelectorAll('#checkbox-1');
+            for (var j = 0; j < inputsTrash.length; j++) {
+                inputsTrash[j].checked = false;
+            }
+            setItemsChecked([]);
+            dispatch(getTrashTopics());
+            dispatch({ type: TOPIC_DESTROY_RESET });
+        }
+
+        if (restoreTopic && restoreTopic === true) {
+            var inputTrash = document.querySelectorAll('#checkbox-1');
+            for (var k = 0; k < inputTrash.length; k++) {
+                inputTrash[k].checked = false;
+            }
+            setItemsChecked([]);
+            dispatch(getTrashTopics());
+            dispatch({ type: TOPIC_RESTORE_RESET });
+        }
+
         props.setDeleteItems(itemsChecked);
-    }, [itemsChecked, props]);
+    }, [
+        activeTopic,
+        deleteTopic,
+        dispatch,
+        errorHandle,
+        itemsChecked,
+        props,
+        pushTopicToTrash,
+        restoreTopic,
+    ]);
 
     return (
         <div className="tables-wrapper">
@@ -69,7 +138,7 @@ const TopicTable = (props) => {
                                             <h6>Tên Chủ Đề</h6>
                                         </th>
 
-                                        {url === "/admin/topics/trash" ? (
+                                        {url === '/admin/topics/trash' ? (
                                             <th>
                                                 <h6>Thời Điểm Xóa</h6>
                                             </th>
@@ -132,7 +201,7 @@ const TopicTable = (props) => {
                                                             <td>
                                                                 <div className="action">
                                                                     {value.status ===
-                                                                    "1" ? (
+                                                                    '1' ? (
                                                                         <button
                                                                             className="text-success"
                                                                             onClick={() =>
@@ -184,7 +253,7 @@ const TopicTable = (props) => {
                                                                     )
                                                                         .utc()
                                                                         .format(
-                                                                            "DD-MM-YYYY HH:ss"
+                                                                            'DD-MM-YYYY HH:ss'
                                                                         )}
                                                                 </p>
                                                             </td>

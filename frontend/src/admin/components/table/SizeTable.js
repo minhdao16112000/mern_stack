@@ -1,16 +1,31 @@
-import moment from "moment";
-import React, { useEffect, useState } from "react";
-import Pagination from "react-js-pagination";
-// import { useDispatch } from 'react-redux';
-import { Link, useRouteMatch } from "react-router-dom";
-import "./style.scss";
+import moment from 'moment';
+import React, { useEffect, useState } from 'react';
+import Pagination from 'react-js-pagination';
+import { useSelector, useDispatch } from 'react-redux';
+import { Link, useRouteMatch } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import {
+    SIZE_DELETE_RESET,
+    SIZE_DESTROY_RESET,
+    SIZE_RESTORE_RESET,
+} from '../../../constants/productConstant';
+import { getSizes, getTrashSizes } from '../../../redux/actions/productActions';
+import './style.scss';
 
 const SizeTable = (props) => {
     const list = props.list;
-    // const dispatch = useDispatch();
+    const dispatch = useDispatch();
     let { url } = useRouteMatch();
     const [itemsChecked, setItemsChecked] = useState([]);
     const [activePage, setCurrentPage] = useState(1);
+    const handelSize = useSelector((state) => state.product);
+
+    const {
+        error: errorReviewCreate,
+        trash: pushSizeToTrash,
+        delete: deleteSize,
+        restore: restoreSize,
+    } = handelSize;
 
     const indexOfLastTodo = activePage * 5;
 
@@ -39,8 +54,50 @@ const SizeTable = (props) => {
     };
 
     useEffect(() => {
+        if (errorReviewCreate.length !== 0) {
+            toast.error(errorReviewCreate);
+        }
+
+        if (pushSizeToTrash && pushSizeToTrash === true) {
+            var inputs = document.querySelectorAll('#checkbox-1');
+            for (var i = 0; i < inputs.length; i++) {
+                inputs[i].checked = false;
+            }
+            setItemsChecked([]);
+            dispatch(getSizes());
+            dispatch({ type: SIZE_DELETE_RESET });
+        }
+
+        if (deleteSize && deleteSize === true) {
+            var inputsTrash = document.querySelectorAll('#checkbox-1');
+            for (var j = 0; j < inputsTrash.length; j++) {
+                inputsTrash[j].checked = false;
+            }
+            setItemsChecked([]);
+            dispatch(getTrashSizes());
+            dispatch({ type: SIZE_DESTROY_RESET });
+        }
+
+        if (restoreSize && restoreSize === true) {
+            var inputTrash = document.querySelectorAll('#checkbox-1');
+            for (var k = 0; k < inputTrash.length; k++) {
+                inputTrash[k].checked = false;
+            }
+            setItemsChecked([]);
+            dispatch(getTrashSizes());
+            dispatch({ type: SIZE_RESTORE_RESET });
+        }
+
         props.setDeleteItems(itemsChecked);
-    }, [itemsChecked, props]);
+    }, [
+        deleteSize,
+        dispatch,
+        errorReviewCreate,
+        itemsChecked,
+        props,
+        pushSizeToTrash,
+        restoreSize,
+    ]);
 
     return (
         <div className="tables-wrapper">
@@ -60,7 +117,7 @@ const SizeTable = (props) => {
                                         <th>
                                             <h6>Thời Điểm Tạo</h6>
                                         </th>
-                                        {url === "/admin/colors/trash" ? (
+                                        {url === '/admin/colors/trash' ? (
                                             <th>
                                                 <h6>Thời Điểm Xóa</h6>
                                             </th>
@@ -106,7 +163,7 @@ const SizeTable = (props) => {
                                                             )
                                                                 .utc()
                                                                 .format(
-                                                                    "DD-MM-YYYY HH:ss"
+                                                                    'DD-MM-YYYY HH:ss'
                                                                 )}
                                                         </p>
                                                     </td>
@@ -130,7 +187,7 @@ const SizeTable = (props) => {
                                                                 )
                                                                     .utc()
                                                                     .format(
-                                                                        "DD-MM-YYYY HH:ss"
+                                                                        'DD-MM-YYYY HH:ss'
                                                                     )}
                                                             </p>
                                                         </td>

@@ -197,7 +197,7 @@ const MenuLeft = (props) => {
                     )}
                 </div>
             </div>
-            {actCate ? (
+            {match || match2 ? (
                 <>
                     <div className="filter-widget">
                         <h4 className="fw-title">Size</h4>

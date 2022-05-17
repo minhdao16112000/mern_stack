@@ -1,12 +1,19 @@
+import { toast } from 'react-toastify';
 import api from '../../api';
 import { DELETE_ALL_CART } from '../../constants/cartConstant';
 import {
     ORDER_CREATE_FAIL,
     ORDER_CREATE_REQUEST,
     ORDER_CREATE_SUCCESS,
+    ORDER_DELETE_FAIL,
+    ORDER_DELETE_REQUEST,
+    ORDER_DELETE_SUCCESS,
     ORDER_DELIVERED_FAIL,
     ORDER_DELIVERED_REQUEST,
     ORDER_DELIVERED_SUCCESS,
+    ORDER_DESTROY_FAIL,
+    ORDER_DESTROY_REQUEST,
+    ORDER_DESTROY_SUCCESS,
     ORDER_DETAILS_FAIL,
     ORDER_DETAILS_REQUEST,
     ORDER_DETAILS_SUCCESS,
@@ -22,6 +29,9 @@ import {
     ORDER_PAY_FAIL,
     ORDER_PAY_REQUEST,
     ORDER_PAY_SUCCESS,
+    ORDER_RESTORE_FAIL,
+    ORDER_RESTORE_REQUEST,
+    ORDER_RESTORE_SUCCESS,
     ORDER_STATUS_FAIL,
     ORDER_STATUS_REQUEST,
     ORDER_STATUS_SUCCESS,
@@ -166,30 +176,47 @@ export const listTrashOrders = () => async (dispatch) => {
 };
 
 export const deleteOrders = (data) => async (dispatch) => {
+    dispatch({ type: ORDER_DELETE_REQUEST });
     try {
         const ids = { id: data };
         const isDeleted = await api.delete('api/order', { data: ids });
         if (isDeleted) {
-            document.location.href = '/admin/orders';
+            toast.success('Đơn hàng đã được đưa vào thùng rác !');
+            dispatch({
+                type: ORDER_DELETE_SUCCESS,
+            });
         }
-    } catch (e) {
-        console.log(e);
+    } catch (error) {
+        const message =
+            error.response && error.response.data.message
+                ? error.response.data.message
+                : error.message;
+        dispatch({ type: ORDER_DELETE_FAIL, payload: message });
     }
 };
 
 export const destroyOrders = (data) => async (dispatch) => {
+    dispatch({ type: ORDER_DESTROY_REQUEST });
     try {
         const ids = { id: data };
         const isDestroy = await api.delete('api/order/force', { data: ids });
         if (isDestroy) {
-            document.location.href = '/admin/orders/trash';
+            toast.success('Đơn hàng đã được xóa hoàn toàn !');
+            dispatch({
+                type: ORDER_DESTROY_SUCCESS,
+            });
         }
-    } catch (e) {
-        console.log(e);
+    } catch (error) {
+        const message =
+            error.response && error.response.data.message
+                ? error.response.data.message
+                : error.message;
+        dispatch({ type: ORDER_DESTROY_FAIL, payload: message });
     }
 };
 
 export const restoreOrders = (data) => async (dispatch) => {
+    dispatch({ type: ORDER_RESTORE_REQUEST });
     try {
         const ids = { id: data };
 
@@ -197,10 +224,17 @@ export const restoreOrders = (data) => async (dispatch) => {
             data: ids.id.split(','),
         });
         if (isRestore) {
-            document.location.href = '/admin/orders/trash';
+            toast.success('Đơn hàng đã được phục hồi !');
+            dispatch({
+                type: ORDER_RESTORE_SUCCESS,
+            });
         }
-    } catch (e) {
-        console.log(e);
+    } catch (error) {
+        const message =
+            error.response && error.response.data.message
+                ? error.response.data.message
+                : error.message;
+        dispatch({ type: ORDER_RESTORE_FAIL, payload: message });
     }
 };
 

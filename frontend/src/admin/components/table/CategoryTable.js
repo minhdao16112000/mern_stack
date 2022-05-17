@@ -1,10 +1,21 @@
-import moment from "moment";
-import React, { useEffect, useState } from "react";
-import Pagination from "react-js-pagination";
-import { useDispatch } from "react-redux";
-import { Link, useRouteMatch } from "react-router-dom";
-import { activeCategories } from "../../../redux/actions/categoryActions";
-import "./style.scss";
+import moment from 'moment';
+import React, { useEffect, useState } from 'react';
+import Pagination from 'react-js-pagination';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useRouteMatch } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import {
+    CATE_DELETE_RESET,
+    CATE_DESTROY_RESET,
+    CATE_RESTORE_RESET,
+    CATE_STATUS_RESET,
+} from '../../../constants/categoryConstant';
+import {
+    activeCategories,
+    getCategories,
+    getTrashCategories,
+} from '../../../redux/actions/categoryActions';
+import './style.scss';
 
 const CategoryTable = (props) => {
     const list = props.list;
@@ -12,6 +23,16 @@ const CategoryTable = (props) => {
     let { url } = useRouteMatch();
     const [itemsChecked, setItemsChecked] = useState([]);
     const [activePage, setCurrentPage] = useState(1);
+
+    const handelCate = useSelector((state) => state.category);
+
+    const {
+        error: errorHandle,
+        active: activeCate,
+        trash: pushCateToTrash,
+        delete: deleteCate,
+        restore: restoreCate,
+    } = handelCate;
 
     const indexOfLastTodo = activePage * 5;
 
@@ -50,8 +71,56 @@ const CategoryTable = (props) => {
     };
 
     useEffect(() => {
+        if (errorHandle && errorHandle.length !== 0) {
+            toast.error(errorHandle);
+        }
+
+        if (activeCate && activeCate === true) {
+            dispatch(getCategories());
+            dispatch({ type: CATE_STATUS_RESET });
+        }
+
+        if (pushCateToTrash && pushCateToTrash === true) {
+            var inputs = document.querySelectorAll('#checkbox-1');
+            for (var i = 0; i < inputs.length; i++) {
+                inputs[i].checked = false;
+            }
+            setItemsChecked([]);
+            dispatch(getCategories());
+            dispatch({ type: CATE_DELETE_RESET });
+        }
+
+        if (deleteCate && deleteCate === true) {
+            var inputsTrash = document.querySelectorAll('#checkbox-1');
+            for (var j = 0; j < inputsTrash.length; j++) {
+                inputsTrash[j].checked = false;
+            }
+            setItemsChecked([]);
+            dispatch(getTrashCategories());
+            dispatch({ type: CATE_DESTROY_RESET });
+        }
+
+        if (restoreCate && restoreCate === true) {
+            var inputTrash = document.querySelectorAll('#checkbox-1');
+            for (var k = 0; k < inputTrash.length; k++) {
+                inputTrash[k].checked = false;
+            }
+            setItemsChecked([]);
+            dispatch(getTrashCategories());
+            dispatch({ type: CATE_RESTORE_RESET });
+        }
+
         props.setDeleteItems(itemsChecked);
-    }, [itemsChecked, props]);
+    }, [
+        activeCate,
+        deleteCate,
+        dispatch,
+        errorHandle,
+        itemsChecked,
+        props,
+        pushCateToTrash,
+        restoreCate,
+    ]);
 
     return (
         <div className="tables-wrapper">
@@ -69,7 +138,7 @@ const CategoryTable = (props) => {
                                             <h6>Tên Danh Mục</h6>
                                         </th>
 
-                                        {url === "/admin/categories/trash" ? (
+                                        {url === '/admin/categories/trash' ? (
                                             <th>
                                                 <h6>Thời Điểm Xóa</h6>
                                             </th>
@@ -134,7 +203,7 @@ const CategoryTable = (props) => {
                                                             <td>
                                                                 <div className="action">
                                                                     {value.status ===
-                                                                    "1" ? (
+                                                                    '1' ? (
                                                                         <button
                                                                             className="text-success"
                                                                             onClick={() =>
@@ -186,7 +255,7 @@ const CategoryTable = (props) => {
                                                                     )
                                                                         .utc()
                                                                         .format(
-                                                                            "DD-MM-YYYY HH:ss"
+                                                                            'DD-MM-YYYY HH:ss'
                                                                         )}
                                                                 </p>
                                                             </td>

@@ -7,6 +7,15 @@ import {
     SET_USERS,
     USER_LOGIN_FAIL,
     RESET_MESSAGE,
+    USER_RESTORE_FAIL,
+    USER_RESTORE_SUCCESS,
+    USER_RESTORE_REQUEST,
+    USER_DESTROY_FAIL,
+    USER_DESTROY_SUCCESS,
+    USER_DESTROY_REQUEST,
+    USER_DELETE_FAIL,
+    USER_DELETE_SUCCESS,
+    USER_DELETE_REQUEST,
 } from '../../constants/userConstant';
 
 //GET ACTION BEGIN
@@ -44,10 +53,7 @@ export const getUserGoogle = () => async (dispatch) => {
                         'userInfo',
                         JSON.stringify(res.data.info)
                     );
-                    localStorage.setItem(
-                        'message-user',
-                        JSON.stringify(res.data.message)
-                    );
+                    toast.success(res.data.message);
                     dispatch({
                         type: SET_USER,
                         payload: res.data.info,
@@ -72,10 +78,7 @@ export const getUserFacebook = () => async (dispatch) => {
                         'userInfo',
                         JSON.stringify(res.data.info)
                     );
-                    localStorage.setItem(
-                        'message-user',
-                        JSON.stringify(res.data.message)
-                    );
+                    toast.success(res.data.message);
                     dispatch({
                         type: SET_USER,
                         payload: res.data.info,
@@ -207,32 +210,49 @@ export const logout = () => (dispatch) => {
 
 //DELETE ACTION BEGIN
 export const deleteUsers = (data) => async (dispatch) => {
+    dispatch({ type: USER_DELETE_REQUEST });
     try {
         const ids = { id: data };
         const isDeleted = await api.delete('api/user', { data: ids });
         if (isDeleted) {
-            document.location.href = '/admin/users';
+            toast.success('Người dùng đã được đưa vào thùng rác !');
+            dispatch({
+                type: USER_DELETE_SUCCESS,
+            });
         }
-    } catch (e) {
-        console.log(e);
+    } catch (error) {
+        const message =
+            error.response && error.response.data.message
+                ? error.response.data.message
+                : error.message;
+        dispatch({ type: USER_DELETE_FAIL, payload: message });
     }
 };
 
 export const destroyUsers = (data) => async (dispatch) => {
+    dispatch({ type: USER_DESTROY_REQUEST });
     try {
         const ids = { id: data };
         const isDestroy = await api.delete('api/user/force', { data: ids });
         if (isDestroy) {
-            document.location.href = '/admin/users/trash';
+            toast.success('Người dùng đã được xóa hoàn toàn !');
+            dispatch({
+                type: USER_DESTROY_SUCCESS,
+            });
         }
-    } catch (e) {
-        console.log(e);
+    } catch (error) {
+        const message =
+            error.response && error.response.data.message
+                ? error.response.data.message
+                : error.message;
+        dispatch({ type: USER_DESTROY_FAIL, payload: message });
     }
 };
 //DELETE ACTION END
 
 //RESTORE ACTION
 export const restoreUsers = (data) => async (dispatch) => {
+    dispatch({ type: USER_RESTORE_REQUEST });
     try {
         const ids = { id: data };
 
@@ -240,10 +260,17 @@ export const restoreUsers = (data) => async (dispatch) => {
             data: ids.id.split(','),
         });
         if (isRestore) {
-            document.location.href = '/admin/users/trash';
+            toast.success('Người dùng đã được phục hồi !');
+            dispatch({
+                type: USER_RESTORE_SUCCESS,
+            });
         }
-    } catch (e) {
-        console.log(e);
+    } catch (error) {
+        const message =
+            error.response && error.response.data.message
+                ? error.response.data.message
+                : error.message;
+        dispatch({ type: USER_RESTORE_FAIL, payload: message });
     }
 };
 

@@ -1,16 +1,37 @@
-import moment from "moment";
-import React, { useEffect, useState } from "react";
-import Pagination from "react-js-pagination";
-// import { useDispatch } from 'react-redux';
-import { Link, useRouteMatch } from "react-router-dom";
-import "./style.scss";
+import moment from 'moment';
+import React, { useEffect, useState } from 'react';
+import Pagination from 'react-js-pagination';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useRouteMatch } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import {
+    CONTACT_DELETE_RESET,
+    CONTACT_DESTROY_RESET,
+    CONTACT_RESTORE_RESET,
+    CONTACT_STATUS_RESET,
+} from '../../../constants/contactConstant';
+import {
+    listContact,
+    listTrashContact,
+} from '../../../redux/actions/contactAction';
+import './style.scss';
 
 const ContactTable = (props) => {
     const list = props.list;
-    // const dispatch = useDispatch();
+    const dispatch = useDispatch();
     let { url } = useRouteMatch();
     const [itemsChecked, setItemsChecked] = useState([]);
     const [activePage, setCurrentPage] = useState(1);
+
+    const handelContact = useSelector((state) => state.contact);
+
+    const {
+        error: errorHandle,
+        active: activeContact,
+        trash: pushContactToTrash,
+        delete: deleteContact,
+        restore: restoreContact,
+    } = handelContact;
 
     const indexOfLastTodo = activePage * 5;
 
@@ -39,8 +60,56 @@ const ContactTable = (props) => {
     };
 
     useEffect(() => {
+        if (errorHandle && errorHandle.length !== 0) {
+            toast.error(errorHandle);
+        }
+
+        if (activeContact && activeContact === true) {
+            dispatch(listContact());
+            dispatch({ type: CONTACT_STATUS_RESET });
+        }
+
+        if (pushContactToTrash && pushContactToTrash === true) {
+            var inputs = document.querySelectorAll('#checkbox-1');
+            for (var i = 0; i < inputs.length; i++) {
+                inputs[i].checked = false;
+            }
+            setItemsChecked([]);
+            dispatch(listContact());
+            dispatch({ type: CONTACT_DELETE_RESET });
+        }
+
+        if (deleteContact && deleteContact === true) {
+            var inputsTrash = document.querySelectorAll('#checkbox-1');
+            for (var j = 0; j < inputsTrash.length; j++) {
+                inputsTrash[j].checked = false;
+            }
+            setItemsChecked([]);
+            dispatch(listTrashContact());
+            dispatch({ type: CONTACT_DESTROY_RESET });
+        }
+
+        if (restoreContact && restoreContact === true) {
+            var inputTrash = document.querySelectorAll('#checkbox-1');
+            for (var k = 0; k < inputTrash.length; k++) {
+                inputTrash[k].checked = false;
+            }
+            setItemsChecked([]);
+            dispatch(listTrashContact());
+            dispatch({ type: CONTACT_RESTORE_RESET });
+        }
+
         props.setDeleteItems(itemsChecked);
-    }, [itemsChecked, props]);
+    }, [
+        activeContact,
+        deleteContact,
+        dispatch,
+        errorHandle,
+        itemsChecked,
+        props,
+        pushContactToTrash,
+        restoreContact,
+    ]);
 
     return (
         <div className="tables-wrapper">
@@ -69,7 +138,7 @@ const ContactTable = (props) => {
                                         <th>
                                             <h6>Thời Điểm Phản Hồi</h6>
                                         </th>
-                                        {url === "/admin/contacts/trash" ? (
+                                        {url === '/admin/contacts/trash' ? (
                                             <th>
                                                 <h6>Thời Điểm Xóa</h6>
                                             </th>
@@ -124,7 +193,7 @@ const ContactTable = (props) => {
                                                             )
                                                                 .utc()
                                                                 .format(
-                                                                    "DD-MM-YYYY HH:ss"
+                                                                    'DD-MM-YYYY HH:ss'
                                                                 )}
                                                         </p>
                                                     </td>
@@ -148,7 +217,7 @@ const ContactTable = (props) => {
                                                                 )
                                                                     .utc()
                                                                     .format(
-                                                                        "DD-MM-YYYY HH:ss"
+                                                                        'DD-MM-YYYY HH:ss'
                                                                     )}
                                                             </p>
                                                         </td>

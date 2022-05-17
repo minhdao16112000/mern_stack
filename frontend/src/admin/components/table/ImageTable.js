@@ -1,10 +1,21 @@
-import moment from "moment";
-import React, { useEffect, useState } from "react";
-import Pagination from "react-js-pagination";
-import { useDispatch, useSelector } from "react-redux";
-import { Link, useRouteMatch } from "react-router-dom";
-import { activeImages } from "../../../redux/actions/imageActions";
-import "./style.scss";
+import moment from 'moment';
+import React, { useEffect, useState } from 'react';
+import Pagination from 'react-js-pagination';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useRouteMatch } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import {
+    IMAGE_DELETE_RESET,
+    IMAGE_DESTROY_RESET,
+    IMAGE_RESTORE_RESET,
+    IMAGE_STATUS_RESET,
+} from '../../../constants/imageConstant';
+import {
+    activeImages,
+    getImages,
+    getTrashImages,
+} from '../../../redux/actions/imageActions';
+import './style.scss';
 
 const ImageTable = (props) => {
     const list = props.list;
@@ -13,6 +24,16 @@ const ImageTable = (props) => {
     const [itemsChecked, setItemsChecked] = useState([]);
     const lstCategory = useSelector((state) => state.category.categories);
     const [activePage, setCurrentPage] = useState(1);
+
+    const handelImage = useSelector((state) => state.image);
+
+    const {
+        error: errorHandle,
+        active: activeImage,
+        trash: pushImageToTrash,
+        delete: deleteImage,
+        restore: restoreImage,
+    } = handelImage;
 
     const indexOfLastTodo = activePage * 5;
 
@@ -52,8 +73,56 @@ const ImageTable = (props) => {
     };
 
     useEffect(() => {
+        if (errorHandle && errorHandle.length !== 0) {
+            toast.error(errorHandle);
+        }
+
+        if (activeImage && activeImage === true) {
+            dispatch(getImages());
+            dispatch({ type: IMAGE_STATUS_RESET });
+        }
+
+        if (pushImageToTrash && pushImageToTrash === true) {
+            var inputs = document.querySelectorAll('#checkbox-1');
+            for (var i = 0; i < inputs.length; i++) {
+                inputs[i].checked = false;
+            }
+            setItemsChecked([]);
+            dispatch(getImages());
+            dispatch({ type: IMAGE_DELETE_RESET });
+        }
+
+        if (deleteImage && deleteImage === true) {
+            var inputsTrash = document.querySelectorAll('#checkbox-1');
+            for (var j = 0; j < inputsTrash.length; j++) {
+                inputsTrash[j].checked = false;
+            }
+            setItemsChecked([]);
+            dispatch(getTrashImages());
+            dispatch({ type: IMAGE_DESTROY_RESET });
+        }
+
+        if (restoreImage && restoreImage === true) {
+            var inputTrash = document.querySelectorAll('#checkbox-1');
+            for (var k = 0; k < inputTrash.length; k++) {
+                inputTrash[k].checked = false;
+            }
+            setItemsChecked([]);
+            dispatch(getTrashImages());
+            dispatch({ type: IMAGE_RESTORE_RESET });
+        }
+
         props.setDeleteItems(itemsChecked);
-    }, [itemsChecked, props]);
+    }, [
+        activeImage,
+        deleteImage,
+        dispatch,
+        errorHandle,
+        itemsChecked,
+        props,
+        pushImageToTrash,
+        restoreImage,
+    ]);
 
     return (
         <div className="tables-wrapper">
@@ -85,7 +154,7 @@ const ImageTable = (props) => {
                                         <th>
                                             <h6>Vị Trí Hiển Thị</h6>
                                         </th>
-                                        {url === "/admin/images/trash" ? (
+                                        {url === '/admin/images/trash' ? (
                                             <th>
                                                 <h6>Thời Điểm Xóa</h6>
                                             </th>
@@ -151,7 +220,7 @@ const ImageTable = (props) => {
                                                             {value.content.substring(
                                                                 0,
                                                                 50
-                                                            ) + "..."}
+                                                            ) + '...'}
                                                         </p>
                                                     </td>
                                                     <td className="min-width">
@@ -165,7 +234,7 @@ const ImageTable = (props) => {
                                                             <td>
                                                                 <div className="action">
                                                                     {value.status ===
-                                                                    "1" ? (
+                                                                    '1' ? (
                                                                         <button
                                                                             className="text-success"
                                                                             onClick={() =>
@@ -213,7 +282,7 @@ const ImageTable = (props) => {
                                                                     )
                                                                         .utc()
                                                                         .format(
-                                                                            "DD-MM-YYYY HH:ss"
+                                                                            'DD-MM-YYYY HH:ss'
                                                                         )}
                                                                 </p>
                                                             </td>

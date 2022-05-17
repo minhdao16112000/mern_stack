@@ -1,15 +1,33 @@
-import moment from "moment";
-import React, { useEffect, useState } from "react";
-import Pagination from "react-js-pagination";
+import moment from 'moment';
+import React, { useEffect, useState } from 'react';
+import Pagination from 'react-js-pagination';
+import { useDispatch, useSelector } from 'react-redux';
 // import { useDispatch } from 'react-redux';
-import { Link, useRouteMatch } from "react-router-dom";
-import "./style.scss";
+import { Link, useRouteMatch } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import {
+    USER_DELETE_RESET,
+    USER_DESTROY_RESET,
+    USER_RESTORE_RESET,
+} from '../../../constants/userConstant';
+import { getTrashUsers, getUsers } from '../../../redux/actions/userActions';
+import './style.scss';
 
 const UserTable = (props) => {
     const list = props.list;
+    const dispatch = useDispatch();
     let { url } = useRouteMatch();
     const [itemsChecked, setItemsChecked] = useState([]);
     const [activePage, setCurrentPage] = useState(1);
+
+    const handelUser = useSelector((state) => state.user);
+
+    const {
+        error: errorHandle,
+        trash: pushUserToTrash,
+        delete: deleteUser,
+        restore: restoreUser,
+    } = handelUser;
 
     const indexOfLastTodo = activePage * 5;
 
@@ -38,8 +56,50 @@ const UserTable = (props) => {
     };
 
     useEffect(() => {
+        if (errorHandle && errorHandle.length !== 0) {
+            toast.error(errorHandle);
+        }
+
+        if (pushUserToTrash && pushUserToTrash === true) {
+            var inputs = document.querySelectorAll('#checkbox-1');
+            for (var i = 0; i < inputs.length; i++) {
+                inputs[i].checked = false;
+            }
+            setItemsChecked([]);
+            dispatch(getUsers());
+            dispatch({ type: USER_DELETE_RESET });
+        }
+
+        if (deleteUser && deleteUser === true) {
+            var inputsTrash = document.querySelectorAll('#checkbox-1');
+            for (var j = 0; j < inputsTrash.length; j++) {
+                inputsTrash[j].checked = false;
+            }
+            setItemsChecked([]);
+            dispatch(getTrashUsers());
+            dispatch({ type: USER_DESTROY_RESET });
+        }
+
+        if (restoreUser && restoreUser === true) {
+            var inputTrash = document.querySelectorAll('#checkbox-1');
+            for (var k = 0; k < inputTrash.length; k++) {
+                inputTrash[k].checked = false;
+            }
+            setItemsChecked([]);
+            dispatch(getTrashUsers());
+            dispatch({ type: USER_RESTORE_RESET });
+        }
+
         props.setDeleteItems(itemsChecked);
-    }, [itemsChecked, props]);
+    }, [
+        deleteUser,
+        dispatch,
+        errorHandle,
+        itemsChecked,
+        props,
+        pushUserToTrash,
+        restoreUser,
+    ]);
 
     return (
         <div className="tables-wrapper">
@@ -68,7 +128,7 @@ const UserTable = (props) => {
                                         <th>
                                             <h6>Số Điện Thoại</h6>
                                         </th>
-                                        {url === "/admin/users/trash" ? (
+                                        {url === '/admin/users/trash' ? (
                                             <th>
                                                 <h6>Thời Điểm Tạo</h6>
                                             </th>
@@ -144,7 +204,7 @@ const UserTable = (props) => {
                                                                     )
                                                                         .utc()
                                                                         .format(
-                                                                            "DD-MM-YYYY HH:ss"
+                                                                            'DD-MM-YYYY HH:ss'
                                                                         )}
                                                                 </p>
                                                             </td>
