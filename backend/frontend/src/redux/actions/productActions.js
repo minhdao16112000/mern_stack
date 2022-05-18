@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify';
 import api from '../../api';
 import {
     PRODUCTS_LIST,
@@ -13,6 +14,36 @@ import {
     PRODUCT_MARK_ALL_REQUEST,
     PRODUCT_MARK_ALL_SUCCESS,
     PRODUCT_MARK_ALL_FAIL,
+    PRODUCT_DELETE_REQUEST,
+    PRODUCT_DELETE_SUCCESS,
+    PRODUCT_DELETE_FAIL,
+    PRODUCT_DESTROY_REQUEST,
+    PRODUCT_DESTROY_SUCCESS,
+    PRODUCT_RESTORE_REQUEST,
+    PRODUCT_RESTORE_SUCCESS,
+    PRODUCT_RESTORE_FAIL,
+    PRODUCT_STATUS_REQUEST,
+    PRODUCT_STATUS_SUCCESS,
+    PRODUCT_STATUS_FAIL,
+    COLOR_DELETE_REQUEST,
+    COLOR_DELETE_SUCCESS,
+    COLOR_DELETE_FAIL,
+    COLOR_DESTROY_REQUEST,
+    COLOR_DESTROY_SUCCESS,
+    PRODUCT_DESTROY_FAIL,
+    COLOR_DESTROY_FAIL,
+    COLOR_RESTORE_REQUEST,
+    COLOR_RESTORE_SUCCESS,
+    COLOR_RESTORE_FAIL,
+    SIZE_DELETE_REQUEST,
+    SIZE_DELETE_SUCCESS,
+    SIZE_DELETE_FAIL,
+    SIZE_DESTROY_REQUEST,
+    SIZE_DESTROY_SUCCESS,
+    SIZE_DESTROY_FAIL,
+    SIZE_RESTORE_REQUEST,
+    SIZE_RESTORE_SUCCESS,
+    SIZE_RESTORE_FAIL,
 } from '../../constants/productConstant';
 
 //GET ACTIONS BEGIN
@@ -122,9 +153,8 @@ export const storeProduct = (data) => async (dispatch) => {
     try {
         const isSucc = await api.post('api/product/store', data);
         if (isSucc) {
-            console.log(isSucc.data);
-            console.log('success');
             document.location.href = '/admin/products';
+            toast.success('Thêm sản phẩm thành công !');
         }
     } catch (e) {
         console.log(e);
@@ -135,7 +165,7 @@ export const storeProductAndContinue = (data) => async (dispatch) => {
     try {
         const isSucc = await api.post('api/product/store', data);
         if (isSucc) {
-            console.log('success');
+            toast.success('Thêm sản phẩm thành công !');
         }
     } catch (e) {
         console.log(e);
@@ -146,9 +176,8 @@ export const storeColor = (data) => async (dispatch) => {
     try {
         const isSucc = await api.post('api/color/store', data);
         if (isSucc) {
-            console.log(isSucc.data);
-            console.log('success');
             document.location.href = '/admin/colors';
+            toast.success('Thêm màu thành công !');
         }
     } catch (e) {
         console.log(e);
@@ -159,7 +188,7 @@ export const storeColorAndContinue = (data) => async (dispatch) => {
     try {
         const isSucc = await api.post('api/color/store', data);
         if (isSucc) {
-            console.log('success');
+            toast.success('Thêm màu thành công !');
         }
     } catch (e) {
         console.log(e);
@@ -168,12 +197,10 @@ export const storeColorAndContinue = (data) => async (dispatch) => {
 
 export const storeSize = (data) => async (dispatch) => {
     try {
-        // console.log(data);
         const isSucc = await api.post('api/size/store', data);
         if (isSucc) {
-            console.log(isSucc.data);
-            console.log('success');
             document.location.href = '/admin/sizes';
+            toast.success('Thêm size thành công !');
         }
     } catch (e) {
         console.log(e);
@@ -182,10 +209,9 @@ export const storeSize = (data) => async (dispatch) => {
 
 export const storeSizeAndContinue = (data) => async (dispatch) => {
     try {
-        // console.log(data);
         const isSucc = await api.post('api/size/store', data);
         if (isSucc) {
-            console.log('success');
+            toast.success('Thêm size thành công !');
         }
     } catch (e) {
         console.log(e);
@@ -223,80 +249,129 @@ export const createReview = (productId, review) => async (dispatch) => {
 
 //DELETE ACTION BEGIN
 export const deleteProducts = (data) => async (dispatch) => {
+    dispatch({ type: PRODUCT_DELETE_REQUEST });
     try {
         const ids = { id: data };
         const isDeleted = await api.delete('api/product', { data: ids });
         if (isDeleted) {
-            document.location.href = '/admin/products';
+            toast.success('Sản phẩm đã được đưa vào thùng rác !');
+            dispatch({
+                type: PRODUCT_DELETE_SUCCESS,
+            });
         }
-    } catch (e) {
-        console.log(e);
+    } catch (error) {
+        const message =
+            error.response && error.response.data.message
+                ? error.response.data.message
+                : error.message;
+        dispatch({ type: PRODUCT_DELETE_FAIL, payload: message });
     }
 };
 
 export const deleteColors = (data) => async (dispatch) => {
+    dispatch({ type: COLOR_DELETE_REQUEST });
     try {
         const ids = { id: data };
         const isDeleted = await api.delete('api/color', { data: ids });
         if (isDeleted) {
-            document.location.href = '/admin/colors';
+            toast.success('Màu đã được đưa vào thùng rác !');
+            dispatch({
+                type: COLOR_DELETE_SUCCESS,
+            });
         }
-    } catch (e) {
-        console.log(e);
+    } catch (error) {
+        const message =
+            error.response && error.response.data.message
+                ? error.response.data.message
+                : error.message;
+        dispatch({ type: COLOR_DELETE_FAIL, payload: message });
     }
 };
 
 export const deleteSizes = (data) => async (dispatch) => {
+    dispatch({ type: SIZE_DELETE_REQUEST });
     try {
         const ids = { id: data };
         const isDeleted = await api.delete('api/size', { data: ids });
         if (isDeleted) {
-            document.location.href = '/admin/sizes';
+            toast.success('Size đã được đưa vào thùng rác !');
+            dispatch({
+                type: SIZE_DELETE_SUCCESS,
+            });
         }
-    } catch (e) {
-        console.log(e);
+    } catch (error) {
+        const message =
+            error.response && error.response.data.message
+                ? error.response.data.message
+                : error.message;
+        dispatch({ type: SIZE_DELETE_FAIL, payload: message });
     }
 };
 
 export const destroyProducts = (data) => async (dispatch) => {
+    dispatch({ type: PRODUCT_DESTROY_REQUEST });
     try {
         const ids = { id: data };
         const isDestroy = await api.delete('api/product/force', { data: ids });
         if (isDestroy) {
-            document.location.href = '/admin/products/trash';
+            toast.success('Sản phẩm đã được xóa hoàn toàn !');
+            dispatch({
+                type: PRODUCT_DESTROY_SUCCESS,
+            });
         }
-    } catch (e) {
-        console.log(e);
+    } catch (error) {
+        const message =
+            error.response && error.response.data.message
+                ? error.response.data.message
+                : error.message;
+        dispatch({ type: PRODUCT_DESTROY_FAIL, payload: message });
     }
 };
 
 export const destroyColors = (data) => async (dispatch) => {
+    dispatch({ type: COLOR_DESTROY_REQUEST });
     try {
         const ids = { id: data };
         const isDestroy = await api.delete('api/color/force', { data: ids });
         if (isDestroy) {
-            document.location.href = '/admin/colors/trash';
+            toast.success('Màu đã được xóa hoàn toàn !');
+            dispatch({
+                type: COLOR_DESTROY_SUCCESS,
+            });
         }
-    } catch (e) {
-        console.log(e);
+    } catch (error) {
+        const message =
+            error.response && error.response.data.message
+                ? error.response.data.message
+                : error.message;
+        dispatch({ type: COLOR_DESTROY_FAIL, payload: message });
     }
 };
 
 export const destroySizes = (data) => async (dispatch) => {
+    dispatch({ type: SIZE_DESTROY_REQUEST });
     try {
         const ids = { id: data };
         const isDestroy = await api.delete('api/size/force', { data: ids });
         if (isDestroy) {
-            document.location.href = '/admin/sizes/trash';
+            toast.success('Size đã được xóa hoàn toàn !');
+            dispatch({
+                type: SIZE_DESTROY_SUCCESS,
+            });
         }
-    } catch (e) {
-        console.log(e);
+    } catch (error) {
+        const message =
+            error.response && error.response.data.message
+                ? error.response.data.message
+                : error.message;
+        dispatch({ type: SIZE_DESTROY_FAIL, payload: message });
     }
 };
 //DELETE ACTION END
 
 //PATCH ACTION BEGIN
 export const restoreProducts = (data) => async (dispatch) => {
+    dispatch({ type: PRODUCT_RESTORE_REQUEST });
     try {
         const ids = { id: data };
 
@@ -304,14 +379,22 @@ export const restoreProducts = (data) => async (dispatch) => {
             data: ids.id.split(','),
         });
         if (isRestore) {
-            document.location.href = '/admin/products/trash';
+            toast.success('Sản phẩm đã được phục hồi !');
+            dispatch({
+                type: PRODUCT_RESTORE_SUCCESS,
+            });
         }
-    } catch (e) {
-        console.log(e);
+    } catch (error) {
+        const message =
+            error.response && error.response.data.message
+                ? error.response.data.message
+                : error.message;
+        dispatch({ type: PRODUCT_RESTORE_FAIL, payload: message });
     }
 };
 
 export const restoreColors = (data) => async (dispatch) => {
+    dispatch({ type: COLOR_RESTORE_REQUEST });
     try {
         const ids = { id: data };
 
@@ -319,14 +402,22 @@ export const restoreColors = (data) => async (dispatch) => {
             data: ids.id.split(','),
         });
         if (isRestore) {
-            document.location.href = '/admin/colors/trash';
+            toast.success('Màu đã được phục hồi !');
+            dispatch({
+                type: COLOR_RESTORE_SUCCESS,
+            });
         }
-    } catch (e) {
-        console.log(e);
+    } catch (error) {
+        const message =
+            error.response && error.response.data.message
+                ? error.response.data.message
+                : error.message;
+        dispatch({ type: COLOR_RESTORE_FAIL, payload: message });
     }
 };
 
 export const restoreSizes = (data) => async (dispatch) => {
+    dispatch({ type: SIZE_RESTORE_REQUEST });
     try {
         const ids = { id: data };
 
@@ -334,21 +425,36 @@ export const restoreSizes = (data) => async (dispatch) => {
             data: ids.id.split(','),
         });
         if (isRestore) {
-            document.location.href = '/admin/sizes/trash';
+            toast.success('Size đã được phục hồi !');
+            dispatch({
+                type: SIZE_RESTORE_SUCCESS,
+            });
         }
-    } catch (e) {
-        console.log(e);
+    } catch (error) {
+        const message =
+            error.response && error.response.data.message
+                ? error.response.data.message
+                : error.message;
+        dispatch({ type: SIZE_RESTORE_FAIL, payload: message });
     }
 };
 
 export const activeProducts = (data) => async (dispatch) => {
+    dispatch({ type: PRODUCT_STATUS_REQUEST });
     try {
         const isActive = await api.patch('api/product/' + data);
         if (isActive) {
-            document.location.href = '/admin/products';
+            toast.success('Thay đổi trạng thái thành công !');
+            dispatch({
+                type: PRODUCT_STATUS_SUCCESS,
+            });
         }
-    } catch (e) {
-        console.log(e);
+    } catch (error) {
+        const message =
+            error.response && error.response.data.message
+                ? error.response.data.message
+                : error.message;
+        dispatch({ type: PRODUCT_STATUS_FAIL, payload: message });
     }
 };
 
@@ -378,9 +484,8 @@ export const updateProduct = (product) => async (dispatch) => {
             product.formData
         );
         if (isSucc) {
-            console.log(isSucc.data);
-            console.log('success');
             document.location.href = '/admin/products';
+            toast.success('Cập nhật sản phẩm thành cônng !');
         }
     } catch (e) {
         console.log(e);
@@ -392,6 +497,7 @@ export const updateColor = (color) => async (dispatch) => {
         const data = await api.put(`api/color/${color.id}`, color);
         if (data) {
             document.location.href = '/admin/colors';
+            toast.success('Cập nhật màu thành cônng !');
         }
     } catch (e) {
         console.log(e);
@@ -403,6 +509,7 @@ export const updateSize = (size) => async (dispatch) => {
         const data = await api.put(`api/size/${size.id}`, size);
         if (data) {
             document.location.href = '/admin/sizes';
+            toast.success('Cập nhật size thành cônng !');
         }
     } catch (e) {
         console.log(e);

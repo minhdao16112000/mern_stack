@@ -196,7 +196,7 @@ class UserController {
         userModel
             .delete({ _id: idArr })
             .then(() => res.send('Delete Successfully !!!'))
-            .catch(next);
+            .catch(() => res.send({ message: 'Delete failed' }));
     }
 
     // [DELETE] /force
@@ -206,7 +206,7 @@ class UserController {
         userModel
             .deleteMany({ _id: idArr })
             .then(() => res.send('Delete Forever Successfully !!!'))
-            .catch(next);
+            .catch(() => res.send({ message: 'Delete Forever failed' }));
     }
 
     // [PATCH] /:id/restore
@@ -221,7 +221,7 @@ class UserController {
             );
             res.send('Restore Successfully !!!');
         } catch (error) {
-            res.json({ error: err });
+            res.send({ message: err });
         }
     }
 

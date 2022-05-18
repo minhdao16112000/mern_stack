@@ -260,7 +260,7 @@ class OrderController {
         orderModel
             .delete({ _id: idArr })
             .then(() => res.send('Delete Successfully !!!'))
-            .catch(next);
+            .catch(() => res.send({ message: 'Delete Failed !!!' }));
     }
 
     // [DELETE] /force
@@ -270,7 +270,7 @@ class OrderController {
         orderModel
             .deleteMany({ _id: idArr })
             .then(() => res.send('Delete Forever Successfully !!!'))
-            .catch(next);
+            .catch(() => res.send({ message: 'Delete Forever Failed !!!' }));
     }
     /* ----End Actions Delete product ---- */
 
@@ -287,7 +287,7 @@ class OrderController {
             );
             res.send('Restore Successfully !!!');
         } catch (error) {
-            res.json({ error: err });
+            res.send({ message: err });
         }
     }
     /* ----End Actions Restore product ---- */

@@ -1,15 +1,13 @@
 const sizeModel = require('../models/SizeModel');
 const { mongooseToObject } = require('../util/mongoose');
 
-
 class SizeController {
-
     // [POST] /store
     store(req, res, next) {
         const size = new sizeModel(req.body);
         size.save()
             .then(() => res.json(size))
-            .catch(next)
+            .catch(next);
     }
 
     // [GET] /
@@ -18,17 +16,18 @@ class SizeController {
             .then(([Sizes, deletedCount]) =>
                 res.json({
                     deletedCount,
-                    Sizes
+                    Sizes,
                 })
             )
-            .catch(next)
+            .catch(next);
     }
 
     // [GET] /trash
     trash(req, res, next) {
-        sizeModel.findDeleted({})
-            .then(size => res.json(size))
-            .catch(next)
+        sizeModel
+            .findDeleted({})
+            .then((size) => res.json(size))
+            .catch(next);
     }
 
     // [GET] /:slug
@@ -43,54 +42,57 @@ class SizeController {
     //         .catch(next)
     // }
 
-
-
     // [GET] /:id/edit
     showById(req, res, next) {
-        sizeModel.findById(req.params.id)
-            .then(size => {
-                res.json(size)
+        sizeModel
+            .findById(req.params.id)
+            .then((size) => {
+                res.json(size);
             })
-            .catch(next)
+            .catch(next);
     }
 
     // [PUT] /:id
     update(req, res, next) {
-        sizeModel.updateOne({ _id: req.params.id }, req.body)
-            .then(() => res.send(req.body)
-            )
-            .catch(next)
+        sizeModel
+            .updateOne({ _id: req.params.id }, req.body)
+            .then(() => res.send(req.body))
+            .catch(next);
     }
 
     // [DELETE] /
     destroy(req, res, next) {
         const ids = req.body.id;
         const idArr = ids.split(',');
-        sizeModel.delete({ _id: idArr })
+        sizeModel
+            .delete({ _id: idArr })
             .then(() => res.send('Delete Successfully !!!'))
-            .catch(next);
+            .catch(() => res.send({ message: 'Delete failed' }));
     }
 
     // [DELETE] /force
     forceDestroy(req, res, next) {
         const ids = req.body.id;
         const idArr = ids.split(',');
-        sizeModel.deleteOne({ _id: idArr })
+        sizeModel
+            .deleteOne({ _id: idArr })
             .then(() => res.send('Delete Forever Successfully !!!'))
-            .catch(next);
+            .catch(() => res.send({ message: 'Delete Forever failed' }));
     }
 
     // [PATCH] /:id/restore
     restore(req, res, next) {
         try {
             const ids = req.body.data;
-            ids.forEach(value => sizeModel.restore({ _id: value }, (err, result) => {
-                if (err) throw err;
-                console.log(result);
-            }));
+            ids.forEach((value) =>
+                sizeModel.restore({ _id: value }, (err, result) => {
+                    if (err) throw err;
+                    console.log(result);
+                })
+            );
             res.send('Restore Successfully !!!');
         } catch (error) {
-            res.json({ error: err });
+            res.send({ message: err });
         }
     }
 
@@ -108,7 +110,6 @@ class SizeController {
     //             res.json({ message: 'Action in invalid' })
     //     }
     // }
-
 }
 
 module.exports = new SizeController();

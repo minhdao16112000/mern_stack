@@ -1,13 +1,37 @@
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import Pagination from 'react-js-pagination';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, useRouteMatch } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import {
+    ORDER_DELETE_RESET,
+    ORDER_DESTROY_RESET,
+    ORDER_RESTORE_RESET,
+    ORDER_STATUS_RESET,
+} from '../../../constants/orderConstant';
+import {
+    listOrder,
+    listTrashOrders,
+} from '../../../redux/actions/orderActions';
 
 const OrderTable = (props) => {
     const list = props.list;
+    const dispatch = useDispatch();
     let { url } = useRouteMatch();
     const [itemsChecked, setItemsChecked] = useState([]);
     const [activePage, setCurrentPage] = useState(1);
+
+    const handelOrder = useSelector((state) => state.order);
+
+    const {
+        error: errorHandle,
+        active: activeOrder,
+        trash: pushOrderToTrash,
+        delete: deleteOrder,
+        restore: restoreOrder,
+    } = handelOrder;
+
     const indexOfLastTodo = activePage * 5;
 
     const indexOfFirstTodo = indexOfLastTodo - 5;
@@ -42,8 +66,56 @@ const OrderTable = (props) => {
     };
 
     useEffect(() => {
+        if (errorHandle && errorHandle.length !== 0) {
+            toast.error(errorHandle);
+        }
+
+        if (activeOrder && activeOrder === true) {
+            dispatch(listOrder());
+            dispatch({ type: ORDER_STATUS_RESET });
+        }
+
+        if (pushOrderToTrash && pushOrderToTrash === true) {
+            var inputs = document.querySelectorAll('#checkbox-1');
+            for (var i = 0; i < inputs.length; i++) {
+                inputs[i].checked = false;
+            }
+            setItemsChecked([]);
+            dispatch(listOrder());
+            dispatch({ type: ORDER_DELETE_RESET });
+        }
+
+        if (deleteOrder && deleteOrder === true) {
+            var inputsTrash = document.querySelectorAll('#checkbox-1');
+            for (var j = 0; j < inputsTrash.length; j++) {
+                inputsTrash[j].checked = false;
+            }
+            setItemsChecked([]);
+            dispatch(listTrashOrders());
+            dispatch({ type: ORDER_DESTROY_RESET });
+        }
+
+        if (restoreOrder && restoreOrder === true) {
+            var inputTrash = document.querySelectorAll('#checkbox-1');
+            for (var k = 0; k < inputTrash.length; k++) {
+                inputTrash[k].checked = false;
+            }
+            setItemsChecked([]);
+            dispatch(listTrashOrders());
+            dispatch({ type: ORDER_RESTORE_RESET });
+        }
+
         props.setDeleteItems(itemsChecked);
-    }, [itemsChecked, props]);
+    }, [
+        activeOrder,
+        deleteOrder,
+        dispatch,
+        errorHandle,
+        itemsChecked,
+        props,
+        pushOrderToTrash,
+        restoreOrder,
+    ]);
 
     return (
         <div className="tables-wrapper">

@@ -3,16 +3,15 @@ const { mongooseToObject } = require('../util/mongoose');
 const uploadFile = require('../util/multerCategory.js');
 
 class CategoryController {
-
     uploadImg = uploadFile.single('image');
 
     uploadSingleImg = async (req, res, next) => {
         try {
-            res.send('File Uploaded Successfully')
+            res.send('File Uploaded Successfully');
         } catch (error) {
             res.send(error.message);
         }
-    }
+    };
 
     // [POST] /store
     store(req, res, next) {
@@ -35,120 +34,148 @@ class CategoryController {
             status: info.status,
         });
 
-        category.save()
-            .then(() => res.json({
-                info: {
-                    category,
-                },
-                message: {
-                    message: "Add Category Successfully !!!"
-                }
-            }))
-            .catch(err => {
-                res.json({ error: err });
-            })
+        category
+            .save()
+            .then(() =>
+                res.json({
+                    info: {
+                        category,
+                    },
+                    message: {
+                        message: 'Add Category Successfully !!!',
+                    },
+                })
+            )
+            .catch((err) => {
+                res.send({ message: err });
+            });
     }
 
     // [PUT] /:id
     update(req, res, next) {
         const info = JSON.parse(req.body.infos);
         let imagesArray = info.image;
+        let arr = '';
 
         if (req.file) {
-            imagesArray = req.file.path.slice(25)
+            req.file.forEach((element, key) => {
+                arr += element.path.slice(20) + ',';
+            });
+            imagesArray = arr.slice(0, -1);
         }
 
-        categoryModel.updateOne({ _id: req.params.id }, {
-            name: info.name,
-            image: imagesArray,
-            parentCate: info.parentCate,
-            type: info.type,
-            status: info.status,
-        })
-            .then(() => res.send({ message: "Update Successfully !!!" }))
-            .catch(err => {
-                res.json({ error: err });
-            })
+        categoryModel
+            .updateOne(
+                { _id: req.params.id },
+                {
+                    name: info.name,
+                    image: imagesArray,
+                    parentCate: info.parentCate,
+                    type: info.type,
+                    status: info.status,
+                }
+            )
+            .then(() => res.send({ message: 'Update Successfully !!!' }))
+            .catch((err) => {
+                res.send({ message: err });
+            });
     }
 
     // [PATCH] /restore
     restore(req, res, next) {
         try {
             const ids = req.body.data;
-            ids.forEach(value => categoryModel.restore({ _id: value }, (err, result) => {
-                if (err) throw err;
-                console.log(result);
-            }));
+            ids.forEach((value) =>
+                categoryModel.restore({ _id: value }, (err, result) => {
+                    if (err) throw err;
+                    console.log(result);
+                })
+            );
             res.send('Restore Successfully !!!');
         } catch (error) {
-            res.json({ error: err });
+            res.send({ message: err });
         }
     }
-    
+
     // [PATCH] /:id
     active = async (req, res, next) => {
         try {
-            const category = await categoryModel.findOne({ _id: req.params.id });
-            const show = { status: "1" };
-            const hidden = { status: "0" };
-            category.status === "1"
-                ? categoryModel.findOneAndUpdate({ _id: category.id }, hidden, {
-                    returnOriginal: false
-                })
-                    .then(() => res.send('hidden'))
-                    .catch(next)
-                : categoryModel.findOneAndUpdate({ _id: req.params.id }, show, {
-                    returnOriginal: false
-                })
-                    .then(() => res.send('show'))
-                    .catch(next)
+            const category = await categoryModel.findOne({
+                _id: req.params.id,
+            });
+            const show = { status: '1' };
+            const hidden = { status: '0' };
+            category.status === '1'
+                ? categoryModel
+                      .findOneAndUpdate({ _id: category.id }, hidden, {
+                          returnOriginal: false,
+                      })
+                      .then(() => res.send('hidden'))
+                      .catch(() =>
+                          res.send({ message: 'Category Not Found !!!' })
+                      )
+                : categoryModel
+                      .findOneAndUpdate({ _id: req.params.id }, show, {
+                          returnOriginal: false,
+                      })
+                      .then(() => res.send('show'))
+                      .catch(() =>
+                          res.send({ message: 'Category Not Found !!!' })
+                      );
         } catch (error) {
-            res.send({ error: "Error" });
+            res.send({ message: 'Error' });
         }
-    }
+    };
 
     // [DELETE] /:id/force
     forceDestroy(req, res, next) {
         const ids = req.body.id;
         const idArr = ids.split(',');
-        categoryModel.deleteMany({ _id: idArr })
+        categoryModel
+            .deleteMany({ _id: idArr })
             .then(() => res.send('Delete Forever Successfully !!!'))
-            .catch(next);
+            .catch(() => res.send({ message: 'Delete Forever failed' }));
     }
 
     // [DELETE] /:id
     destroy(req, res, next) {
         const ids = req.body.id;
         const idArr = ids.split(',');
-        categoryModel.delete({ _id: idArr })
+        categoryModel
+            .delete({ _id: idArr })
             .then(() => res.send('Delete Successfully !!!'))
-            .catch(next);
+            .catch(() => res.send({ message: 'Delete failed' }));
     }
 
     // [GET] /:id/edit
     edit(req, res, next) {
-        categoryModel.findById(req.params.id)
-            .then(category => res.send(category))
-            .catch(next)
+        categoryModel
+            .findById(req.params.id)
+            .then((category) => res.send(category))
+            .catch(next);
     }
 
     // [GET] /
     show(req, res, next) {
-        Promise.all([categoryModel.find({}), categoryModel.countDocumentsDeleted()])
+        Promise.all([
+            categoryModel.find({}),
+            categoryModel.countDocumentsDeleted(),
+        ])
             .then(([Categories, deletedCount]) =>
                 res.json({
                     deletedCount,
-                    Categories
+                    Categories,
                 })
             )
-            .catch(next)
+            .catch(next);
     }
 
     // [GET] /trash
     trash(req, res, next) {
-        categoryModel.findDeleted({})
-            .then(category => res.json(category))
-            .catch(next)
+        categoryModel
+            .findDeleted({})
+            .then((category) => res.json(category))
+            .catch(next);
     }
 
     // [GET] /:slug
@@ -162,7 +189,7 @@ class CategoryController {
     //         })
     //         .catch(next)
     // }
-    
+
     // [POST] /handle-form-actions
     // handleFormAction(req, res, next) {
     //     switch (req.body.action) {
@@ -177,7 +204,6 @@ class CategoryController {
     //             res.json({ message: 'Action in invalid' })
     //     }
     // }
-
 }
 
 module.exports = new CategoryController();

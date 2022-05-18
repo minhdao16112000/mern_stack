@@ -1,10 +1,21 @@
-import moment from "moment";
-import React, { useEffect, useState } from "react";
-import Pagination from "react-js-pagination";
-import { useDispatch } from "react-redux";
-import { Link, useRouteMatch } from "react-router-dom";
-import { activePages } from "../../../redux/actions/pageActions";
-import "./style.scss";
+import moment from 'moment';
+import React, { useEffect, useState } from 'react';
+import Pagination from 'react-js-pagination';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useRouteMatch } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import {
+    PAGE_DELETE_RESET,
+    PAGE_DESTROY_RESET,
+    PAGE_RESTORE_RESET,
+    PAGE_STATUS_RESET,
+} from '../../../constants/pageConstant';
+import {
+    activePages,
+    getPages,
+    getTrashPages,
+} from '../../../redux/actions/pageActions';
+import './style.scss';
 
 const PageTable = (props) => {
     const list = props.list;
@@ -12,6 +23,16 @@ const PageTable = (props) => {
     let { url } = useRouteMatch();
     const [itemsChecked, setItemsChecked] = useState([]);
     const [activePage, setCurrentPage] = useState(1);
+
+    const handelPage = useSelector((state) => state.page);
+
+    const {
+        error: errorHandle,
+        active: activePagesShop,
+        trash: pushPageToTrash,
+        delete: deletePage,
+        restore: restorePage,
+    } = handelPage;
 
     const indexOfLastTodo = activePage * 5;
 
@@ -40,8 +61,56 @@ const PageTable = (props) => {
     };
 
     useEffect(() => {
+        if (errorHandle && errorHandle.length !== 0) {
+            toast.error(errorHandle);
+        }
+
+        if (activePagesShop && activePagesShop === true) {
+            dispatch(getPages());
+            dispatch({ type: PAGE_STATUS_RESET });
+        }
+
+        if (pushPageToTrash && pushPageToTrash === true) {
+            var inputs = document.querySelectorAll('#checkbox-1');
+            for (var i = 0; i < inputs.length; i++) {
+                inputs[i].checked = false;
+            }
+            setItemsChecked([]);
+            dispatch(getPages());
+            dispatch({ type: PAGE_DELETE_RESET });
+        }
+
+        if (deletePage && deletePage === true) {
+            var inputsTrash = document.querySelectorAll('#checkbox-1');
+            for (var j = 0; j < inputsTrash.length; j++) {
+                inputsTrash[j].checked = false;
+            }
+            setItemsChecked([]);
+            dispatch(getTrashPages());
+            dispatch({ type: PAGE_DESTROY_RESET });
+        }
+
+        if (restorePage && restorePage === true) {
+            var inputTrash = document.querySelectorAll('#checkbox-1');
+            for (var k = 0; k < inputTrash.length; k++) {
+                inputTrash[k].checked = false;
+            }
+            setItemsChecked([]);
+            dispatch(getTrashPages());
+            dispatch({ type: PAGE_RESTORE_RESET });
+        }
+
         props.setDeleteItems(itemsChecked);
-    }, [itemsChecked, props]);
+    }, [
+        activePagesShop,
+        deletePage,
+        dispatch,
+        errorHandle,
+        itemsChecked,
+        props,
+        pushPageToTrash,
+        restorePage,
+    ]);
 
     return (
         <div className="tables-wrapper">
@@ -64,7 +133,7 @@ const PageTable = (props) => {
                                         <th>
                                             <h6>Người Tạo</h6>
                                         </th>
-                                        {url === "/admin/pages/trash" ? (
+                                        {url === '/admin/pages/trash' ? (
                                             <th>
                                                 <h6>Thời Điểm Xóa</h6>
                                             </th>
@@ -120,7 +189,7 @@ const PageTable = (props) => {
                                                             {value.content.substring(
                                                                 0,
                                                                 100
-                                                            ) + "..."}
+                                                            ) + '...'}
                                                         </p>
                                                     </td>
                                                     <td className="min-width">
@@ -131,7 +200,7 @@ const PageTable = (props) => {
                                                             <td>
                                                                 <div className="action">
                                                                     {value.status ===
-                                                                    "1" ? (
+                                                                    '1' ? (
                                                                         <button
                                                                             className="text-success"
                                                                             onClick={() =>
@@ -179,7 +248,7 @@ const PageTable = (props) => {
                                                                     )
                                                                         .utc()
                                                                         .format(
-                                                                            "DD-MM-YYYY HH:ss"
+                                                                            'DD-MM-YYYY HH:ss'
                                                                         )}
                                                                 </p>
                                                             </td>

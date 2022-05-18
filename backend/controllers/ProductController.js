@@ -20,7 +20,7 @@ class ProductController {
         const info = JSON.parse(req.body.infos);
         let imagesArray = '';
         req.files.forEach((element, key) => {
-            imagesArray += element.path.slice(25) + ',';
+            imagesArray += element.path.slice(17) + ',';
         });
         const product = new productModel({
             name: info.name,
@@ -144,15 +144,6 @@ class ProductController {
     }
     /* ----End Actions Show product ---- */
 
-    // [GET] /:slug
-    // showBySlug(req, res, next) {
-    //     productModel.findOne({ slug: req.params.slug })
-    //         .then(products => {
-    //             res.json(products)
-    //         })
-    //         .catch(next)
-    // }
-
     /* ----Begin Actions Update product ---- */
     // [PATCH] /:id/active
     active = async (req, res, next) => {
@@ -166,15 +157,19 @@ class ProductController {
                           returnOriginal: false,
                       })
                       .then(() => res.send('hidden'))
-                      .catch(next)
+                      .catch(() =>
+                          res.send({ message: 'Product Not Found !!!' })
+                      )
                 : productModel
                       .findOneAndUpdate({ _id: req.params.id }, show, {
                           returnOriginal: false,
                       })
                       .then(() => res.send('show'))
-                      .catch(next);
+                      .catch(() =>
+                          res.send({ message: 'Product Not Found !!!' })
+                      );
         } catch (error) {
-            res.send({ error: 'Error' });
+            res.send({ message: 'Error' });
         }
     };
 
@@ -186,7 +181,7 @@ class ProductController {
 
         if (req.files.length !== 0) {
             req.files.forEach((element, key) => {
-                arr += element.path.slice(25) + ',';
+                arr += element.path.slice(17) + ',';
             });
             imagesArray = arr.slice(0, -1);
         }
@@ -243,7 +238,7 @@ class ProductController {
                 .then(() => res.send('Mark Successfully !!!'))
                 .catch(next);
         } catch (error) {
-            res.send({ mess: 'error' });
+            res.send({ message: 'error' });
         }
     };
 
@@ -258,7 +253,7 @@ class ProductController {
         productModel
             .delete({ _id: idArr })
             .then(() => res.send('Delete Successfully !!!'))
-            .catch(next);
+            .catch(() => res.send({ message: 'Delete failed' }));
     }
 
     // [DELETE] /force
@@ -268,7 +263,7 @@ class ProductController {
         productModel
             .deleteMany({ _id: idArr })
             .then(() => res.send('Delete Forever Successfully !!!'))
-            .catch(next);
+            .catch(() => res.send({ message: 'Delete Forever failed' }));
     }
     /* ----End Actions Delete product ---- */
 
@@ -285,7 +280,7 @@ class ProductController {
             );
             res.send('Restore Successfully !!!');
         } catch (error) {
-            res.json({ error: err });
+            res.send({ message: err });
         }
     }
     /* ----End Actions Restore product ---- */

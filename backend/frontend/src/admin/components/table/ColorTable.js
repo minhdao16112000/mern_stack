@@ -1,16 +1,35 @@
-import moment from "moment";
-import React, { useEffect, useState } from "react";
-import Pagination from "react-js-pagination";
-// import { useDispatch } from 'react-redux';
-import { Link, useRouteMatch } from "react-router-dom";
-import "./style.scss";
+import moment from 'moment';
+import React, { useEffect, useState } from 'react';
+import Pagination from 'react-js-pagination';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useRouteMatch } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import {
+    COLOR_DELETE_RESET,
+    COLOR_DESTROY_RESET,
+    COLOR_RESTORE_RESET,
+} from '../../../constants/productConstant';
+import {
+    getColors,
+    getTrashColors,
+} from '../../../redux/actions/productActions';
+import './style.scss';
 
 const ColorTable = (props) => {
     const list = props.list;
-    // const dispatch = useDispatch();
+    const dispatch = useDispatch();
     let { url } = useRouteMatch();
     const [itemsChecked, setItemsChecked] = useState([]);
     const [activePage, setCurrentPage] = useState(1);
+
+    const handelColor = useSelector((state) => state.product);
+
+    const {
+        error: errorReviewCreate,
+        trash: pushColorToTrash,
+        delete: deleteColor,
+        restore: restoreColor,
+    } = handelColor;
 
     const indexOfLastTodo = activePage * 5;
 
@@ -39,8 +58,50 @@ const ColorTable = (props) => {
     };
 
     useEffect(() => {
+        if (errorReviewCreate.length !== 0) {
+            toast.error(errorReviewCreate);
+        }
+
+        if (pushColorToTrash && pushColorToTrash === true) {
+            var inputs = document.querySelectorAll('#checkbox-1');
+            for (var i = 0; i < inputs.length; i++) {
+                inputs[i].checked = false;
+            }
+            setItemsChecked([]);
+            dispatch(getColors());
+            dispatch({ type: COLOR_DELETE_RESET });
+        }
+
+        if (deleteColor && deleteColor === true) {
+            var inputsTrash = document.querySelectorAll('#checkbox-1');
+            for (var j = 0; j < inputsTrash.length; j++) {
+                inputsTrash[j].checked = false;
+            }
+            setItemsChecked([]);
+            dispatch(getTrashColors());
+            dispatch({ type: COLOR_DESTROY_RESET });
+        }
+
+        if (restoreColor && restoreColor === true) {
+            var inputTrash = document.querySelectorAll('#checkbox-1');
+            for (var k = 0; k < inputTrash.length; k++) {
+                inputTrash[k].checked = false;
+            }
+            setItemsChecked([]);
+            dispatch(getTrashColors());
+            dispatch({ type: COLOR_RESTORE_RESET });
+        }
+
         props.setDeleteItems(itemsChecked);
-    }, [itemsChecked, props]);
+    }, [
+        deleteColor,
+        dispatch,
+        errorReviewCreate,
+        itemsChecked,
+        props,
+        pushColorToTrash,
+        restoreColor,
+    ]);
 
     return (
         <div className="tables-wrapper">
@@ -63,7 +124,7 @@ const ColorTable = (props) => {
                                         <th>
                                             <h6>Thời Điểm Tạo</h6>
                                         </th>
-                                        {url === "/admin/colors/trash" ? (
+                                        {url === '/admin/colors/trash' ? (
                                             <th>
                                                 <h6>Thời Điểm Xóa</h6>
                                             </th>
@@ -105,7 +166,7 @@ const ColorTable = (props) => {
                                                     <td
                                                         className="min-width"
                                                         style={{
-                                                            width: "50px",
+                                                            width: '50px',
                                                         }}
                                                     >
                                                         <div
@@ -115,7 +176,7 @@ const ColorTable = (props) => {
                                                                     value.code,
                                                             }}
                                                         >
-                                                            {" "}
+                                                            {' '}
                                                         </div>
                                                     </td>
                                                     <td className="min-width">
@@ -125,7 +186,7 @@ const ColorTable = (props) => {
                                                             )
                                                                 .utc()
                                                                 .format(
-                                                                    "DD-MM-YYYY HH:ss"
+                                                                    'DD-MM-YYYY HH:ss'
                                                                 )}
                                                         </p>
                                                     </td>
@@ -149,7 +210,7 @@ const ColorTable = (props) => {
                                                                 )
                                                                     .utc()
                                                                     .format(
-                                                                        "DD-MM-YYYY HH:ss"
+                                                                        'DD-MM-YYYY HH:ss'
                                                                     )}
                                                             </p>
                                                         </td>

@@ -20,7 +20,7 @@ import {
 } from '../redux/actions/productActions';
 import { favoritesAdd, getUser } from '../redux/actions/userActions';
 import { PRODUCT_REVIEW_CREATE_RESET } from '../constants/productConstant';
-import './styles/porductDetail.scss';
+import './styles/productDetail.scss';
 
 const ProductDetailScreen = () => {
     const dispatch = useDispatch();

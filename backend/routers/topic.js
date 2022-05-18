@@ -6,7 +6,7 @@ router.post('/store', topicController.store);
 router.put('/:id', topicController.update);
 router.patch('/restore', topicController.restore);
 router.patch('/:id', topicController.active);
-router.delete('/:id/force', topicController.forceDestroy);
+router.delete('/force', topicController.forceDestroy);
 router.delete('/', topicController.destroy);
 router.get('/:id/edit', topicController.edit);
 router.get('/trash', topicController.trash);

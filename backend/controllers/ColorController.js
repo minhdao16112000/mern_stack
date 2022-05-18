@@ -1,15 +1,14 @@
 const colorModel = require('../models/ColorModel');
 const { mongooseToObject } = require('../util/mongoose');
 
-
 class ColorController {
-
     // [POST] /store
     store(req, res, next) {
         const color = new colorModel(req.body);
-        color.save()
+        color
+            .save()
             .then(() => res.send(color))
-            .catch(next)
+            .catch(next);
     }
 
     // [GET] /
@@ -18,68 +17,73 @@ class ColorController {
             .then(([Colors, deletedCount]) =>
                 res.json({
                     deletedCount,
-                    Colors
+                    Colors,
                 })
             )
-            .catch(next)
-
+            .catch(next);
     }
 
     // [GET] /:id/edit
     showById(req, res, next) {
-        colorModel.findOne({ _id: req.params.id })
-            .then(color => {
-                res.json(color)
+        colorModel
+            .findOne({ _id: req.params.id })
+            .then((color) => {
+                res.json(color);
             })
-            .catch(next)
+            .catch(next);
     }
 
     // [GET] /trash
     trash(req, res, next) {
-        colorModel.findDeleted({})
-            .then(color => res.json(color))
-            .catch(next)
+        colorModel
+            .findDeleted({})
+            .then((color) => res.json(color))
+            .catch(next);
     }
 
     // [PUT] /:id
     update(req, res, next) {
-        colorModel.updateOne({ _id: req.params.id }, req.body)
+        colorModel
+            .updateOne({ _id: req.params.id }, req.body)
             .then(() => res.send(req.body))
-            .catch(next)
+            .catch(next);
     }
 
     // [DELETE] /
     destroy(req, res, next) {
         const ids = req.body.id;
         const idArr = ids.split(',');
-        colorModel.delete({ _id: idArr })
+        colorModel
+            .delete({ _id: idArr })
             .then(() => res.send('Delete Successfully !!!'))
-            .catch(next);
+            .catch(() => res.send({ message: 'Delete failed' }));
     }
 
     // [DELETE] /force
     forceDestroy(req, res, next) {
         const ids = req.body.id;
         const idArr = ids.split(',');
-        colorModel.deleteOne({ _id: idArr })
+        colorModel
+            .deleteOne({ _id: idArr })
             .then(() => res.send('Delete Forever Successfully !!!'))
-            .catch(next);
+            .catch(() => res.send({ message: 'Delete Forever failed' }));
     }
 
     // [PATCH] /:id/restore
     restore(req, res, next) {
         try {
             const ids = req.body.data;
-            ids.forEach(value => colorModel.restore({ _id: value }, (err, result) => {
-                if (err) throw err;
-                console.log(result);
-            }));
+            ids.forEach((value) =>
+                colorModel.restore({ _id: value }, (err, result) => {
+                    if (err) throw err;
+                    console.log(result);
+                })
+            );
             res.send('Restore Successfully !!!');
         } catch (error) {
-            res.json({ error: err });
+            res.send({ message: err });
         }
     }
-
 }
 
 module.exports = new ColorController();

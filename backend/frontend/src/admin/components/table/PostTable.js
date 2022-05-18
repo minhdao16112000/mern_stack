@@ -3,7 +3,18 @@ import React, { useEffect, useState } from 'react';
 import Pagination from 'react-js-pagination';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useRouteMatch } from 'react-router-dom';
-import { activePosts } from '../../../redux/actions/postActions';
+import { toast } from 'react-toastify';
+import {
+    POST_DELETE_RESET,
+    POST_DESTROY_RESET,
+    POST_RESTORE_RESET,
+    POST_STATUS_RESET,
+} from '../../../constants/postConstant';
+import {
+    activePosts,
+    getPosts,
+    getTrashPosts,
+} from '../../../redux/actions/postActions';
 import './style.scss';
 
 const PostTable = (props) => {
@@ -13,6 +24,16 @@ const PostTable = (props) => {
     const [itemsChecked, setItemsChecked] = useState([]);
     const lstTopic = useSelector((state) => state.topic.topics);
     const [activePage, setCurrentPage] = useState(1);
+
+    const handelPost = useSelector((state) => state.post);
+
+    const {
+        error: errorHandle,
+        active: activePost,
+        trash: pushPostToTrash,
+        delete: deletePost,
+        restore: restorePost,
+    } = handelPost;
 
     const indexOfLastTodo = activePage * 5;
 
@@ -53,8 +74,56 @@ const PostTable = (props) => {
     };
 
     useEffect(() => {
+        if (errorHandle && errorHandle.length !== 0) {
+            toast.error(errorHandle);
+        }
+
+        if (activePost && activePost === true) {
+            dispatch(getPosts());
+            dispatch({ type: POST_STATUS_RESET });
+        }
+
+        if (pushPostToTrash && pushPostToTrash === true) {
+            var inputs = document.querySelectorAll('#checkbox-1');
+            for (var i = 0; i < inputs.length; i++) {
+                inputs[i].checked = false;
+            }
+            setItemsChecked([]);
+            dispatch(getPosts());
+            dispatch({ type: POST_DELETE_RESET });
+        }
+
+        if (deletePost && deletePost === true) {
+            var inputsTrash = document.querySelectorAll('#checkbox-1');
+            for (var j = 0; j < inputsTrash.length; j++) {
+                inputsTrash[j].checked = false;
+            }
+            setItemsChecked([]);
+            dispatch(getTrashPosts());
+            dispatch({ type: POST_DESTROY_RESET });
+        }
+
+        if (restorePost && restorePost === true) {
+            var inputTrash = document.querySelectorAll('#checkbox-1');
+            for (var k = 0; k < inputTrash.length; k++) {
+                inputTrash[k].checked = false;
+            }
+            setItemsChecked([]);
+            dispatch(getTrashPosts());
+            dispatch({ type: POST_RESTORE_RESET });
+        }
+
         props.setDeleteItems(itemsChecked);
-    }, [itemsChecked, props]);
+    }, [
+        activePost,
+        deletePost,
+        dispatch,
+        errorHandle,
+        itemsChecked,
+        props,
+        pushPostToTrash,
+        restorePost,
+    ]);
 
     return (
         <div className="tables-wrapper">
