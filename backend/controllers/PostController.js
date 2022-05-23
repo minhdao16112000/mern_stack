@@ -22,6 +22,7 @@ class PostController {
         const post = new postModel({
             image: req.file.path.slice(14),
             topicId: info.topicId,
+            productId: info.productId,
             title: info.title,
             summary: info.summary,
             content: info.content,
@@ -29,6 +30,7 @@ class PostController {
             createdBy: info.createdBy,
             status: info.status,
         });
+
         post.save()
             .then(() =>
                 res.json({
@@ -63,6 +65,7 @@ class PostController {
                 {
                     image: imagesArray,
                     topicId: info.topicId,
+                    productId: info.productId,
                     title: info.title,
                     summary: info.summary,
                     content: info.content,

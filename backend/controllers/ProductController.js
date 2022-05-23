@@ -211,15 +211,24 @@ class ProductController {
     // [PATCH] /decreaseQty
     decreaseQty(req, res, next) {
         try {
-            req.body.orderItems.forEach((value) => {
-                var pro = productModel.findOne({ _id: value.id });
-                var decrQty = { quantity: value.inStock - value.quantity };
-                productModel
-                    .findOneAndUpdate({ _id: value.id }, decrQty, {
-                        returnOriginal: false,
-                    })
-                    .then(() => res.send('Decrease Quantity Successfully !!!'))
-                    .catch(next);
+            req.body.orderItems.forEach(async (value) => {
+                var pro = await productModel.findOne({ _id: value.id });
+                if (!pro) {
+                    res.send('Product not found !');
+                } else {
+                    var decrQty = {
+                        quantity: value.inStock - value.quantity,
+                        sold: pro.sold + value.quantity,
+                    };
+                    productModel
+                        .findOneAndUpdate({ _id: value.id }, decrQty, {
+                            returnOriginal: false,
+                        })
+                        .then(() =>
+                            res.send('Decrease Quantity Successfully !!!')
+                        )
+                        .catch(next);
+                }
             });
         } catch (error) {
             res.json({ error: err });

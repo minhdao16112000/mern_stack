@@ -6,10 +6,6 @@ class OrderController {
     /* ----Begin Actions Add product ---- */
     // [POST] /store
     store(req, res, next) {
-        req.body.orderItems.forEach((value) => {
-            console.log(value.inStock);
-        });
-        var stock = req.body.orderItems.inStock;
         if (req.body.orderItems.length === 0) {
             res.send({ message: 'Cart is empty' });
         } else {
