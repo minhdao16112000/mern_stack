@@ -165,7 +165,7 @@ const BlogDetailScreen = (props) => {
                                                                         }
                                                                     >
                                                                         <img
-                                                                            src={`http://localhost:5000/products/${checkImage(
+                                                                            src={`https://shopfashi.herokuapp.com/products/${checkImage(
                                                                                 key
                                                                             )}`}
                                                                             alt=""
