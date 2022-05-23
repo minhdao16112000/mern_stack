@@ -230,7 +230,15 @@ const OrderTable = (props) => {
                                                             textAlign: 'center',
                                                         }}
                                                     >
-                                                        <p>{value.delivered}</p>
+                                                        <p>
+                                                            {value.delivered ===
+                                                            'Preparing'
+                                                                ? 'Đang chuẩn bị'
+                                                                : value.delivered ===
+                                                                  'Delivering'
+                                                                ? 'Đang giao hàng'
+                                                                : 'Đã giao hàng'}
+                                                        </p>
                                                     </td>
                                                     <td className="min-width">
                                                         <p>
@@ -252,32 +260,38 @@ const OrderTable = (props) => {
                                                     </td>
                                                     {value.deleted === false ? (
                                                         <>
-                                                            <td>
+                                                            <td
+                                                                className="min-width"
+                                                                style={{
+                                                                    textAlign:
+                                                                        'center',
+                                                                }}
+                                                            >
                                                                 {value.status ===
                                                                 'Pending' ? (
                                                                     <span className="status-btn warning-btn">
                                                                         {
-                                                                            value.status
+                                                                            'Chưa giải quyết'
                                                                         }
                                                                     </span>
                                                                 ) : value.status ===
                                                                   'Processing' ? (
                                                                     <span className="status-btn active-btn">
                                                                         {
-                                                                            value.status
+                                                                            'Đang xử lý'
                                                                         }
                                                                     </span>
                                                                 ) : value.status ===
                                                                   'Completed' ? (
                                                                     <span className="status-btn success-btn">
                                                                         {
-                                                                            value.status
+                                                                            'Đã hoàn tất'
                                                                         }
                                                                     </span>
                                                                 ) : (
                                                                     <span className="status-btn close-btn">
                                                                         {
-                                                                            value.status
+                                                                            'Hủy hàng'
                                                                         }
                                                                     </span>
                                                                 )}
@@ -293,7 +307,6 @@ const OrderTable = (props) => {
                                                                     <Link
                                                                         to={`${url}/${value._id}`}
                                                                         className="text-primary"
-                                                                        title="View"
                                                                     >
                                                                         <i className="fas fa-info-circle"></i>
                                                                     </Link>

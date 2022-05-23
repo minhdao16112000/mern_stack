@@ -34,7 +34,7 @@ const Routers = () => {
                 : false;
         const isAdmin =
             JSON.parse(localStorage.getItem('userInfo')) !== null
-                ? JSON.parse(localStorage.getItem('userInfo')).role === 1
+                ? JSON.parse(localStorage.getItem('userInfo')).role === 0
                     ? true
                     : false
                 : false;

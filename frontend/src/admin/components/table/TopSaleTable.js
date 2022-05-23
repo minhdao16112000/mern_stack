@@ -1,25 +1,28 @@
 import moment from 'moment';
-import React from 'react'
+import React from 'react';
 import { useSelector } from 'react-redux';
 
 const TopSaleTable = (props) => {
     var optionTopSale = props.reqOptionTopSale;
-    const order = useSelector(state => state.order.orders);
-    const products = useSelector(state => state.product.products_list);
+    const order = useSelector((state) => state.order.orders);
+    const products = useSelector((state) => state.product.products_list);
     if (optionTopSale === 0) {
-        var data = [];
-        let pro ={};
-        var temp = order.filter(value => Number(value.createdAt.substring(0, 4)) === moment().year());
-        products.forEach(element => {
+        // var data = [];
+        // let pro = {};
+        var temp = order.filter(
+            (value) =>
+                Number(value.createdAt.substring(0, 4)) === moment().year()
+        );
+        products.forEach((element) => {
             let s = 0;
-            temp.forEach(index => {
-                index.orderItems.forEach(value => {
+            temp.forEach((index) => {
+                index.orderItems.forEach((value) => {
                     if (element._id === value.id) {
                         s += value.quantity;
                     }
-                })
-            })
-            console.log(s)
+                });
+            });
+            console.log(s);
         });
     }
 
@@ -96,7 +99,7 @@ const TopSaleTable = (props) => {
             </table>
             {/* End Table */}
         </div>
-    )
-}
+    );
+};
 
-export default TopSaleTable
+export default TopSaleTable;

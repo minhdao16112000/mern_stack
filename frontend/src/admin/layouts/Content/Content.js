@@ -5,7 +5,7 @@ import { listOrder } from '../../../redux/actions/orderActions';
 import { getProducts } from '../../../redux/actions/productActions';
 import ChartPrice from '../../components/chart/ChartPrice';
 import ChartProduct from '../../components/chart/ChartProduct';
-import TopSaleTable from '../../components/table/TopSaleTable';
+// import TopSaleTable from '../../components/table/TopSaleTable';
 // import DateRagersPicker from '../../components/date/DateRagersPicker';
 
 const Content = () => {
@@ -28,7 +28,7 @@ const Content = () => {
     );
     const [reqOptionPrice, setReqOptionPrice] = useState(0);
     const [reqOptionPro, setReqOptionPro] = useState(1);
-    const [reqOptionTopSale, setReqOptionTopSale] = useState(2);
+    // const [reqOptionTopSale, setReqOptionTopSale] = useState(2);
 
     const handleChangePrice = () => {
         var e = document.getElementById('ddlViewBy').selectedIndex;
@@ -40,10 +40,10 @@ const Content = () => {
         setReqOptionPro(e);
     };
 
-    const handleChangeTopSale = () => {
-        var e = document.getElementById('ddlViewBy2').selectedIndex;
-        setReqOptionTopSale(e);
-    };
+    // const handleChangeTopSale = () => {
+    //     var e = document.getElementById('ddlViewBy2').selectedIndex;
+    //     setReqOptionTopSale(e);
+    // };
 
     const TotalYearly = () => {
         if (listOrders && listOrders.Orders) {
@@ -112,6 +112,31 @@ const Content = () => {
                     <h3 className="text-bold mb-10">$0</h3>
                     <p className="text-sm">{percent(0, 0)}</p>
                 </>
+            );
+        }
+    };
+
+    const newOrders = (before, after) => {
+        if (before > after) {
+            return (
+                <p className="text-sm text-danger">
+                    {percent(orderLastMonth.length, orderMonth.length)}
+                    <span className="text-gray"> (30 ngày)</span>
+                </p>
+            );
+        } else if (before < after) {
+            return (
+                <p className="text-sm text-success">
+                    {percent(orderLastMonth.length, orderMonth.length)}
+                    <span className="text-gray"> (30 ngày)</span>
+                </p>
+            );
+        } else {
+            return (
+                <p className="text-sm">
+                    {percent(orderLastMonth.length, orderMonth.length)}
+                    <span className="text-gray"> (30 ngày)</span>
+                </p>
             );
         }
     };
@@ -203,17 +228,20 @@ const Content = () => {
                                 <h3 className="text-bold mb-10">
                                     {orderMonth.length ? orderMonth.length : 0}
                                 </h3>
-                                <p className="text-sm text-success">
+                                {newOrders(
+                                    orderLastMonth.length,
+                                    orderMonth.length
+                                )}
+                                {/* <p className="text-sm text-success">
                                     {percent(
                                         orderLastMonth.length,
                                         orderMonth.length
                                     )}
-                                    {/* <i className="lni lni-arrow-up" /> +2.00% */}
                                     <span className="text-gray">
                                         {' '}
                                         (30 ngày)
                                     </span>
-                                </p>
+                                </p> */}
                             </div>
                         </div>
                     </div>
@@ -367,13 +395,13 @@ const Content = () => {
                     <div className="col-lg-12">
                         <div className="card-style mb-30">
                             <div className="title d-flex flex-wrap justify-content-between align-items-center">
-                                <div className="left">
+                                {/* <div className="left">
                                     <h6 className="text-medium mb-30">
                                         Top Selling Products
                                     </h6>
-                                </div>
+                                </div> */}
                                 <div className="right">
-                                    <div className="select-style-1">
+                                    {/* <div className="select-style-1">
                                         <div className="select-position select-sm">
                                             <select
                                                 className="light-bg"
@@ -392,17 +420,17 @@ const Content = () => {
                                                 </option>
                                             </select>
                                         </div>
-                                    </div>
+                                    </div> */}
                                     {/* end select */}
                                 </div>
                             </div>
                             {/* End Title */}
-                            <TopSaleTable reqOptionTopSale={reqOptionTopSale} />
+                            {/* <TopSaleTable reqOptionTopSale={reqOptionTopSale} /> */}
                         </div>
                     </div>
                     {/* End Col */}
 
-                    <div className="col-lg-12">
+                    {/* <div className="col-lg-12">
                         <div className="card-style mb-30">
                             <div className="title d-flex flex-wrap align-items-center justify-content-between">
                                 <div className="left">
@@ -527,7 +555,7 @@ const Content = () => {
                                 </table>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
                     {/* End Col */}
                 </div>
                 {/* End Row */}

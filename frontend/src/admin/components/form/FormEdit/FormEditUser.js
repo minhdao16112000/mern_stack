@@ -1,11 +1,11 @@
-import { FastField, Field, Form, Formik } from "formik";
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import * as Yup from "yup";
-import { getUser, updateUser } from "../../../../redux/actions/userActions";
-import AddField from "../../add/AddField";
-import SelectField from "../../add/SelectField";
+import { FastField, Field, Form, Formik } from 'formik';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import * as Yup from 'yup';
+import { getUser, updateUser } from '../../../../redux/actions/userActions';
+import AddField from '../../add/AddField';
+import SelectField from '../../add/SelectField';
 
 const FormEditUser = (props) => {
     const dispatch = useDispatch();
@@ -15,33 +15,33 @@ const FormEditUser = (props) => {
     // const lstTopic = useSelector((state) => state.topic.topics);
 
     const initialValues = {
-        firstName: "",
-        lastName: "",
-        email: "",
-        role: "",
-        phone: "",
-        address: "",
+        firstName: '',
+        lastName: '',
+        email: '',
+        role: '',
+        phone: '',
+        address: '',
     };
 
     const validationSchema = Yup.object().shape({
         firstName: Yup.string()
-            .max(15, "Tối đa 15 kí tự")
-            .required("Bạn phải nhập họ"),
+            .max(15, 'Tối đa 15 kí tự')
+            .required('Bạn phải nhập họ'),
         lastName: Yup.string()
-            .max(8, "Tối đa 8 kí tự")
-            .required("Bạn phải nhập Tên"),
+            .max(8, 'Tối đa 8 kí tự')
+            .required('Bạn phải nhập Tên'),
         phone: Yup.string()
-            .min(10, "Tối thiểu 10 kí tự")
-            .max(11, "Tối đa 11 kí tự")
-            .required("Bạn phải nhập Số ĐT"),
-        address: Yup.string().required("Bạn phải nhập địa chỉ"),
+            .min(10, 'Tối thiểu 10 kí tự')
+            .max(11, 'Tối đa 11 kí tự')
+            .required('Bạn phải nhập Số ĐT'),
+        address: Yup.string().required('Bạn phải nhập địa chỉ'),
         email: Yup.string()
-            .email("Email không hợp lệ")
-            .required("Bạn phải nhập Email"),
+            .email('Email không hợp lệ')
+            .required('Bạn phải nhập Email'),
     });
 
     useEffect(() => {
-        document.title = "Manage Orders";
+        document.title = 'Manage Orders';
         if (id) dispatch(getUser(id));
 
         // notify();
@@ -145,11 +145,11 @@ const FormEditUser = (props) => {
                                                     options={[
                                                         {
                                                             value: 0,
-                                                            label: "User",
+                                                            label: 'Admin',
                                                         },
                                                         {
                                                             value: 1,
-                                                            label: "Admin",
+                                                            label: 'User',
                                                         },
                                                     ]}
                                                     data={user.role}

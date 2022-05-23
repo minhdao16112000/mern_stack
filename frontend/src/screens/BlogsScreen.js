@@ -118,7 +118,7 @@ const BlogsScreen = () => {
                                     <h4>Tin Tức Mới Nhất</h4>
                                     <div className="recent-blog">
                                         {list.length !== 0 ? (
-                                            list.slice(0, 4).map((value) => {
+                                            list.slice(0, 5).map((value) => {
                                                 return (
                                                     <Link
                                                         key={value._id}

@@ -58,7 +58,7 @@ const ExportExcel = (props) => {
                 type: 'pattern',
                 pattern: 'solid', //darkVertical
                 fgColor: {
-                    argb: '000OFF',
+                    argb: '006b3c',
                 },
             },
         };
@@ -73,7 +73,7 @@ const ExportExcel = (props) => {
                 type: 'pattern',
                 pattern: 'solid', //darkVertical
                 fgColor: {
-                    argb: 'FF0000',
+                    argb: '007ba7',
                 },
             },
         };
@@ -164,7 +164,7 @@ const ExportExcel = (props) => {
             onClick={() => exportData()}
         >
             <i className="fas fa-save"></i>
-            &ensp;Export
+            &ensp;Xuất file Excel
         </button>
     );
 };

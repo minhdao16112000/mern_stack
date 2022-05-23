@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import "./nav.scss";
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import './nav.scss';
 
 const Nav = (props) => {
     var [childCate, setChildCate] = useState([]);
     var [grandChildCate, setGrandChildCate] = useState([]);
     const lstCate = props.listCate;
-    const lstParentCate = lstCate.filter((value) => value.parentCate === "");
+    const lstParentCate = lstCate.filter((value) => value.parentCate === '');
 
     const getChild = (id) => {
         setChildCate([]);
         lstCate.forEach((value, key) => {
-            if (value.deleted === false && value.status === "1") {
+            if (value.deleted === false && value.status === '1') {
                 if (value.parentCate.includes(id)) {
                     setChildCate((oldVal) => [...oldVal, value]);
                 }
@@ -22,18 +22,18 @@ const Nav = (props) => {
     const getGrandChild = (id, parentType) => {
         setGrandChildCate([]);
         lstCate.forEach((value, key) => {
-            if (value.deleted === false && value.status === "1") {
+            if (value.deleted === false && value.status === '1') {
                 if (value.parentCate.includes(id)) {
-                    if (value.type === parentType || value.type === "0") {
+                    if (value.type === parentType || value.type === '0') {
                         setGrandChildCate((oldVal) => [...oldVal, value]);
                     } else if (
-                        value.type === "4" &&
-                        (parentType === "1" || parentType === "2")
+                        value.type === '4' &&
+                        (parentType === '1' || parentType === '2')
                     ) {
                         setGrandChildCate((oldVal) => [...oldVal, value]);
                     } else if (
-                        value.type === "5" &&
-                        (parentType === "2" || parentType === "3")
+                        value.type === '5' &&
+                        (parentType === '2' || parentType === '3')
                     ) {
                         setGrandChildCate((oldVal) => [...oldVal, value]);
                     }
@@ -148,7 +148,7 @@ const Nav = (props) => {
                                     </Link>
                                 </li>
                                 {JSON.parse(
-                                    localStorage.getItem("userInfo")
+                                    localStorage.getItem('userInfo')
                                 ) !== null ? (
                                     <li>
                                         <Link to="/lich-su-mua-hang">
@@ -157,14 +157,14 @@ const Nav = (props) => {
                                     </li>
                                 ) : null}
                                 {JSON.parse(
-                                    localStorage.getItem("userInfo")
+                                    localStorage.getItem('userInfo')
                                 ) === null ? (
                                     <li>
                                         <Link to="/dang-ky">Đăng ký</Link>
                                     </li>
                                 ) : null}
                                 {JSON.parse(
-                                    localStorage.getItem("userInfo")
+                                    localStorage.getItem('userInfo')
                                 ) === null ? (
                                     <li>
                                         <Link to="/dang-nhap">Đăng nhập</Link>
@@ -175,14 +175,14 @@ const Nav = (props) => {
                                     <Link to="/login">Dashboard</Link>
                                 </li>
                                 ) : null} */}
-                                {role === 1 ? (
+                                {role === 0 ? (
                                     <li>
                                         <Link to="/admin">Trang quản trị</Link>
                                     </li>
                                 ) : null}
                             </ul>
                         </li>
-                        {JSON.parse(localStorage.getItem("userInfo")) !==
+                        {JSON.parse(localStorage.getItem('userInfo')) !==
                         null ? (
                             <li>
                                 <Link to="/logout">Đăng xuất</Link>
