@@ -26,9 +26,7 @@ const SearchScreen = () => {
 
     const indexOfFirstTodo = indexOfLastTodo - 6;
 
-    const currentTodos = showPro
-        .reverse()
-        .slice(indexOfFirstTodo, indexOfLastTodo);
+    const currentTodos = showPro.slice(indexOfFirstTodo, indexOfLastTodo);
 
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);

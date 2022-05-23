@@ -175,7 +175,7 @@ const Nav = (props) => {
                                     <Link to="/login">Dashboard</Link>
                                 </li>
                                 ) : null} */}
-                                {role === 1 ? (
+                                {role === 0 ? (
                                     <li>
                                         <Link to="/admin">Trang quản trị</Link>
                                     </li>

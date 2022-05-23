@@ -7,10 +7,12 @@ import {
     storePost,
     storePostAndContinue,
 } from '../../../../redux/actions/postActions';
+import { getProducts } from '../../../../redux/actions/productActions';
 import { getTopics } from '../../../../redux/actions/topicActions';
 import AddField from '../../add/AddField';
 import CKEditorField from '../../add/CKEditorField';
 import ImageField from '../../add/ImageField';
+import MultiSelectField from '../../add/MultiSelectField';
 import SelectField from '../../add/SelectField';
 import '../style.scss';
 
@@ -18,15 +20,18 @@ const FormAddPost = () => {
     const dispatch = useDispatch();
 
     const [topic, setTopic] = useState([]);
+    const [product, setProduct] = useState([]);
     const [file, setFile] = useState([]);
     const [save, setSave] = useState('true');
 
     const lstTopic = useSelector((state) => state.topic.topics);
+    const lstPro = useSelector((state) => state.product.products_list);
 
     const initialValues = {
         title: '',
         image: '',
         topicId: '',
+        productId: '',
         summary: '',
         content: '',
         type: '1',
@@ -45,12 +50,26 @@ const FormAddPost = () => {
         }
     };
 
+    const setSelectPro = () => {
+        if (lstPro && lstPro.Products) {
+            lstPro.Products.forEach((value) => {
+                if (value.status === '1') {
+                    let objPro = { value: value._id, label: value.name };
+                    setProduct((oldVal) => [...oldVal, objPro]);
+                }
+            });
+        }
+    };
+
     const validationSchema = Yup.object().shape({
         title: Yup.string()
             .min(5, 'Tên bài viết tối thiểu 5 kí tự')
             .required('Bạn phải nhập tên bài viết'),
         image: Yup.string().required('Bạn phải chọn hình ảnh cho bài viết'),
         topicId: Yup.string().required('Bạn phải chọn chủ đề cho bài viết'),
+        productId: Yup.string().required(
+            'Bạn phải chọn sản phẩm liên quan cho bài viết'
+        ),
         summary: Yup.string()
             .min(15, 'Mô tả ngắn của bài viết tối thiểu 15 kí tự')
             .max(1000, 'Mô tả ngắn của bài viết tối đa 1000 kí tự')
@@ -67,8 +86,12 @@ const FormAddPost = () => {
     useEffect(() => {
         document.title = 'Manage Posts';
         dispatch(getTopics());
+        if (!lstPro.Products) {
+            dispatch(getProducts());
+        }
 
         setSelectTopic();
+        setSelectPro();
 
         // notify();
         // setTimeout(clearMess, 5000);
@@ -86,6 +109,7 @@ const FormAddPost = () => {
                     title: values.title,
                     image: values.image,
                     topicId: values.topicId,
+                    productId: values.productId,
                     summary: values.summary,
                     content: values.content,
                     type: values.type,
@@ -206,6 +230,15 @@ const FormAddPost = () => {
                                                     placeholder="Chọn chủ đề..."
                                                     id="topicId"
                                                     options={topic}
+                                                />
+                                                {/* end input */}
+                                                <Field
+                                                    name="productId"
+                                                    label="Sản Phẩm Liên Quan"
+                                                    component={MultiSelectField}
+                                                    placeholder="Chọn sản phẩm liên quan..."
+                                                    id="productId"
+                                                    options={product}
                                                 />
                                                 {/* end input */}
                                                 <FastField

@@ -4,14 +4,18 @@ import { Link } from 'react-router-dom';
 // import GoTop from '../components/GoTop/GoTop';
 import { getPosts, getPostSlug } from '../redux/actions/postActions';
 import { getTopics } from '../redux/actions/topicActions';
+import { getProducts } from '../redux/actions/productActions';
 import './styles/blog.scss';
 
 const BlogDetailScreen = (props) => {
     const dispatch = useDispatch();
     const slug = props.match.params.slug;
+    const post = useSelector((state) => state.post.post);
     const listTopic = useSelector((state) => state.topic.topics);
     const listPost = useSelector((state) => state.post.posts_list);
-    const post = useSelector((state) => state.post.post);
+    const lstPro = useSelector((state) => state.product.products_list);
+    const pro = [];
+
     var listPostByTopic = [];
     if (listPost.Posts && listPost.Posts) {
         listPostByTopic = listPost.Posts.filter(
@@ -26,14 +30,33 @@ const BlogDetailScreen = (props) => {
         }
     });
 
-    const checkTopic = (id) => {
-        var topicArr = [];
-        listTopic.Topics.forEach((value) => {
-            if (id.includes(value._id)) {
-                topicArr.push(value.name);
+    if (post.productId && lstPro && lstPro.Products) {
+        lstPro.Products.forEach((item) => {
+            if (post.productId.includes(item._id)) {
+                pro.push(item);
             }
         });
+    }
+
+    const checkTopic = (id) => {
+        var topicArr = [];
+        if (listTopic && listTopic.Topics) {
+            listTopic.Topics.forEach((value) => {
+                if (id.includes(value._id)) {
+                    topicArr.push(value.name);
+                }
+            });
+        }
         return topicArr.toString();
+    };
+
+    const checkImage = (key) => {
+        let Arr = [];
+        pro.forEach((value) => {
+            const imageArr = value.image.split(',');
+            Arr.push(imageArr[0]);
+        });
+        return Arr[key];
     };
 
     useEffect(() => {
@@ -43,10 +66,13 @@ const BlogDetailScreen = (props) => {
         });
         dispatch(getPosts());
         dispatch(getTopics());
+        if (!lstPro.Products) {
+            dispatch(getProducts());
+        }
         if (slug) {
             dispatch(getPostSlug(slug));
         }
-    }, [dispatch, slug]);
+    }, [dispatch, lstPro.Products, slug]);
 
     return (
         <>
@@ -107,19 +133,65 @@ const BlogDetailScreen = (props) => {
                                             they're basically good and smart, and if you give them tools, they'll do wonderful
                                             things with them.” <span>- Steven Jobs</span></p>
                                     </div> */}
-                                        {/* <div className="blog-more">
-                                        <div className="row">
-                                            <div className="col-sm-4">
-                                                <img src="assets/img/blog/blog-detail-1.jpg" alt="" />
+                                        {pro.length !== 0 ? (
+                                            <div className="blog-more">
+                                                <div className="row">
+                                                    <div className="col-lg-12">
+                                                        <div className="section-title">
+                                                            <h2>
+                                                                Có thể bạn sẽ
+                                                                thích các sản
+                                                                phẩm này
+                                                            </h2>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className="row">
+                                                    {pro
+                                                        .slice(0, 3)
+                                                        .map((value, key) => {
+                                                            return (
+                                                                <div
+                                                                    key={key}
+                                                                    className="col-sm-4 image-pro"
+                                                                >
+                                                                    <Link
+                                                                        to={`/product/${value.slug}`}
+                                                                        onClick={() =>
+                                                                            localStorage.setItem(
+                                                                                'proCate',
+                                                                                value.categoryId
+                                                                            )
+                                                                        }
+                                                                    >
+                                                                        <img
+                                                                            src={`http://localhost:5000/products/${checkImage(
+                                                                                key
+                                                                            )}`}
+                                                                            alt=""
+                                                                        />
+                                                                    </Link>
+                                                                </div>
+                                                            );
+                                                        })}
+
+                                                    {/* <div className="col-sm-4">
+                                                        <img
+                                                            src="assets/img/blog/blog-detail-2.jpg"
+                                                            alt=""
+                                                        />
+                                                    </div>
+                                                    <div className="col-sm-4">
+                                                        <img
+                                                            src="assets/img/blog/blog-detail-3.jpg"
+                                                            alt=""
+                                                        />
+                                                    </div> */}
+                                                </div>
                                             </div>
-                                            <div className="col-sm-4">
-                                                <img src="assets/img/blog/blog-detail-2.jpg" alt="" />
-                                            </div>
-                                            <div className="col-sm-4">
-                                                <img src="assets/img/blog/blog-detail-3.jpg" alt="" />
-                                            </div>
-                                        </div>
-                                    </div> */}
+                                        ) : (
+                                            <div></div>
+                                        )}
 
                                         <div className="tag-share">
                                             <div className="details-tag">
@@ -127,8 +199,9 @@ const BlogDetailScreen = (props) => {
                                                     <li>
                                                         <i className="fa fa-tags"></i>
                                                     </li>
-                                                    {listTopic.Topics.length !==
-                                                    0 ? (
+                                                    {listTopic.Topics &&
+                                                    listTopic.Topics.length !==
+                                                        0 ? (
                                                         listTopic.Topics.filter(
                                                             (item) =>
                                                                 item.slug !==

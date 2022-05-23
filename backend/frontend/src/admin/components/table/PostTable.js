@@ -41,7 +41,7 @@ const PostTable = (props) => {
 
     var currentTodos = [];
     if (list && list.length !== 0) {
-        currentTodos = list.reverse().slice(indexOfFirstTodo, indexOfLastTodo);
+        currentTodos = list.slice(indexOfFirstTodo, indexOfLastTodo);
     }
 
     const handlePageChange = (pageNumber) => {

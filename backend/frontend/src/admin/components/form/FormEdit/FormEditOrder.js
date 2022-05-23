@@ -56,14 +56,22 @@ const FormEditOrder = (props) => {
         return (
             <div className="select-position">
                 <select
-                    defaultValue={get_order.status}
+                    defaultValue={
+                        get_order.status === 'Pending'
+                            ? 'Chưa giải quyết'
+                            : get_order.status === 'Processing'
+                            ? 'Đang xử lý'
+                            : get_order.status === 'Completed'
+                            ? 'Đã hoàn tất'
+                            : 'Hủy hàng'
+                    }
                     className="select_status"
                     onChange={(e) => setSaveStatus(e.target.value)}
                 >
-                    <option value="Pending">Pending</option>
-                    <option value="Processing">Processing</option>
-                    <option value="Completed">Completed</option>
-                    <option value="Cancel">Cancel</option>
+                    <option value="Pending">Chưa giải quyết</option>
+                    <option value="Processing">Đang xử lý</option>
+                    <option value="Completed">Đã hoàn tất</option>
+                    <option value="Cancel">Hủy hàng</option>
                 </select>
             </div>
         );
@@ -73,13 +81,19 @@ const FormEditOrder = (props) => {
         return (
             <div className="select-position">
                 <select
-                    defaultValue={get_order.delivered}
+                    defaultValue={
+                        get_order.delivered === 'Preparing'
+                            ? 'Đang chuẩn bị'
+                            : get_order.delivered === 'Delivering'
+                            ? 'Đang giao hàng'
+                            : 'Đã giao hàng'
+                    }
                     className="select_status"
                     onChange={(e) => setSaveDelivery(e.target.value)}
                 >
-                    <option value="Preparing">Preparing</option>
-                    <option value="Delivering">Delivering</option>
-                    <option value="Delivered">Delivered</option>
+                    <option value="Preparing">Đang chuẩn bị</option>
+                    <option value="Delivering">Đang giao hàng</option>
+                    <option value="Delivered">Đã giao hàng</option>
                 </select>
             </div>
         );
@@ -167,7 +181,7 @@ const FormEditOrder = (props) => {
                                         onClick={() => printDocument()}
                                     >
                                         <i className="fas fa-save"></i>
-                                        &ensp;Export PDF
+                                        &ensp;Xuất file PDF
                                     </button>
                                 </nav>
                             </div>
@@ -250,8 +264,8 @@ const FormEditOrder = (props) => {
                                                                 <strong>
                                                                     {get_order.isPaid ===
                                                                     true
-                                                                        ? 'Paid'
-                                                                        : 'No'}
+                                                                        ? 'Đã thanh toán'
+                                                                        : 'Chưa thanh toán'}
                                                                 </strong>
                                                             </p>
                                                         </div>
@@ -264,9 +278,16 @@ const FormEditOrder = (props) => {
                                                             0 ? (
                                                                 <p>
                                                                     <strong>
-                                                                        {
-                                                                            get_order.status
-                                                                        }
+                                                                        {get_order.status ===
+                                                                        'Pending'
+                                                                            ? 'Chưa giải quyết'
+                                                                            : get_order.status ===
+                                                                              'Processing'
+                                                                            ? 'Đang xử lý'
+                                                                            : get_order.status ===
+                                                                              'Completed'
+                                                                            ? 'Đã hoàn tất'
+                                                                            : 'Hủy hàng'}
                                                                     </strong>
                                                                 </p>
                                                             ) : (
@@ -370,9 +391,9 @@ const FormEditOrder = (props) => {
                                                             </label>
                                                             <p>
                                                                 <strong>
-                                                                    {
+                                                                    {formatVND(
                                                                         get_order.totalPrice
-                                                                    }
+                                                                    )}
                                                                 </strong>
                                                             </p>
                                                         </div>
@@ -385,9 +406,13 @@ const FormEditOrder = (props) => {
                                                             0 ? (
                                                                 <p>
                                                                     <strong>
-                                                                        {
-                                                                            get_order.delivered
-                                                                        }
+                                                                        {get_order.delivered ===
+                                                                        'Preparing'
+                                                                            ? 'Đang chuẩn bị'
+                                                                            : get_order.delivered ===
+                                                                              'Delivering'
+                                                                            ? 'Đang giao hàng'
+                                                                            : 'Đã giao hàng'}
                                                                     </strong>
                                                                 </p>
                                                             ) : (

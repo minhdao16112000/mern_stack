@@ -176,7 +176,11 @@ const UserTable = (props) => {
                                                         <p>{value.email}</p>
                                                     </td>
                                                     <td className="min-width">
-                                                        <p>{value.role}</p>
+                                                        <p>
+                                                            {value.role === 0
+                                                                ? 'Admin'
+                                                                : 'User'}
+                                                        </p>
                                                     </td>
                                                     <td className="min-width">
                                                         <p>{value.phone}</p>

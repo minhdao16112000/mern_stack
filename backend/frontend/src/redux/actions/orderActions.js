@@ -237,13 +237,3 @@ export const restoreOrders = (data) => async (dispatch) => {
         dispatch({ type: ORDER_RESTORE_FAIL, payload: message });
     }
 };
-
-export const exportOrders = () => async (dispatch) => {
-    try {
-        await api.post('api/order/export-excel', {
-            month: '3',
-        });
-    } catch (e) {
-        console.log(e);
-    }
-};
