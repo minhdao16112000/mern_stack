@@ -22,7 +22,7 @@
 .user {
     padding-right: 80px;
     margin-right: -200px;
-    margin-left: 360px;
+    margin-left: 415px;
 }
 .user_password {
     margin-bottom: -15px;
@@ -37,4 +37,37 @@
     min-width: 100px;
     margin-left: -20px;
     margin-top: -15px;
+}
+.avatar-user {
+    position: absolute;
+    width: 190px;
+    height: 190px;
+    margin-left: 110px;
+}
+.image-user img {
+    margin-top: 12px;
+    margin-left: 1px;
+    min-width: 100%;
+}
+
+.input-image-user {
+    position: absolute;
+    margin-top: 210px;
+    margin-left: 0px !important;
+}
+.btn-edit-info {
+    margin-left: 810px;
+    width: 295px;
+    margin-bottom: 10px;
+}
+.btn-edit-info button {
+    margin-left: 5px;
+}
+.input-info-user {
+    border: 1px solid #ebebeb;
+    height: 30px;
+    width: 100%;
+    margin-bottom: 5px;
+    font-size: 19px;
+    font-family: 'Muli', sans-serif;
 }

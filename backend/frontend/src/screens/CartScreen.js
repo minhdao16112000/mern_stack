@@ -330,24 +330,6 @@ const CartScreen = () => {
                                                 Tiếp Tục Mua Sắm
                                             </Link>
                                         </div>
-                                        <div className="discount-coupon">
-                                            <h6>Mã Giảm Giá</h6>
-                                            <form
-                                                action="#"
-                                                className="coupon-form"
-                                            >
-                                                <input
-                                                    type="text"
-                                                    placeholder="Nhập Mã Giảm Giá"
-                                                />
-                                                <button
-                                                    type="submit"
-                                                    className="site-btn coupon-btn"
-                                                >
-                                                    Áp Dụng
-                                                </button>
-                                            </form>
-                                        </div>
                                     </div>
                                     <div className="col-lg-4 offset-lg-4">
                                         <div className="proceed-checkout">

@@ -10,6 +10,7 @@ router.post('/register', userController.register);
 router.post('/forgetPassword', userController.forgetPassword);
 router.post('/userRole', userController.getRole);
 router.put('/changePassword', userController.changePassword);
+router.put('/:id/info', userController.uploadImg, userController.updateInfo);
 router.put('/:id', userController.update);
 router.patch('/restore', userController.restore);
 router.patch('/:id/favorites', userController.addFavorites);

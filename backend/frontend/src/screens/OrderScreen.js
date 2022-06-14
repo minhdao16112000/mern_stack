@@ -199,15 +199,27 @@ const OrderScreen = (props) => {
                                                     )}
                                                 </span>
                                             </li>
+                                            <li className="fw-normal">
+                                                Giảm giá
+                                                <span>
+                                                    -{' '}
+                                                    {formatVND(
+                                                        order.discount || 0
+                                                    )}
+                                                </span>
+                                            </li>
                                             <li className="total-price">
                                                 Tổng tiền{' '}
                                                 <span>
                                                     {formatVND(
-                                                        order.totalPrice
+                                                        order.totalPrice -
+                                                            order.discount
                                                     )}{' '}
                                                     = $
                                                     {(
-                                                        order.totalPrice / 25000
+                                                        (order.totalPrice -
+                                                            order.discount) /
+                                                        25000
                                                     ).toFixed(2)}
                                                 </span>
                                             </li>

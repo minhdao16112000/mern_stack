@@ -8,7 +8,6 @@ import {
     ORDER_DELETE_RESET,
     ORDER_DESTROY_RESET,
     ORDER_RESTORE_RESET,
-    ORDER_STATUS_RESET,
 } from '../../../constants/orderConstant';
 import {
     listOrder,
@@ -26,7 +25,6 @@ const OrderTable = (props) => {
 
     const {
         error: errorHandle,
-        active: activeOrder,
         trash: pushOrderToTrash,
         delete: deleteOrder,
         restore: restoreOrder,
@@ -70,10 +68,10 @@ const OrderTable = (props) => {
             toast.error(errorHandle);
         }
 
-        if (activeOrder && activeOrder === true) {
-            dispatch(listOrder());
-            dispatch({ type: ORDER_STATUS_RESET });
-        }
+        // if (activeOrder && activeOrder === true) {
+        //     dispatch(listOrder());
+        //     dispatch({ type: ORDER_STATUS_RESET });
+        // }
 
         if (pushOrderToTrash && pushOrderToTrash === true) {
             var inputs = document.querySelectorAll('#checkbox-1');
@@ -107,7 +105,6 @@ const OrderTable = (props) => {
 
         props.setDeleteItems(itemsChecked);
     }, [
-        activeOrder,
         deleteOrder,
         dispatch,
         errorHandle,
@@ -242,20 +239,23 @@ const OrderTable = (props) => {
                                                     </td>
                                                     <td className="min-width">
                                                         <p>
-                                                            {moment(
+                                                            {new Date(
                                                                 value.createdAt
-                                                            )
-                                                                .utc()
-                                                                .format(
-                                                                    'DD-MM-YYYY hh:ss'
-                                                                )}
+                                                            ).toLocaleString(
+                                                                'en-CA'
+                                                            )}
                                                         </p>
                                                     </td>
                                                     <td className="min-width">
                                                         <p>
-                                                            {formatVND(
-                                                                value.totalPrice
-                                                            )}
+                                                            {value.discount
+                                                                ? formatVND(
+                                                                      value.totalPrice -
+                                                                          value.discount
+                                                                  )
+                                                                : formatVND(
+                                                                      value.totalPrice
+                                                                  )}
                                                         </p>
                                                     </td>
                                                     {value.deleted === false ? (

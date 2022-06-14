@@ -6,6 +6,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import * as Yup from 'yup';
 import CheckboxField from '../components/InputField/CheckboxField';
+import DatePickerField from '../components/InputField/DatePickerField';
 import InputField from '../components/InputField/InputField';
 import { register } from '../redux/actions/userActions';
 
@@ -17,6 +18,7 @@ const RegisterScreen = () => {
     const initialValues = {
         firstName: '',
         lastName: '',
+        dateOfBirth: '',
         email: '',
         password: '',
         confirmPassword: '',
@@ -31,8 +33,14 @@ const RegisterScreen = () => {
         lastName: Yup.string()
             .max(8, 'Tối đa 8 kí tự')
             .required('Bạn phải nhập Tên'),
+        dateOfBirth: Yup.date().required('Bạn phải chọn ngày sinh của bạn'),
         phone: Yup.string()
+            .min(10, 'Số điện thoại không hợp lệ')
             .max(11, 'Tối đa 11 kí tự')
+            .matches(
+                /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/,
+                'Số điện thoại không hợp lệ'
+            )
             .required('Bạn phải nhập Số ĐT'),
         address: Yup.string().required('Bạn phải nhập địa chỉ'),
         email: Yup.string()
@@ -71,6 +79,7 @@ const RegisterScreen = () => {
                     register({
                         firstName: values.firstName,
                         lastName: values.lastName,
+                        dateOfBirth: values.dateOfBirth,
                         email: values.email,
                         password: values.password,
                         phone: values.phone,
@@ -91,6 +100,7 @@ const RegisterScreen = () => {
                                         <h2>Đăng Ký</h2>
                                         <Form>
                                             <FastField
+                                                label="Họ"
                                                 type="firstName"
                                                 name="firstName"
                                                 component={InputField}
@@ -99,6 +109,7 @@ const RegisterScreen = () => {
                                                 placeholder="Nhập Họ"
                                             />
                                             <FastField
+                                                label="Tên"
                                                 type="lastName"
                                                 name="lastName"
                                                 className="group-input"
@@ -107,6 +118,14 @@ const RegisterScreen = () => {
                                                 placeholder="Nhập Tên"
                                             />
                                             <FastField
+                                                label="Ngày Sinh"
+                                                type="date"
+                                                name="dateOfBirth"
+                                                className="group-input"
+                                                component={DatePickerField}
+                                            />
+                                            <FastField
+                                                label="Số Điện Thoại"
                                                 type="phone"
                                                 name="phone"
                                                 className="group-input"
@@ -115,6 +134,7 @@ const RegisterScreen = () => {
                                                 placeholder="Nhập Số Điện Thoại"
                                             />
                                             <FastField
+                                                label="Địa Chỉ"
                                                 type="address"
                                                 name="address"
                                                 className="group-input"
@@ -123,6 +143,7 @@ const RegisterScreen = () => {
                                                 placeholder="Nhập Địa Chỉ"
                                             />
                                             <FastField
+                                                label="Email"
                                                 type="email"
                                                 name="email"
                                                 className="group-input"
@@ -131,6 +152,7 @@ const RegisterScreen = () => {
                                                 placeholder="Nhập Email"
                                             />
                                             <FastField
+                                                label="Mật Khẩu"
                                                 type="password"
                                                 name="password"
                                                 className="group-input"
@@ -139,6 +161,7 @@ const RegisterScreen = () => {
                                                 placeholder="Nhập Mật Khẩu"
                                             />
                                             <FastField
+                                                label="Nhập Lại Mật Khẩu"
                                                 type="password"
                                                 name="confirmPassword"
                                                 className="group-input"

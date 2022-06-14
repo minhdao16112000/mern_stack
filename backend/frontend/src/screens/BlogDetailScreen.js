@@ -148,7 +148,7 @@ const BlogDetailScreen = (props) => {
                                                 </div>
                                                 <div className="row">
                                                     {pro
-                                                        .slice(0, 3)
+                                                        .slice(0, 5)
                                                         .map((value, key) => {
                                                             return (
                                                                 <div
@@ -165,6 +165,9 @@ const BlogDetailScreen = (props) => {
                                                                         }
                                                                     >
                                                                         <img
+                                                                            style={{
+                                                                                height: '300px',
+                                                                            }}
                                                                             src={`https://shopfashi.herokuapp.com/products/${checkImage(
                                                                                 key
                                                                             )}`}

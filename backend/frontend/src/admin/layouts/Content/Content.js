@@ -312,11 +312,9 @@ const Content = () => {
                                                 onChange={() =>
                                                     handleChangePrice()
                                                 }
+                                                defaultValue="1"
                                             >
-                                                <option
-                                                    value="1"
-                                                    selected={true}
-                                                >
+                                                <option value="1">
                                                     Hàng Năm
                                                 </option>
                                                 <option value="2">
@@ -354,14 +352,12 @@ const Content = () => {
                                                 onChange={() =>
                                                     handleChangePro()
                                                 }
+                                                defaultValue="2"
                                             >
                                                 <option value="1">
                                                     Hàng Năm
                                                 </option>
-                                                <option
-                                                    value="2"
-                                                    selected={true}
-                                                >
+                                                <option value="2">
                                                     Hàng Tháng
                                                 </option>
                                                 <option value="3">

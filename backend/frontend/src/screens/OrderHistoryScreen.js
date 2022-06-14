@@ -74,9 +74,14 @@ const OrderHistoryScreen = (props) => {
                                                             </h5>
                                                         </td>
                                                         <td className="p-price first-row">
-                                                            {formatVND(
-                                                                item.totalPrice
-                                                            )}
+                                                            {item.discount
+                                                                ? formatVND(
+                                                                      item.totalPrice -
+                                                                          item.discount
+                                                                  )
+                                                                : formatVND(
+                                                                      item.totalPrice
+                                                                  )}
                                                         </td>
                                                         <td className="qua-col first-row">
                                                             <div className="quantity">

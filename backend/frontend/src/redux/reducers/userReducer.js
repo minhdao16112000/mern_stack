@@ -18,6 +18,10 @@ import {
     USER_RESTORE_SUCCESS,
     USER_RESTORE_FAIL,
     USER_RESTORE_RESET,
+    USER_INFO_REQUEST,
+    USER_INFO_SUCCESS,
+    USER_INFO_FAIL,
+    USER_INFO_RESET,
 } from '../../constants/userConstant';
 
 const userReducer = (state = _state.userState, action) => {
@@ -46,6 +50,26 @@ const userReducer = (state = _state.userState, action) => {
                 isAdmin: action.payload,
             };
         }
+
+        //UPDATE USER INFO
+        case USER_INFO_REQUEST:
+            return {
+                ...state,
+                userInfo: false,
+            };
+        case USER_INFO_SUCCESS:
+            return {
+                ...state,
+                userInfo: true,
+            };
+        case USER_INFO_FAIL:
+            return {
+                ...state,
+                error: action.payload,
+            };
+        case USER_INFO_RESET:
+            return { ...state, userInfo: false, error: '' };
+
         case REMOVE_USER: {
             return {
                 ...state,

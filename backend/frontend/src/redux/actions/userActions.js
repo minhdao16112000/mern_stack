@@ -16,6 +16,9 @@ import {
     USER_DELETE_FAIL,
     USER_DELETE_SUCCESS,
     USER_DELETE_REQUEST,
+    USER_INFO_REQUEST,
+    USER_INFO_SUCCESS,
+    USER_INFO_FAIL,
 } from '../../constants/userConstant';
 
 //GET ACTION BEGIN
@@ -128,14 +131,29 @@ export const register = (data) => async (dispatch) => {
             phone: data.phone,
             sex: data.sex,
             address: data.address,
+            dateOfBirth: data.dateOfBirth,
         });
-        localStorage.setItem('userInfo', JSON.stringify(res.data.info));
-        localStorage.setItem('message-user', JSON.stringify(res.data.message));
-        dispatch({
-            type: SET_USER,
-            payload: res.data.info,
-        });
-        document.location.href = '/';
+        if (res.data.info) {
+            localStorage.setItem('userInfo', JSON.stringify(res.data.info));
+            localStorage.setItem(
+                'message-user',
+                JSON.stringify(res.data.message)
+            );
+            dispatch({
+                type: SET_USER,
+                payload: res.data.info,
+            });
+            document.location.href = '/';
+        } else {
+            dispatch({
+                type: USER_LOGIN_FAIL,
+                payload: res.data.message,
+            });
+            localStorage.setItem(
+                'message-user_error',
+                JSON.stringify(res.data)
+            );
+        }
     } catch (e) {
         console.log(e);
     }
@@ -157,6 +175,9 @@ export const login = (data) => async (dispatch) => {
                 address: res.data.info.address,
                 role: res.data.info.role,
                 sex: res.data.info.sex,
+                dateOfBirth: res.data.info.dateOfBirth,
+                avatar: res.data.info.avatar,
+                token: res.data.info.token,
             };
             localStorage.setItem('userInfo', JSON.stringify(user));
             localStorage.setItem(
@@ -297,6 +318,42 @@ export const updateUser = (user) => async (dispatch) => {
             console.log(data.data);
             document.location.href = '/admin/users';
         }
+    } catch (e) {
+        console.log(e);
+    }
+};
+
+//PUT ACTION
+export const updateUserInfo = (user) => async (dispatch) => {
+    dispatch({ type: USER_INFO_REQUEST });
+    try {
+        const res = await api.put(`api/user/${user.id}/info`, user.formData);
+        if (res.data.data) {
+            var userNew = JSON.parse(localStorage.getItem('userInfo'));
+            userNew.avatar = res.data.data.avatar;
+            userNew.address = res.data.data.address;
+            userNew.dateOfBirth = res.data.data.dateOfBirth;
+            userNew.firstName = res.data.data.firstName;
+            userNew.lastName = res.data.data.lastName;
+            userNew.phone = res.data.data.phone;
+            userNew.sex = res.data.data.sex;
+            localStorage.setItem('userInfo', JSON.stringify(userNew));
+            dispatch({
+                type: USER_INFO_SUCCESS,
+            });
+        }
+    } catch (error) {
+        const message =
+            error.response && error.response.data.message
+                ? error.response.data.message
+                : error.message;
+        dispatch({ type: USER_INFO_FAIL, payload: message });
+    }
+};
+
+export const postImgUser = (data) => async (dispatch) => {
+    try {
+        await api.post('api/user/imagePost', data);
     } catch (e) {
         console.log(e);
     }

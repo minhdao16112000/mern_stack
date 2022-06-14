@@ -1,14 +1,38 @@
 const userModel = require('../models/UserModel');
 const bcryptjs = require('bcryptjs');
 const nodemailer = require('nodemailer');
+var jwt = require('jsonwebtoken');
+var fs = require('fs');
+const uploadFile = require('../util/multerUser');
 
 class UserController {
+    uploadImg = uploadFile.single('image');
+
+    //UploadImage
+    uploadSingleImg = async (req, res, next) => {
+        try {
+            res.send('File Uploaded Successfully');
+        } catch (error) {
+            res.send(error.message);
+        }
+    };
+
     // [POST] /login
     login = async (req, res, next) => {
         try {
             const user = await userModel.findOne({ email: req.body.email });
             if (user) {
                 if (bcryptjs.compareSync(req.body.password, user.password)) {
+                    var token = '';
+                    if (user.role === 0) {
+                        token = jwt.sign(
+                            { _id: user._id },
+                            process.env.SECRET,
+                            {
+                                expiresIn: '30 days',
+                            }
+                        );
+                    }
                     res.send({
                         info: {
                             _id: user._id,
@@ -17,9 +41,12 @@ class UserController {
                             email: user.email,
                             phone: user.phone,
                             sex: user.sex,
+                            dateOfBirth: user.dateOfBirth,
                             role: user.role,
                             address: user.address,
                             favorites: user.favorites,
+                            avatar: user.avatar,
+                            token: token,
                         },
                         message: {
                             message: 'Đăng nhập thành công !',
@@ -38,31 +65,38 @@ class UserController {
 
     // [POST] /register
     register = async (req, res, err) => {
-        const newUser = new userModel({
-            ...req.body,
-            password: bcryptjs.hashSync(req.body.password, 8),
-        });
+        const user = await userModel.findOne({ email: req.body.email });
 
-        await newUser
-            .save()
-            .then(() =>
-                res.send({
-                    info: {
-                        _id: newUser._id,
-                        firstName: newUser.firstName,
-                        lastName: newUser.lastName,
-                        email: newUser.email,
-                        phone: newUser.phone,
-                        role: newUser.role,
-                        sex: newUser.sex,
-                        address: newUser.address,
-                    },
-                    message: {
-                        message: 'Đăng ký thành công !',
-                    },
-                })
-            )
-            .catch((err) => res.status(500).json({ error: err.message }));
+        if (user) {
+            res.send({ message: 'Email đã tồn tại' });
+        } else {
+            const newUser = new userModel({
+                ...req.body,
+                password: bcryptjs.hashSync(req.body.password, 8),
+            });
+
+            await newUser
+                .save()
+                .then(() =>
+                    res.send({
+                        info: {
+                            _id: newUser._id,
+                            firstName: newUser.firstName,
+                            lastName: newUser.lastName,
+                            email: newUser.email,
+                            phone: newUser.phone,
+                            role: newUser.role,
+                            sex: newUser.sex,
+                            dateOfBirth: newUser.dateOfBirth,
+                            address: newUser.address,
+                        },
+                        message: {
+                            message: 'Đăng ký thành công !',
+                        },
+                    })
+                )
+                .catch((err) => res.status(500).json({ error: err.message }));
+        }
     };
 
     //[POST] /forgetPassword
@@ -188,6 +222,25 @@ class UserController {
             .then(() => res.send({ message: 'Update Successfully !!!' }))
             .catch(next);
     }
+
+    // [PUT] /:id/info
+    updateInfo = async (req, res, next) => {
+        const info = JSON.parse(req.body.infos);
+        if (req.file) {
+            const userImage = await userModel.findOne({ _id: req.params.id });
+            const currPath = './uploads/users/' + userImage.avatar;
+            if (fs.existsSync(currPath)) {
+                fs.unlinkSync(currPath);
+            }
+            info.avatar = req.file.path.slice(14);
+        }
+        userModel
+            .updateOne({ _id: req.params.id }, info)
+            .then(() =>
+                res.send({ message: 'Update Successfully !!!', data: info })
+            )
+            .catch(next);
+    };
 
     // [DELETE] /:id
     destroy(req, res, next) {

@@ -40,12 +40,12 @@ import {
 export const createOrder = (order) => async (dispatch) => {
     dispatch({ type: ORDER_CREATE_REQUEST, payload: order });
     try {
-        if (order.paymentMethod === 'cash') {
+        if (order.paymentMethod === 'Tiền Mặt') {
             alert(
                 'Bạn đã đặt hàng thành công !!! Vui lòng kiểm tra xác nhận đơn hàng trong email'
             );
-            await api.patch('/api/product/decrease-qty', order);
             const { data } = await api.post('/api/order', order);
+            await api.patch('/api/product/decrease-qty', order);
             await api.post('/api/order/send-email', data);
             dispatch({ type: ORDER_CREATE_SUCCESS, payload: data.order });
         } else {
@@ -82,13 +82,16 @@ export const detailsOrder = (orderId) => async (dispatch) => {
 export const payOrder = (order, paymentResult) => async (dispatch) => {
     dispatch({ type: ORDER_PAY_REQUEST, payload: { order, paymentResult } });
     try {
-        // await api.patch('/api/product/decrease-qty', order);
         const { data } = await api.put(
             `/api/order/${order._id}/pay`,
             paymentResult
         );
-        await api.post('/api/order/send-email', data);
-        dispatch({ type: ORDER_PAY_SUCCESS, payload: data });
+        if (data) {
+            toast.success('Thanh toán thành công');
+            await api.patch('/api/product/decrease-qty', order);
+            await api.post('/api/order/send-email', data);
+            dispatch({ type: ORDER_PAY_SUCCESS, payload: data });
+        }
     } catch (e) {
         const message =
             e.response && e.response.data.message
@@ -105,7 +108,12 @@ export const deliveredOrder = (order) => async (dispatch) => {
             `/api/order/${order.id}/delivered`,
             order
         );
-        dispatch({ type: ORDER_DELIVERED_SUCCESS, payload: data });
+        if (data.order) {
+            toast.success('Cập nhật vận chuyển thành công');
+            dispatch({ type: ORDER_DELIVERED_SUCCESS, payload: data.order });
+        } else {
+            toast.error(data.message);
+        }
     } catch (e) {
         const message =
             e.response && e.response.data.message
@@ -122,7 +130,12 @@ export const statusOrder = (order) => async (dispatch) => {
             `/api/order/${order.id}/status`,
             order
         );
-        dispatch({ type: ORDER_STATUS_SUCCESS, payload: data });
+        if (data.order) {
+            toast.success('Thay đổi trạng thái thành công');
+            dispatch({ type: ORDER_STATUS_SUCCESS, payload: data });
+        } else {
+            toast.error(data.message);
+        }
     } catch (e) {
         const message =
             e.response && e.response.data.message
