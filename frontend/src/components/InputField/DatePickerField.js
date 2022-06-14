@@ -1,32 +1,30 @@
 import React from 'react';
+import 'react-datepicker/dist/react-datepicker.css';
 import PropTypes from 'prop-types';
 import { ErrorMessage } from 'formik';
 
-InputField.propTypes = {
+DatePickerField.propTypes = {
     field: PropTypes.object.isRequired,
     form: PropTypes.object.isRequired,
 
-    type: PropTypes.string,
     label: PropTypes.string,
-    placeholder: PropTypes.string,
     className: PropTypes.string,
-    disabled: PropTypes.bool,
 };
 
-InputField.defaultProps = {
-    type: 'text',
-    label: '',
-    placeholder: '',
-    className: '',
-    disabled: false,
-};
-
-export default function InputField(props) {
-    const { field, form, type, placeholder, disabled, className, label } =
-        props;
+export default function DatePickerField(props) {
+    const { field, form, type, className, label } = props;
     const { name } = field;
     const { errors, touched } = form;
     const showError = errors[name] && touched[name];
+    const handleCkeditorState = (value) => {
+        const changeEvent = {
+            target: {
+                name: name,
+                value: value,
+            },
+        };
+        field.onChange(changeEvent);
+    };
     return (
         <div className={className}>
             {label && (
@@ -37,10 +35,9 @@ export default function InputField(props) {
             )}
             <input
                 className={showError ? 'input-error' : ''}
+                onChange={(date) => handleCkeditorState(date)}
                 type={type}
                 id={name}
-                placeholder={placeholder}
-                disabled={disabled}
                 {...field}
                 invalid={showError}
             />

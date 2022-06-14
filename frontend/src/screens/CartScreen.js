@@ -26,7 +26,7 @@ const CartScreen = () => {
         handleChangeQty();
     };
 
-    const QtyUpdatedecr = (key, quantity) => {
+    const QtyUpdateDecr = (key, quantity) => {
         dispatch(decreaseQuantity(key));
         setQtyPro(quantity);
         handleChangeQty();
@@ -251,7 +251,7 @@ const CartScreen = () => {
                                                                 <div className="pro-qty">
                                                                     <span
                                                                         onClick={() =>
-                                                                            QtyUpdatedecr(
+                                                                            QtyUpdateDecr(
                                                                                 key,
                                                                                 item.quantity
                                                                             )
@@ -314,24 +314,6 @@ const CartScreen = () => {
                                             >
                                                 Tiếp Tục Mua Sắm
                                             </a>
-                                        </div>
-                                        <div className="discount-coupon">
-                                            <h6>Mã Giảm Giá</h6>
-                                            <form
-                                                action="#"
-                                                className="coupon-form"
-                                            >
-                                                <input
-                                                    type="text"
-                                                    placeholder="Nhập Mã Giảm Giá"
-                                                />
-                                                <button
-                                                    type="submit"
-                                                    className="site-btn coupon-btn"
-                                                >
-                                                    Áp Dụng
-                                                </button>
-                                            </form>
                                         </div>
                                     </div>
                                     <div className="col-lg-4 offset-lg-4">

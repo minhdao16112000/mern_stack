@@ -52,8 +52,7 @@ const ListOrders = () => {
         const myExportData = displayOders.map((d) => {
             return {
                 'Mã đơn hàng': d._id.slice(-6).toUpperCase(),
-                'Phương thức thanh toán':
-                    d.paymentMethod === 'cash' ? 'Tiền mặt' : d.paymentMethod,
+                'Phương thức thanh toán': d.paymentMethod,
                 'Trạng thái thanh toán':
                     d.isPaid === true ? 'Đã thanh toán' : 'Chưa thanh toán',
                 'Ngày mua hàng': moment(d.createdAt)
@@ -80,10 +79,7 @@ const ListOrders = () => {
                 total += d.totalPrice;
                 return {
                     'Mã đơn hàng': d._id.slice(-6).toUpperCase(),
-                    'Phương thức thanh toán':
-                        d.paymentMethod === 'cash'
-                            ? 'Tiền mặt'
-                            : d.paymentMethod,
+                    'Phương thức thanh toán': d.paymentMethod,
                     'Trạng thái thanh toán':
                         d.isPaid === true ? 'Đã thanh toán' : 'Chưa thanh toán',
                     'Ngày mua hàng': moment(d.createdAt)

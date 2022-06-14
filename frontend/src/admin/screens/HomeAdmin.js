@@ -32,6 +32,7 @@ import Size from './SizesScreen';
 import './style/home.scss';
 import Topic from './TopicsScreen';
 import User from './UsersScreen';
+import Voucher from './VoucherScreen';
 
 const HomeAdmin = () => {
     const dispatch = useDispatch();
@@ -252,6 +253,34 @@ const HomeAdmin = () => {
                                         <Link to="/admin/categories">
                                             <i className="lni lni-arrow-right"></i>{' '}
                                             Quản Lý Danh Mục
+                                        </Link>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li className="nav-item__admin nav-item-has-children">
+                                <a
+                                    href="#0"
+                                    className="collapsed"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#ddmenu_9"
+                                    aria-controls="ddmenu_9"
+                                    aria-expanded="false"
+                                    aria-label="Toggle navigation"
+                                >
+                                    <span className="icon">
+                                        <i className="lni lni-gift"></i>
+                                    </span>
+                                    <span className="text">Mã Giảm Giá</span>
+                                </a>
+                                <ul
+                                    id="ddmenu_9"
+                                    className="collapse dropdown-nav"
+                                >
+                                    <li>
+                                        <Link to="/admin/vouchers">
+                                            <i className="lni lni-arrow-right"></i>{' '}
+                                            Quản Lý Mã Giảm Giá
                                         </Link>
                                     </li>
                                 </ul>
@@ -735,6 +764,7 @@ const HomeAdmin = () => {
                         <Route path={`${path}/orders`} component={Order} />
                         <Route path={`${path}/contacts`} component={Contact} />
                         <Route path={`${path}/pages`} component={Page} />
+                        <Route path={`${path}/vouchers`} component={Voucher} />
                     </Switch>
                     {/* -- ========== footer start =========== -- */}
                     <Footer />

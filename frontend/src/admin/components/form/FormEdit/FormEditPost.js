@@ -38,10 +38,12 @@ const FormEditPost = (props) => {
     };
 
     const setSelectTopic = () => {
-        lstTopic.Topics.forEach((value) => {
-            let objTopic = { value: value._id, label: value.name };
-            setTopic((oldVal) => [...oldVal, objTopic]);
-        });
+        if (lstTopic && lstTopic.Topics) {
+            lstTopic.Topics.forEach((value) => {
+                let objTopic = { value: value._id, label: value.name };
+                setTopic((oldVal) => [...oldVal, objTopic]);
+            });
+        }
     };
 
     const setSelectPro = () => {
@@ -82,9 +84,7 @@ const FormEditPost = (props) => {
 
         if (id) dispatch(getPost(id));
         dispatch(getTopics());
-        if (!lstPro.Products) {
-            dispatch(getProducts());
-        }
+        dispatch(getProducts());
 
         setSelectTopic();
         setSelectPro();

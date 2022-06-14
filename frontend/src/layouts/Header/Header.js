@@ -7,6 +7,7 @@ import { deleteCart } from '../../redux/actions/cartActions';
 import { getProducts, getSearch } from '../../redux/actions/productActions';
 import './header.scss';
 import { getUser } from '../../redux/actions/userActions';
+import { toast } from 'react-toastify';
 
 const Header = () => {
     const dispatch = useDispatch();
@@ -22,17 +23,25 @@ const Header = () => {
         : '';
     const user = useSelector((state) => state.user.user);
 
+    const image = localStorage.getItem('userInfo')
+        ? JSON.parse(localStorage.getItem('userInfo')).avatar || ''
+        : '';
+
     const onChangeHandler = (text) => {
         let matches = [];
-        if (lstPro && lstPro.Products) {
-            if (text.length > 0) {
-                matches = lstPro.Products.filter((item) => {
-                    return item.name.toLowerCase().match(text.toLowerCase());
-                });
-            }
+        if (text.charCodeAt(0) === 43) {
+            toast.warning(
+                'Ký tự bạn nhập không phù hợp. Vui lòng nhập ký tự khác.'
+            );
+            return;
         }
-        setSuggestions(matches);
-        setSearch(text);
+        if (lstPro && lstPro.Products) {
+            matches = lstPro.Products.filter((item) => {
+                return item.name.toLowerCase().match(text.toLowerCase());
+            });
+            setSuggestions(matches);
+            setSearch(text);
+        }
     };
 
     const onSuggestHandler = (text) => {
@@ -76,10 +85,6 @@ const Header = () => {
         }).format(value);
     };
 
-    function handleClick() {
-        history.push('/');
-    }
-
     useEffect(() => {
         dispatch(getCategories());
         dispatch(getProducts());
@@ -106,10 +111,20 @@ const Header = () => {
                         {localStorage.getItem('userInfo') ? (
                             <Link
                                 to="/thong-tin-tai-khoan"
-                                onClick={handleClick}
                                 className="login-panel"
                             >
-                                <i className="fa fa-user"></i>
+                                {image.length !== 0 ? (
+                                    <img
+                                        style={{
+                                            width: '40px',
+                                            height: '40px',
+                                        }}
+                                        src={`http://localhost:5000/users/${image}`}
+                                        alt=""
+                                    />
+                                ) : (
+                                    <i className="fa fa-user"></i>
+                                )}{' '}
                                 {
                                     JSON.parse(localStorage.getItem('userInfo'))
                                         .lastName

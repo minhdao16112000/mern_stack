@@ -10,18 +10,30 @@ import { createOrder } from '../redux/actions/orderActions';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './styles/checkout.scss';
+import { detailsVoucher } from '../redux/actions/voucherActions';
+import { VOUCHER_DETAILS_RESET } from '../constants/voucherConstant';
 
 const CheckOutScreen = (props) => {
     const dispatch = useDispatch();
     const proCart = useSelector((state) => state.cart.carts);
     const orderCreate = useSelector((state) => state.order);
+    const handleVoucher = useSelector((state) => state.voucher);
     const { success, order } = orderCreate;
     const [subTotal, setSubTotal] = useState(0);
+    const [discount, setDiscount] = useState(0);
     const [totalCart, setTotalCart] = useState(0);
     const [shippingFee, setShippingFee] = useState(0);
     const [checkCash, setCheckCash] = useState(true);
     const [checkPaypal, setCheckPaypal] = useState(false);
-    const [payment, setPayment] = useState('cash');
+    const [payment, setPayment] = useState('Tiền Mặt');
+    const [code, setCode] = useState('');
+    const [checkCode, setCheckCode] = useState(false);
+
+    const {
+        error: ErrorHandle,
+        success: SuccessHandle,
+        voucher: VoucherCode,
+    } = handleVoucher;
 
     const initialValues = localStorage.getItem('userInfo')
         ? {
@@ -74,7 +86,11 @@ const CheckOutScreen = (props) => {
         phone: Yup.string()
             .min(10, 'Số điện thoại không hợp lệ')
             .max(11, 'Số điện thoại không hợp lệ')
-            .required('Bạn phải nhập Số ĐT'),
+            .required('Bạn phải nhập Số ĐT')
+            .matches(
+                /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/,
+                'Số điện thoại không hợp lệ'
+            ),
         emailAddress: Yup.string()
             .email('Email không hợp lệ')
             .required('Bạn phải nhập Email'),
@@ -99,10 +115,47 @@ const CheckOutScreen = (props) => {
         }).format(value);
     };
 
+    const handleVoucherInput = () => {
+        if (code.length !== 0) {
+            dispatch(detailsVoucher(code));
+        } else {
+            toast.warn('Bạn chưa nhập mã giảm giá.');
+        }
+    };
+
+    const handleVoucherCancel = () => {
+        setCheckCode(false);
+        setCode('');
+        document.getElementById('cancelCode').value = '';
+        dispatch({ type: VOUCHER_DETAILS_RESET });
+        setDiscount(0);
+    };
+
     useEffect(() => {
         if (success === true && order._id) {
             props.history.push(`/order/${order._id}`);
             dispatch({ type: ORDER_CREATE_RESET });
+            dispatch({ type: VOUCHER_DETAILS_RESET });
+        }
+        if (ErrorHandle.length !== 0) {
+            toast.error(ErrorHandle);
+            setCode('');
+            dispatch({ type: VOUCHER_DETAILS_RESET });
+        } else if (SuccessHandle === true) {
+            var voucher = VoucherCode.voucher;
+            var message = VoucherCode.message;
+            if (voucher.min <= subTotal) {
+                if (voucher.type === 0) {
+                    setDiscount((subTotal * voucher.discount) / 100);
+                    toast.success(message);
+                } else {
+                    setDiscount(subTotal - voucher.discount);
+                    toast.success(message);
+                }
+                setCheckCode(true);
+            }
+
+            return 0;
         }
         const getTotal = () => {
             const total = proCart.reduce((prev, item) => {
@@ -115,7 +168,19 @@ const CheckOutScreen = (props) => {
             setTotalCart(total + shippingFee);
         };
         getTotal();
-    }, [dispatch, order, proCart, props, shippingFee, success]);
+    }, [
+        ErrorHandle,
+        SuccessHandle,
+        VoucherCode.message,
+        VoucherCode.voucher,
+        dispatch,
+        order._id,
+        proCart,
+        props.history,
+        shippingFee,
+        subTotal,
+        success,
+    ]);
 
     return (
         <Formik
@@ -152,6 +217,8 @@ const CheckOutScreen = (props) => {
                             },
                             paymentMethod: payment,
                             user: value.id,
+                            voucher: code,
+                            discount: discount,
                         })
                     );
                 }
@@ -190,10 +257,10 @@ const CheckOutScreen = (props) => {
                                             ) ? (
                                                 <div></div>
                                             ) : (
-                                                <div className="checkout-content">
+                                                <div className="checkout-content login-to-checkout">
                                                     <Link
                                                         to="/dang-nhap"
-                                                        className="content-btn"
+                                                        className="content-btn btn-login-checkout"
                                                     >
                                                         Click Here To Login
                                                     </Link>
@@ -285,6 +352,52 @@ const CheckOutScreen = (props) => {
                                         <div className="col-lg-6">
                                             <div className="place-order">
                                                 <h4>Đơn Hàng Của Bạn</h4>
+                                                <div className="discount-coupon checkout-cp">
+                                                    {checkCode === false ? (
+                                                        <div className="coupon-form input-code-voucher">
+                                                            <input
+                                                                id="cancelCode"
+                                                                type="text"
+                                                                className="voucher-code text-uppercase code-voucher"
+                                                                placeholder="Nhập Mã Giảm Giá"
+                                                                onChange={(e) =>
+                                                                    setCode(
+                                                                        e.target
+                                                                            .value
+                                                                    )
+                                                                }
+                                                            />
+                                                            <button
+                                                                type="button"
+                                                                className="site-btn coupon-btn code-submit-btn"
+                                                                onClick={() =>
+                                                                    handleVoucherInput()
+                                                                }
+                                                            >
+                                                                Áp Dụng
+                                                            </button>
+                                                        </div>
+                                                    ) : (
+                                                        <div className="coupon-form input-code-voucher">
+                                                            <input
+                                                                id="cancelCode"
+                                                                type="text"
+                                                                className="voucher-code text-uppercase code-voucher"
+                                                                placeholder="Nhập Mã Giảm Giá"
+                                                                disabled
+                                                            />
+                                                            <button
+                                                                type="button"
+                                                                className="site-btn coupon-btn code-submit-btn"
+                                                                onClick={() =>
+                                                                    handleVoucherCancel()
+                                                                }
+                                                            >
+                                                                Hủy
+                                                            </button>
+                                                        </div>
+                                                    )}
+                                                </div>
                                                 <div className="order-total">
                                                     <ul className="order-table">
                                                         <li>
@@ -353,11 +466,21 @@ const CheckOutScreen = (props) => {
                                                                 )}
                                                             </span>
                                                         </li>
+                                                        <li className="fw-normal">
+                                                            Giá Giảm
+                                                            <span>
+                                                                {'-' +
+                                                                    formatVND(
+                                                                        discount
+                                                                    )}
+                                                            </span>
+                                                        </li>
                                                         <li className="total-price">
                                                             Tổng tiền{' '}
                                                             <span>
                                                                 {formatVND(
-                                                                    totalCart
+                                                                    totalCart -
+                                                                        discount
                                                                 )}
                                                             </span>
                                                         </li>

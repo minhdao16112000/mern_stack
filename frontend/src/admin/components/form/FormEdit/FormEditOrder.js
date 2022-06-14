@@ -1,4 +1,3 @@
-import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -11,6 +10,8 @@ import {
 } from '../../../../redux/actions/orderActions';
 import { getColors, getSizes } from '../../../../redux/actions/productActions';
 import '../style.scss';
+import { toast } from 'react-toastify';
+import { ORDER_DELIVERED_RESET } from '../../../../constants/orderConstant';
 
 const FormEditOrder = (props) => {
     const dispatch = useDispatch();
@@ -19,6 +20,9 @@ const FormEditOrder = (props) => {
     const get_order = useSelector((state) => state.order.order);
     const lstColors = useSelector((state) => state.product.colors_list);
     const lstSizes = useSelector((state) => state.product.sizes_list);
+    const handleOrder = useSelector((state) => state.order);
+
+    const { error: errorHandle, success: successHandle } = handleOrder;
 
     const [changeStatus, setChangeStatus] = useState(0);
     const [saveStatus, setSaveStatus] = useState(get_order.status);
@@ -142,6 +146,14 @@ const FormEditOrder = (props) => {
     useEffect(() => {
         document.title = 'Manage Orders';
         if (id) dispatch(detailsOrder(id));
+        if (successHandle && successHandle === true) {
+            dispatch({ type: ORDER_DELIVERED_RESET });
+            dispatch(detailsOrder(id));
+        }
+        if (errorHandle && errorHandle.length !== 0) {
+            toast.error(errorHandle);
+        }
+
         dispatch(getColors());
         dispatch(getSizes());
 
@@ -232,13 +244,11 @@ const FormEditOrder = (props) => {
                                                             </label>
                                                             <p>
                                                                 <strong>
-                                                                    {moment(
+                                                                    {new Date(
                                                                         get_order.createdAt
-                                                                    )
-                                                                        .utc()
-                                                                        .format(
-                                                                            'DD-MM-YYYY hh:ss'
-                                                                        )}
+                                                                    ).toLocaleString(
+                                                                        'en-CA'
+                                                                    )}
                                                                 </strong>
                                                             </p>
                                                         </div>
@@ -379,9 +389,31 @@ const FormEditOrder = (props) => {
                                                             </label>
                                                             <p>
                                                                 <strong>
-                                                                    {
+                                                                    {formatVND(
                                                                         get_order.shippingFee
-                                                                    }
+                                                                    )}
+                                                                </strong>
+                                                            </p>
+                                                        </div>
+                                                        <div className="info_oder">
+                                                            <label htmlFor="fir">
+                                                                Giảm giá{''}
+                                                                {get_order.voucher &&
+                                                                get_order
+                                                                    .voucher
+                                                                    .length !==
+                                                                    0
+                                                                    ? ' (' +
+                                                                      get_order.voucher +
+                                                                      ')'
+                                                                    : ':'}
+                                                            </label>
+                                                            <p>
+                                                                <strong>
+                                                                    -
+                                                                    {formatVND(
+                                                                        get_order.discount
+                                                                    ) || 0}
                                                                 </strong>
                                                             </p>
                                                         </div>

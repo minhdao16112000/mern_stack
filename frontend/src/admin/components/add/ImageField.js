@@ -16,10 +16,10 @@ ImageField.defaultProps = {
 
 export default function ImageField(props) {
     let match = useRouteMatch('/admin/:slug');
-    const { field, form, data } = props;
     // eslint-disable-next-line no-unused-vars
     const [filename, setFilename] = useState([]);
-    const [img, setImg] = useState(data);
+    const [img, setImg] = useState([]);
+    const { field, form, data } = props;
     const { name } = field;
     const { errors, touched } = form;
     const showError = errors[name] && touched[name];
@@ -63,13 +63,12 @@ export default function ImageField(props) {
                 {img.length !== 0 ? (
                     img.map((value, key) => {
                         return (
-                            <div key={key}>
-                                <img
-                                    className="product_img-add"
-                                    src={value}
-                                    alt="hình sản phẩm"
-                                />
-                            </div>
+                            <img
+                                key={key}
+                                className="product_img-add"
+                                src={value}
+                                alt="hình sản phẩm"
+                            />
                         );
                     })
                 ) : data !== '' ? (

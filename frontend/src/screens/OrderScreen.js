@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { PayPalButton } from "react-paypal-button-v2";
-import api from "../api";
-import { detailsOrder, payOrder } from "../redux/actions/orderActions";
-import { ORDER_PAY_RESET } from "../constants/orderConstant";
-import MessageBox from "../components/Box/MessageBox";
-import moment from "moment";
-import "./styles/payment.scss";
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { PayPalButton } from 'react-paypal-button-v2';
+import api from '../api';
+import { detailsOrder, payOrder } from '../redux/actions/orderActions';
+import { ORDER_PAY_RESET } from '../constants/orderConstant';
+import MessageBox from '../components/Box/MessageBox';
+import moment from 'moment';
+import './styles/payment.scss';
 
 const OrderScreen = (props) => {
     const dispatch = useDispatch();
@@ -19,9 +19,9 @@ const OrderScreen = (props) => {
     const { success: successPay } = oderPay;
 
     const formatVND = (value) => {
-        return new Intl.NumberFormat("vi-VN", {
-            style: "currency",
-            currency: "VND",
+        return new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND',
         }).format(value);
     };
 
@@ -31,9 +31,9 @@ const OrderScreen = (props) => {
 
     useEffect(() => {
         const addPayPalScript = async () => {
-            const { data } = await api.get("/api/config/paypal");
-            const script = document.createElement("script");
-            script.type = "text/javascript";
+            const { data } = await api.get('/api/config/paypal');
+            const script = document.createElement('script');
+            script.type = 'text/javascript';
             script.src = `https://www.paypal.com/sdk/js?client-id=${data}`;
             script.async = true;
             script.onload = () => {
@@ -139,11 +139,11 @@ const OrderScreen = (props) => {
                                         <div></div>
                                     )}
 
-                                    {order.delivered === "Delivered" ? (
+                                    {order.delivered === 'Delivered' ? (
                                         <MessageBox variant="success">
                                             Đã Giao Hàng Lúc {order.deliveredAt}
                                         </MessageBox>
-                                    ) : order.delivered === "Delivering" ? (
+                                    ) : order.delivered === 'Delivering' ? (
                                         <MessageBox variant="warning">
                                             Đang Giao Hàng
                                         </MessageBox>
@@ -169,7 +169,7 @@ const OrderScreen = (props) => {
                                                             key={key}
                                                             className="fw-normal"
                                                         >
-                                                            {item.name} x{" "}
+                                                            {item.name} x{' '}
                                                             {item.quantity}
                                                             <span>
                                                                 {formatVND(
@@ -182,7 +182,7 @@ const OrderScreen = (props) => {
                                                 }
                                             )}
                                             <li className="fw-normal">
-                                                Tạm Tính{" "}
+                                                Tạm Tính{' '}
                                                 <span>
                                                     {formatVND(
                                                         order.totalPrice -
@@ -198,25 +198,37 @@ const OrderScreen = (props) => {
                                                     )}
                                                 </span>
                                             </li>
+                                            <li className="fw-normal">
+                                                Giảm giá
+                                                <span>
+                                                    -{' '}
+                                                    {formatVND(
+                                                        order.discount || 0
+                                                    )}
+                                                </span>
+                                            </li>
                                             <li className="total-price">
-                                                Tổng tiền{" "}
+                                                Tổng tiền{' '}
                                                 <span>
                                                     {formatVND(
-                                                        order.totalPrice
-                                                    )}{" "}
+                                                        order.totalPrice -
+                                                            order.discount
+                                                    )}{' '}
                                                     = $
                                                     {(
-                                                        order.totalPrice / 25000
+                                                        (order.totalPrice -
+                                                            order.discount) /
+                                                        25000
                                                     ).toFixed(2)}
                                                 </span>
                                             </li>
                                         </ul>
                                         {order.isPaid ? (
                                             <MessageBox variant="success">
-                                                Thanh Toán Lúc{" "}
+                                                Thanh Toán Lúc{' '}
                                                 {moment(order.paidAt)
                                                     .utc()
-                                                    .format("DD-MM-YYYY HH:ss")}
+                                                    .format('DD-MM-YYYY HH:ss')}
                                             </MessageBox>
                                         ) : (
                                             <MessageBox variant="danger">
@@ -225,7 +237,7 @@ const OrderScreen = (props) => {
                                         )}
                                         <div className="payment-check payment-method">
                                             <label>
-                                                Phương thức thanh toán:{" "}
+                                                Phương thức thanh toán:{' '}
                                             </label>
                                             <p>
                                                 <strong>
@@ -235,7 +247,7 @@ const OrderScreen = (props) => {
                                         </div>
                                         <div>
                                             {sdkReady &&
-                                            order.paymentMethod === "Paypal" &&
+                                            order.paymentMethod === 'Paypal' &&
                                             order.isPaid === false ? (
                                                 <PayPalButton
                                                     amount={(

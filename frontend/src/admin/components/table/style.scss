@@ -5,27 +5,32 @@
     max-width: 25%;
 }
 input#checkbox-1 {
-  margin-left: 0;
+    margin-left: 0;
 }
 i.far.fa-eye {
-  font-size: 20px;
+    font-size: 20px;
 }
 i.far.fa-eye-slash {
-  font-size: 20px;
+    font-size: 20px;
 }
 .code-color {
-  width: 40px;
-  height: 40px;
-  border: 1px solid black;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  margin-right: 10px;
-  margin-left: 10px;
+    width: 40px;
+    height: 40px;
+    border: 1px solid black;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+th {
+    text-align: center;
+}
+.min-width {
+    text-align: center !important;
 }
 // .pagination-container {
 //   display: flex;
 //   list-style-type: none;
-  
 
 //   .pagination-item {
 //     padding: 0 12px;

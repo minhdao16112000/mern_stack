@@ -1,39 +1,33 @@
-import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import Pagination from 'react-js-pagination';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useRouteMatch } from 'react-router-dom';
+import { useRouteMatch } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import {
-    POST_DELETE_RESET,
-    POST_DESTROY_RESET,
-    POST_RESTORE_RESET,
-    POST_STATUS_RESET,
-} from '../../../constants/postConstant';
+    listTrashVoucher,
+    listVoucher,
+} from '../../../redux/actions/voucherActions';
 import {
-    activePosts,
-    getPosts,
-    getTrashPosts,
-} from '../../../redux/actions/postActions';
+    VOUCHER_DELETE_RESET,
+    VOUCHER_DESTROY_RESET,
+    VOUCHER_RESTORE_RESET,
+} from '../../../constants/voucherConstant';
 import './style.scss';
 
-const PostTable = (props) => {
+const VoucherTable = (props) => {
     const list = props.list;
     const dispatch = useDispatch();
     let { url } = useRouteMatch();
     const [itemsChecked, setItemsChecked] = useState([]);
-    const lstTopic = useSelector((state) => state.topic.topics);
     const [activePage, setCurrentPage] = useState(1);
-
-    const handelPost = useSelector((state) => state.post);
+    const handelVoucher = useSelector((state) => state.voucher);
 
     const {
-        error: errorHandle,
-        active: activePost,
-        trash: pushPostToTrash,
-        delete: deletePost,
-        restore: restorePost,
-    } = handelPost;
+        error: errorReviewCreate,
+        trash: pushVoucherToTrash,
+        delete: deleteVoucher,
+        restore: restoreVoucher,
+    } = handelVoucher;
 
     const indexOfLastTodo = activePage * 5;
 
@@ -48,16 +42,11 @@ const PostTable = (props) => {
         setCurrentPage(pageNumber);
     };
 
-    const checkTopic = (id) => {
-        var topicArr = [];
-        if (lstTopic.Topics) {
-            lstTopic.Topics.forEach((value) => {
-                if (id.includes(value._id)) {
-                    topicArr.push(value.name);
-                }
-            });
-        }
-        return <p>{topicArr.toString()}</p>;
+    const formatVND = (value) => {
+        return new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND',
+        }).format(value);
     };
 
     const isChecked = (e, id) => {
@@ -74,55 +63,48 @@ const PostTable = (props) => {
     };
 
     useEffect(() => {
-        if (errorHandle && errorHandle.length !== 0) {
-            toast.error(errorHandle);
+        if (errorReviewCreate.length !== 0) {
+            toast.error(errorReviewCreate);
         }
 
-        if (activePost && activePost === true) {
-            dispatch(getPosts());
-            dispatch({ type: POST_STATUS_RESET });
-        }
-
-        if (pushPostToTrash && pushPostToTrash === true) {
+        if (pushVoucherToTrash && pushVoucherToTrash === true) {
             var inputs = document.querySelectorAll('#checkbox-1');
             for (var i = 0; i < inputs.length; i++) {
                 inputs[i].checked = false;
             }
             setItemsChecked([]);
-            dispatch(getPosts());
-            dispatch({ type: POST_DELETE_RESET });
+            dispatch(listVoucher());
+            dispatch({ type: VOUCHER_DELETE_RESET });
         }
 
-        if (deletePost && deletePost === true) {
+        if (deleteVoucher && deleteVoucher === true) {
             var inputsTrash = document.querySelectorAll('#checkbox-1');
             for (var j = 0; j < inputsTrash.length; j++) {
                 inputsTrash[j].checked = false;
             }
             setItemsChecked([]);
-            dispatch(getTrashPosts());
-            dispatch({ type: POST_DESTROY_RESET });
+            dispatch(listTrashVoucher());
+            dispatch({ type: VOUCHER_DESTROY_RESET });
         }
 
-        if (restorePost && restorePost === true) {
+        if (restoreVoucher && restoreVoucher === true) {
             var inputTrash = document.querySelectorAll('#checkbox-1');
             for (var k = 0; k < inputTrash.length; k++) {
                 inputTrash[k].checked = false;
             }
             setItemsChecked([]);
-            dispatch(getTrashPosts());
-            dispatch({ type: POST_RESTORE_RESET });
+            dispatch(listTrashVoucher());
+            dispatch({ type: VOUCHER_RESTORE_RESET });
         }
-
         props.setDeleteItems(itemsChecked);
     }, [
-        activePost,
-        deletePost,
+        deleteVoucher,
         dispatch,
-        errorHandle,
+        errorReviewCreate,
         itemsChecked,
         props,
-        pushPostToTrash,
-        restorePost,
+        pushVoucherToTrash,
+        restoreVoucher,
     ]);
 
     return (
@@ -141,50 +123,47 @@ const PostTable = (props) => {
                                             <h6>Tiêu Đề</h6>
                                         </th>
                                         <th>
-                                            <h6>Hình Ảnh</h6>
+                                            <h6>Ký Tự Nhận Biết</h6>
                                         </th>
                                         <th>
-                                            <h6>Chủ Đề</h6>
+                                            <h6>Số Lượng</h6>
                                         </th>
                                         <th>
-                                            <h6>Mô Tả Ngắn</h6>
+                                            <h6>Mã Giảm Giá</h6>
                                         </th>
                                         <th>
-                                            <h6>Nội Dung</h6>
+                                            <h6>Giá Trị Giảm</h6>
                                         </th>
                                         <th>
-                                            <h6>Người Tạo</h6>
+                                            <h6>Mã Đã Sử Dụng</h6>
                                         </th>
                                         <th>
-                                            <h6>Người Cập Nhật</h6>
+                                            <h6>Số Tiền Tối Thiểu</h6>
                                         </th>
-                                        {url === '/admin/posts/trash' ? (
+                                        {url === '/admin/vouchers/trash' ? (
                                             <th>
-                                                <h6>Thời Điểm Tạo</h6>
+                                                <h6>Thời Điểm Xóa</h6>
                                             </th>
                                         ) : (
                                             <>
                                                 <th>
-                                                    <h6>Trạng Thái</h6>
+                                                    <h6>Ngày Hết Hạn</h6>
                                                 </th>
                                                 <th>
-                                                    <h6>Chức Năng</h6>
+                                                    <h6>Ngày Tạo</h6>
                                                 </th>
+                                                {/* <th>
+                                                    <h6>Chức Năng</h6>
+                                                </th> */}
                                             </>
                                         )}
                                     </tr>
                                     {/*-- end table row--*/}
                                 </thead>
                                 {currentTodos.length === 0 ? (
-                                    <tbody>
-                                        <tr>
-                                            <td colSpan={10}>
-                                                <h3 className="text-center">
-                                                    Không Có Tin Tức Nào
-                                                </h3>
-                                            </td>
-                                        </tr>
-                                    </tbody>
+                                    <p className="text-center">
+                                        Không Có Mã Giảm Giá Nào Nào Hết !
+                                    </p>
                                 ) : (
                                     <tbody>
                                         {currentTodos.map((value, key) => {
@@ -208,76 +187,90 @@ const PostTable = (props) => {
                                                     <td className="min-width">
                                                         <p>{value.title}</p>
                                                     </td>
-                                                    <td className="min-width th-admin">
-                                                        <img
-                                                            src={`http://localhost:5000/posts/${value.image}`}
-                                                            alt=""
-                                                        />
+                                                    <td className="min-width">
+                                                        <p
+                                                            style={{
+                                                                fontWeight: 700,
+                                                            }}
+                                                        >
+                                                            {value.idCharacter}
+                                                        </p>
                                                     </td>
                                                     <td className="min-width">
-                                                        {checkTopic(
-                                                            value.topicId
+                                                        <p>{value.quantity}</p>
+                                                    </td>
+                                                    <td className="min-width">
+                                                        <p>
+                                                            {value.code
+                                                                .length !== 0
+                                                                ? value.code
+                                                                      .join(
+                                                                          ', '
+                                                                      )
+                                                                      .substring(
+                                                                          0,
+                                                                          40
+                                                                      ) + '...'
+                                                                : ''}
+                                                        </p>
+                                                    </td>
+                                                    <td className="min-width">
+                                                        {value.type === 0 ? (
+                                                            <p>
+                                                                {value.discount +
+                                                                    '%'}
+                                                            </p>
+                                                        ) : (
+                                                            <p>
+                                                                {formatVND(
+                                                                    value.discount
+                                                                )}
+                                                            </p>
                                                         )}
                                                     </td>
                                                     <td className="min-width">
                                                         <p>
-                                                            {value.summary.substring(
-                                                                0,
-                                                                50
-                                                            ) + '...'}
+                                                            {value.used
+                                                                .length !== 0
+                                                                ? value.used
+                                                                      .join(
+                                                                          ', '
+                                                                      )
+                                                                      .substring(
+                                                                          0,
+                                                                          40
+                                                                      ) + '...'
+                                                                : ''}
                                                         </p>
                                                     </td>
                                                     <td className="min-width">
                                                         <p>
-                                                            {value.content.substring(
-                                                                0,
-                                                                100
-                                                            ) + '...'}
+                                                            {formatVND(
+                                                                value.min
+                                                            )}
                                                         </p>
-                                                    </td>
-                                                    <td className="min-width">
-                                                        <p>{value.createdBy}</p>
-                                                    </td>
-                                                    <td className="min-width">
-                                                        <p>{value.updatedBy}</p>
                                                     </td>
                                                     {value.deleted === false ? (
                                                         <>
-                                                            <td>
-                                                                <div className="action">
-                                                                    {value.status ===
-                                                                    '1' ? (
-                                                                        <button
-                                                                            className="text-success"
-                                                                            onClick={() =>
-                                                                                dispatch(
-                                                                                    activePosts(
-                                                                                        value._id
-                                                                                    )
-                                                                                )
-                                                                            }
-                                                                            title="Show"
-                                                                        >
-                                                                            <i className="far fa-eye"></i>
-                                                                        </button>
-                                                                    ) : (
-                                                                        <button
-                                                                            className="text-danger"
-                                                                            onClick={() =>
-                                                                                dispatch(
-                                                                                    activePosts(
-                                                                                        value._id
-                                                                                    )
-                                                                                )
-                                                                            }
-                                                                            title="Hidden"
-                                                                        >
-                                                                            <i className="far fa-eye-slash"></i>
-                                                                        </button>
+                                                            <td className="min-width">
+                                                                <p>
+                                                                    {new Date(
+                                                                        value.expire
+                                                                    ).toLocaleDateString(
+                                                                        'en-CA'
                                                                     )}
-                                                                </div>
+                                                                </p>
                                                             </td>
-                                                            <td>
+                                                            <td className="min-width">
+                                                                <p>
+                                                                    {new Date(
+                                                                        value.createdAt
+                                                                    ).toLocaleDateString(
+                                                                        'en-CA'
+                                                                    )}
+                                                                </p>
+                                                            </td>
+                                                            {/* <td>
                                                                 <div className="action">
                                                                     <Link
                                                                         to={`${url}/${value._id}`}
@@ -287,19 +280,17 @@ const PostTable = (props) => {
                                                                         <i className="fas fa-pen-square"></i>
                                                                     </Link>
                                                                 </div>
-                                                            </td>
+                                                            </td> */}
                                                         </>
                                                     ) : (
                                                         <>
                                                             <td className="min-width">
                                                                 <p>
-                                                                    {moment(
+                                                                    {new Date(
                                                                         value.deletedAt
-                                                                    )
-                                                                        .utc()
-                                                                        .format(
-                                                                            'DD-MM-YYYY HH:ss'
-                                                                        )}
+                                                                    ).toLocaleDateString(
+                                                                        'en-CA'
+                                                                    )}
                                                                 </p>
                                                             </td>
                                                         </>
@@ -332,4 +323,4 @@ const PostTable = (props) => {
     );
 };
 
-export default PostTable;
+export default VoucherTable;

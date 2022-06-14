@@ -113,6 +113,7 @@ const orderReducer = (state = _state.orderState, action) => {
                 ...state,
                 loading: false,
                 success: true,
+                order: action.payload,
             };
         case ORDER_DELIVERED_FAIL:
             return {
@@ -121,7 +122,7 @@ const orderReducer = (state = _state.orderState, action) => {
                 error: action.payload,
             };
         case ORDER_DELIVERED_RESET:
-            return {};
+            return { ...state, error: '', success: false };
         //Order Status
         case ORDER_STATUS_REQUEST:
             return {

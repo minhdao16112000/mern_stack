@@ -1,16 +1,16 @@
-import { FastField, Field, Form, Formik } from "formik";
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import * as Yup from "yup";
-import { getCategories } from "../../../../redux/actions/categoryActions";
-import { getImage, updateImage } from "../../../../redux/actions/imageActions";
-import AddField from "../../add/AddField";
-import CKEditorField from "../../add/CKEditorField";
-import ImageField from "../../add/ImageField";
-import MultiSelectField from "../../add/MultiSelectField";
-import SelectField from "../../add/SelectField";
-import "../style.scss";
+import { FastField, Field, Form, Formik } from 'formik';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import * as Yup from 'yup';
+import { getCategories } from '../../../../redux/actions/categoryActions';
+import { getImage, updateImage } from '../../../../redux/actions/imageActions';
+import AddField from '../../add/AddField';
+import CKEditorField from '../../add/CKEditorField';
+import ImageField from '../../add/ImageField';
+import MultiSelectField from '../../add/MultiSelectField';
+import SelectField from '../../add/SelectField';
+import '../style.scss';
 
 const FormEditImage = (props) => {
     const dispatch = useDispatch();
@@ -33,32 +33,34 @@ const FormEditImage = (props) => {
                   position: set_image.position,
               }
             : {
-                  title: "",
-                  image: "",
-                  categoryId: "",
-                  content: "",
-                  promotion: "",
-                  position: "0",
-                  status: "1",
+                  title: '',
+                  image: '',
+                  categoryId: '',
+                  content: '',
+                  promotion: '',
+                  position: '0',
+                  status: '1',
               };
 
     const setSelectCate = () => {
-        lstCate.Categories.forEach((value) => {
-            let objCate = { value: value._id, label: value.name };
-            setCate((oldVal) => [...oldVal, objCate]);
-        });
+        if (lstCate && lstCate.Categories) {
+            lstCate.Categories.forEach((value) => {
+                let objCate = { value: value._id, label: value.name };
+                setCate((oldVal) => [...oldVal, objCate]);
+            });
+        }
     };
 
     const validationSchema = Yup.object().shape({
         title: Yup.string()
-            .min(5, "Tiêu đề hình tối thiểu 5 kí tự")
-            .required("Bạn phải nhập tên hình"),
-        image: Yup.string().required("Bạn phải chọn hình ảnh cho hình"),
-        position: Yup.string().required("Bạn phải chọn vị trí cho hình"),
+            .min(5, 'Tiêu đề hình tối thiểu 5 kí tự')
+            .required('Bạn phải nhập tên hình'),
+        image: Yup.string().required('Bạn phải chọn hình ảnh cho hình'),
+        position: Yup.string().required('Bạn phải chọn vị trí cho hình'),
     });
 
     useEffect(() => {
-        document.title = "Manage Images";
+        document.title = 'Manage Images';
         if (id) dispatch(getImage(id));
         dispatch(getCategories());
 
@@ -89,9 +91,9 @@ const FormEditImage = (props) => {
                 console.log(values);
                 const formData = new FormData();
                 for (let i = 0; i < file.length; i++) {
-                    formData.append("image", file[i]);
+                    formData.append('image', file[i]);
                 }
-                formData.append("infos", JSON.stringify(value));
+                formData.append('infos', JSON.stringify(value));
                 dispatch(
                     updateImage({
                         formData: formData,
@@ -194,16 +196,16 @@ const FormEditImage = (props) => {
                                                     id="position"
                                                     options={[
                                                         {
-                                                            value: "0",
-                                                            label: "Slider",
+                                                            value: '0',
+                                                            label: 'Slider',
                                                         },
                                                         {
-                                                            value: "1",
-                                                            label: "Product Left",
+                                                            value: '1',
+                                                            label: 'Product Left',
                                                         },
                                                         {
-                                                            value: "2",
-                                                            label: "Product Right",
+                                                            value: '2',
+                                                            label: 'Product Right',
                                                         },
                                                     ]}
                                                 />

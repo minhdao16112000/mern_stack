@@ -1,19 +1,20 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useRouteMatch } from 'react-router-dom';
-import { deletePosts, getPosts } from '../../../redux/actions/postActions';
-import { getTopics } from '../../../redux/actions/topicActions';
-import PostTable from '../../components/table/PostTable';
+import VoucherTable from '../../components/table/VoucherTable';
+import {
+    deleteVouchers,
+    listVoucher,
+} from '../../../redux/actions/voucherActions';
 
-const ListPosts = () => {
+const ListVouchers = () => {
     let { url } = useRouteMatch();
     const dispatch = useDispatch();
     const [deleteItems, setDeleteItems] = useState([]);
-    const lstPosts = useSelector((state) => state.post.posts_list);
+    const lstVoucher = useSelector((state) => state.voucher.vouchers);
 
     const ClickDeleteHandler = () => {
-        dispatch(deletePosts(deleteItems.toString()));
+        dispatch(deleteVouchers(deleteItems.toString()));
     };
 
     const checkButtonDelete = () => {
@@ -23,7 +24,7 @@ const ListPosts = () => {
                     className="main-btn danger-btn btn-hover"
                     onClick={() => ClickDeleteHandler()}
                 >
-                    <i className="fas fa-minus-circle"></i>&ensp;Xóa(Đã Chọn);
+                    <i className="fas fa-minus-circle"></i>&ensp;Xóa(Đã Chọn)
                 </button>
             );
         } else {
@@ -36,9 +37,9 @@ const ListPosts = () => {
     };
 
     useEffect(() => {
-        document.title = 'Manage Posts';
-        dispatch(getPosts());
-        dispatch(getTopics());
+        document.title = 'Manage Vouchers';
+
+        dispatch(listVoucher());
     }, [dispatch]);
 
     return (
@@ -49,12 +50,15 @@ const ListPosts = () => {
                     <div className="row align-items-center">
                         <div className="col-md-6">
                             <div className="title mb-30">
-                                <h2>Danh Sách Tin Tức</h2>
+                                <h2>Danh Sách Mã Giảm Giá</h2>
                             </div>
                         </div>
                         {/*-- end col --*/}
                         <div className="col-md-6">
-                            <div className="breadcrumb-wrapper mb-30">
+                            <div
+                                className="breadcrumb-wrapper"
+                                style={{ marginBottom: '5px' }}
+                            >
                                 <nav aria-label="breadcrumb">
                                     <Link
                                         to={`${url}/add`}
@@ -71,8 +75,8 @@ const ListPosts = () => {
                                         className="main-btn warning-btn btn-hover"
                                     >
                                         <i className="fas fa-trash-alt"></i>
-                                        &ensp;Thùng Rác ({lstPosts.deletedCount}
-                                        )
+                                        &ensp;Thùng Rác (
+                                        {lstVoucher.deletedCount})
                                     </Link>
                                 </nav>
                             </div>
@@ -82,8 +86,8 @@ const ListPosts = () => {
                     {/*-- end row --*/}
                 </div>
                 {/*-- ========== title-wrapper end ========== --*/}
-                <PostTable
-                    list={lstPosts.Posts}
+                <VoucherTable
+                    list={lstVoucher.Vouchers}
                     setDeleteItems={setDeleteItems}
                 />
             </div>
@@ -92,4 +96,4 @@ const ListPosts = () => {
     );
 };
 
-export default ListPosts;
+export default ListVouchers;
