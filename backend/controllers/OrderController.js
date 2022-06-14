@@ -1,14 +1,37 @@
 const { JsonWebTokenError } = require('jsonwebtoken');
 const orderModel = require('../models/OrderModel');
+const voucherModel = require('../models/VoucherModel');
 const nodemailer = require('nodemailer');
 
 class OrderController {
     /* ----Begin Actions Add product ---- */
     // [POST] /store
-    store(req, res, next) {
+    store = async (req, res, next) => {
         if (req.body.orderItems.length === 0) {
             res.send({ message: 'Cart is empty' });
         } else {
+            if (req.body.voucher.length !== 0) {
+                var idCharacter = req.body.voucher?.slice(2, 6);
+                var voucher = await voucherModel.findOne({
+                    idCharacter: idCharacter,
+                });
+                var option = {};
+                if (voucher.used && voucher.used.length !== 0) {
+                    option.used = voucher.used;
+                } else {
+                    option.used = [];
+                }
+                option.used.push(req.body.voucher);
+                option.code = voucher.code.filter(
+                    (value) => value !== req.body.voucher
+                );
+                console.log(voucher);
+                await voucherModel.findOneAndUpdate(
+                    { _id: voucher._id },
+                    option
+                );
+            }
+
             const order = new orderModel({
                 orderItems: req.body.orderItems,
                 shippingAddress: req.body.shippingAddress,
@@ -17,6 +40,8 @@ class OrderController {
                 totalPrice: req.body.totalPrice,
                 paymentMethod: req.body.paymentMethod,
                 user: req.body.user,
+                voucher: req.body.voucher,
+                discount: req.body.discount,
             });
             order
                 .save()
@@ -30,7 +55,7 @@ class OrderController {
                 )
                 .catch(next);
         }
-    }
+    };
 
     // [POST] /store
     sendEmail(req, res, next) {
@@ -195,7 +220,10 @@ class OrderController {
                     returnOriginal: false,
                 })
                 .then((Order) =>
-                    res.send({ message: 'Order Paid', order: Order })
+                    res.send({
+                        message: 'Change Status Order Successfully !!!',
+                        order: Order,
+                    })
                 )
                 .catch(() => res.send({ message: 'Order Not Found !!!' }));
         } catch (error) {
@@ -211,6 +239,13 @@ class OrderController {
                 order.delivered = req.body.saveDelivery;
                 if (req.body.saveDelivery === 'Delivered') {
                     order.deliveredAt = Date.now();
+                    if (
+                        order.paymentMethod === 'Tiền Mặt' &&
+                        order.isPaid === false
+                    ) {
+                        order.isPaid = true;
+                        order.paidAt = Date.now();
+                    }
                 }
             }
             orderModel

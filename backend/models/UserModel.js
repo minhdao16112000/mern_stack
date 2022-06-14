@@ -7,11 +7,12 @@ const UserModel = new Schema(
     {
         firstName: { type: String, required: true },
         lastName: { type: String, required: true },
-        // avartar: { type: String, required: true },
+        avatar: { type: String },
         email: { type: String, required: true, unique: true },
         password: { type: String, required: true },
         role: { type: Number, default: 1 },
         sex: { type: Number, required: true, default: 0 },
+        dateOfBirth: { type: Date, default: NaN },
         phone: { type: String, required: true, unique: true, default: 0 },
         address: { type: String, default: '' },
         favorites: [

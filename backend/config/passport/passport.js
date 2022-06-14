@@ -62,12 +62,13 @@ passport.use(
                     email: getUser.email,
                     role: getUser.role,
                     sex: getUser.sex,
+                    dayOfBirth: getUser.dayOfBirth,
                     phone: getUser.phone,
                     address: getUser.address,
                     googleId: getUser.googleId,
                     provider: getUser.provider,
                     token: accessToken,
-                    avatar: profile.photos[0].value,
+                    // avatar: profile.photos[0].value,
                 };
                 done(null, {
                     info: user,
@@ -133,7 +134,7 @@ passport.use(
                                     googleId: getUser.googleId,
                                     provider: getUser.provider,
                                     token: accessToken,
-                                    avatar: profile.photos[0].value,
+                                    // avatar: profile.photos[0].value,
                                 },
                                 message: {
                                     message: 'Đăng nhập thành công !',
@@ -178,12 +179,13 @@ passport.use(
                     email: getUser.email,
                     role: getUser.role,
                     sex: getUser.sex,
+                    dayOfBirth: getUser.dayOfBirth,
                     phone: getUser.phone,
                     address: getUser.address,
                     faceBookId: getUser.faceBookId,
                     provider: getUser.provider,
                     token: accessToken,
-                    avatar: profile.photos[0].value,
+                    // avatar: profile.photos[0].value,
                 };
                 done(null, {
                     info: user,
@@ -253,7 +255,7 @@ passport.use(
                                     faceBookId: getUser.faceBookId,
                                     provider: getUser.provider,
                                     token: accessToken,
-                                    avatar: profile.photos[0].value,
+                                    // avatar: profile.photos[0].value,
                                 },
                                 message: {
                                     message: 'Đăng nhập thành công !',

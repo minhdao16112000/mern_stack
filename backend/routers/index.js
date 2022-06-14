@@ -10,6 +10,7 @@ const postRouter = require('./post');
 const imageRouter = require('./image');
 const contactRouter = require('./contact');
 const pageRouter = require('./page');
+const voucherRouter = require('./voucher');
 // const testRouter = require('./test');
 
 function router(app) {
@@ -25,6 +26,7 @@ function router(app) {
     app.use('/api/image', imageRouter);
     app.use('/api/contact', contactRouter);
     app.use('/api/page', pageRouter);
+    app.use('/api/voucher', voucherRouter);
     // app.use('/api/test', testRouter);
 }
 
